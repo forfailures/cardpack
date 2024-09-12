@@ -1,23 +1,7 @@
 #![warn(clippy::pedantic)]
+#![allow(clippy::module_name_repetitions)]
 
-use std::error::Error;
-
+pub mod card;
+pub mod card_error;
+pub mod cards;
 mod fluent;
-
-#[derive(Debug)]
-pub enum CardError {
-    InvalidCard(String),
-    InvalidCardCount,
-    InvalidIndex(String),
-    NotEnoughCards,
-    TooManyCards,
-}
-
-// https://github.com/dtolnay/thiserror
-impl std::fmt::Display for CardError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self)
-    }
-}
-
-impl Error for CardError {}

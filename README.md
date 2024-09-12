@@ -25,3 +25,12 @@ decks of various sizes and suites. Possibilities include:
 * Shuffle a deck
 * Verify that a specific card is playable given a set of discards.
 * Determine if two deck types are translatable.
+
+## Dependencies
+
+* [thiserror](https://github.com/dtolnay/thiserror)
+
+## Refactoring Goals
+
+* Use generics to represent cards and decks.
+* Good error reporting
