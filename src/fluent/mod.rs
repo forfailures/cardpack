@@ -12,6 +12,15 @@ static_loader! {
     };
 }
 
+/// Trait used to enable localized names for card entities such as suits and ranks.
+///
+/// The types of `Named` attributes are
+///
+/// * `index` - the default letter representation of a card identifier, such as `A` for Ace, or `S` for Spades.
+/// * `long` - the long name of a card identifier, such as `Ace` or `Spades`.
+/// * `symbol` - the symbol representation of a card identifier, such as `♠` for Spades.
+/// * `weight` - the default weight of a card identifier. Used for sorting cards.
+/// * `prime` - the prime number representation of a card identifier. Used for generating binary signatures.
 pub trait Named {
     const US_ENGLISH: LanguageIdentifier = langid!("en-US");
     const DEUTSCH: LanguageIdentifier = langid!("de");
@@ -23,17 +32,77 @@ pub trait Named {
     const FLUENT_PRIME_SECTION: &str = "prime";
 
     fn fluent_name(&self) -> &FluentName;
-    fn fluent_name_string(&self) -> String;
+    fn fluent_name_string(&self) -> &String;
 
     /// This is the core method for getting fluent values. the index, long, and default weight
     /// methods are all just methods simplifying the call to this method.
+    ///
+    /// ## Usage
+    /// ```
+    /// use cardpack::fluent::*;
+    ///
+    ///
+    ///
+    /// ```
     fn fluent_value(&self, key_section: &str, lid: &LanguageIdentifier) -> String {
         let id = format!("{}-{}", self.fluent_name_string(), key_section);
         LOCALES.lookup(lid, id.as_str())
     }
 
+    /// Returns the value of the `FluentName` index in the fluent templates. An index
+    /// is defined as the default letter representation of a card identifier, such as
+    /// `A` for Ace, or `S` for Spades.
+    ///
+    /// The index is defined as the identity indicator in the corner of a playing card.
+    ///
+    /// ## Usage
+    /// ```
+    /// use cardpack::fluent::*;
+    ///
+    /// let jack = FluentName::new("jack");
+    /// assert_eq!("B", jack.index(&FluentName::DEUTSCH));
+    /// ```
     fn index(&self, lid: &LanguageIdentifier) -> String {
         self.fluent_value(Self::FLUENT_INDEX_SECTION, lid)
+    }
+
+    /// Returns the default, `US_ENGLISH` index value in the fluent templates.
+    ///
+    /// ## Usage
+    /// ```
+    /// use cardpack::fluent::*;
+    ///
+    /// let ten = FluentName::new("ten");
+    /// assert_eq!("T", ten.index_default());
+    /// ```
+    fn index_default(&self) -> String {
+        self.index(&Self::US_ENGLISH)
+    }
+
+    /// Returns the value of the `Named` long value in the fluent templates.
+    ///
+    /// ## Usage
+    /// ```
+    /// use cardpack::fluent::*;
+    ///
+    /// let big_joker = FluentName::new("big-joker");
+    /// assert_eq!("Großer Joker", big_joker.long(&FluentName::DEUTSCH));
+    /// ```
+    fn long(&self, lid: &LanguageIdentifier) -> String {
+        self.fluent_value(Self::FLUENT_LONG_SECTION, lid)
+    }
+
+    /// Returns the default, `US_ENGLISH` value of the `Named` long value in the fluent templates.
+    ///
+    /// ## Usage
+    /// ```
+    /// use cardpack::fluent::*;
+    ///
+    /// let big_joker = FluentName::new("big-joker");
+    /// assert_eq!("Full-Color Joker", big_joker.long_default());
+    /// ```
+    fn long_default(&self) -> String {
+        self.long(&Self::US_ENGLISH)
     }
 }
 
@@ -60,6 +129,19 @@ impl FluentName {
     /// something will be you.**
     ///
     /// **NOTE:** there is no perfect way to do this. Empathy is an art form.
+    ///
+    /// ## Usage
+    /// ```
+    /// use cardpack::fluent::*;
+    ///
+    /// assert_eq!("spades", FluentName::new("spades").fluent_name_string());
+    ///
+    /// // Defaults to `BLANK` when an invalid name is passed in.
+    /// assert_eq!(
+    ///   FluentName::BLANK,
+    ///   FluentName::new("+++").fluent_name_string()
+    /// );
+    /// ```
     #[must_use]
     pub fn new(name_str: &str) -> Self {
         match Self::is_alphanumeric_hyphen_dash(name_str) {
@@ -77,6 +159,32 @@ impl FluentName {
     }
 }
 
+/// USAGE:
+/// ```
+/// use std::str::FromStr;
+/// use cardpack::fluent::*;
+///
+/// assert_eq!(
+///   "hierophant",
+///    FluentName::from_str("hierophant").unwrap().fluent_name_string()
+/// );
+/// ```
+///
+/// Unlike `Fluent::new()`, `Fluent::from_str()` will return a `CardError` if the
+/// passed in value is invalid.
+///
+/// ```
+/// use std::str::FromStr;
+/// use cardpack::card_error::CardError;
+/// use cardpack::fluent::*;
+///
+/// let sut = FluentName::from_str("Only alphanumeric and hyphens please.");
+///
+/// assert_eq!(
+///   CardError::InvalidFluentName("Only alphanumeric and hyphens please.".to_string()),
+///   sut.unwrap_err()
+/// );
+/// ```
 impl FromStr for FluentName {
     type Err = CardError;
 
@@ -93,8 +201,8 @@ impl Named for FluentName {
         self
     }
 
-    fn fluent_name_string(&self) -> String {
-        self.0.clone()
+    fn fluent_name_string(&self) -> &String {
+        &self.0
     }
 }
 
@@ -105,11 +213,7 @@ mod fluent_tests {
 
     #[test]
     fn new() {
-        assert_eq!("abide", FluentName::new("abide").fluent_name_string());
-        assert_eq!(
-            FluentName::BLANK,
-            FluentName::new("+++").fluent_name_string()
-        );
+        assert_eq!(FluentName("queen".to_string()), FluentName::new("queen"));
     }
 
     #[test]
@@ -123,8 +227,10 @@ mod fluent_tests {
     #[test]
     fn from_str() {
         assert_eq!(
-            "abide",
-            FluentName::from_str("abide").unwrap().fluent_name_string()
+            "hierophant",
+            FluentName::from_str("hierophant")
+                .unwrap()
+                .fluent_name_string()
         );
     }
 
@@ -166,6 +272,16 @@ mod fluent_tests {
             "S",
             FluentName::new("spades").index(&FluentName::US_ENGLISH)
         );
+        assert_eq!(
+            "P",
+            FluentName::new("pentacles").index(&FluentName::US_ENGLISH)
+        );
         assert_eq!("K", FluentName::new("clubs").index(&FluentName::DEUTSCH));
+    }
+
+    #[test]
+    fn named__index_default() {
+        assert_eq!("S", FluentName::new("spades").index_default());
+        assert_eq!("P", FluentName::new("pentacles").index_default());
     }
 }
