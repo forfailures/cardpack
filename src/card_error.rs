@@ -6,6 +6,8 @@ pub enum CardError {
     InvalidCard(String),
     #[error("Invalid Card Count: `{0}`")]
     InvalidCardCount(usize),
+    #[error("Invalid FluentName: `{0}`. Must be alphanumeric with hyphens, en-dashes, or em-dashes.")]
+    InvalidFluentName(String),
     #[error("Invalid Index: `{0}`")]
     InvalidIndex(String),
     #[error("Not enough cards: `{0}` missing")]

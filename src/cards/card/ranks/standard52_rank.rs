@@ -1,4 +1,4 @@
-use crate::fluent::fluent_name::FluentName;
+use crate::fluent::FluentName;
 
 pub struct Standard52Rank {
     pub weight: u32,
