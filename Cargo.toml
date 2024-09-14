@@ -4,5 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-fluent-templates = "0.10.1"
+fluent-templates = "0.10"
+log = "0.4"
 thiserror = "1.0"

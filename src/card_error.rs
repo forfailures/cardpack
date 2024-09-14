@@ -1,12 +1,14 @@
 use thiserror::Error;
 
-#[derive(Error, Debug)]
+#[derive(Error, Debug, Eq, PartialEq)]
 pub enum CardError {
     #[error("Invalid Card: `{0}`")]
     InvalidCard(String),
     #[error("Invalid Card Count: `{0}`")]
     InvalidCardCount(usize),
-    #[error("Invalid FluentName: `{0}`. Must be alphanumeric with hyphens, en-dashes, or em-dashes.")]
+    #[error(
+        "Invalid FluentName: `{0}`. Must be alphanumeric with hyphens, en-dashes, or em-dashes."
+    )]
     InvalidFluentName(String),
     #[error("Invalid Index: `{0}`")]
     InvalidIndex(String),
