@@ -12,16 +12,16 @@ static_loader! {
     };
 }
 
-pub const US_ENGLISH: LanguageIdentifier = langid!("en-US");
-pub const GERMAN: LanguageIdentifier = langid!("de");
-
-pub const FLUENT_INDEX_SECTION: &str = "index";
-pub const FLUENT_LONG_SECTION: &str = "long";
-pub const FLUENT_SYMBOL_SECTION: &str = "symbol";
-pub const FLUENT_WEIGHT_SECTION: &str = "weight";
-pub const FLUENT_PRIME_SECTION: &str = "prime";
-
 pub trait Named {
+    const US_ENGLISH: LanguageIdentifier = langid!("en-US");
+    const DEUTSCH: LanguageIdentifier = langid!("de");
+
+    const FLUENT_INDEX_SECTION: &str = "index";
+    const FLUENT_LONG_SECTION: &str = "long";
+    const FLUENT_SYMBOL_SECTION: &str = "symbol";
+    const FLUENT_WEIGHT_SECTION: &str = "weight";
+    const FLUENT_PRIME_SECTION: &str = "prime";
+
     fn fluent_name(&self) -> &FluentName;
     fn fluent_name_string(&self) -> String;
 
@@ -30,6 +30,10 @@ pub trait Named {
     fn fluent_value(&self, key_section: &str, lid: &LanguageIdentifier) -> String {
         let id = format!("{}-{}", self.fluent_name_string(), key_section);
         LOCALES.lookup(lid, id.as_str())
+    }
+
+    fn index(&self, lid: &LanguageIdentifier) -> String {
+        self.fluent_value(Self::FLUENT_INDEX_SECTION, lid)
     }
 }
 
@@ -138,5 +142,30 @@ mod fluent_tests {
             "Invalid FluentName: `I'm a bad bad fluent string name.`. Must be alphanumeric with hyphens, en-dashes, or em-dashes.",
             my_err.to_string()
         );
+    }
+
+    #[test]
+    fn named__fluent_value() {
+        assert_eq!(
+            "_",
+            FluentName::new("+++").fluent_value("symbol", &FluentName::US_ENGLISH)
+        );
+        assert_eq!(
+            "♠",
+            FluentName::new("spades").fluent_value("symbol", &FluentName::US_ENGLISH)
+        );
+        assert_eq!(
+            "Daus",
+            FluentName::new("daus").fluent_value("long", &FluentName::DEUTSCH)
+        );
+    }
+
+    #[test]
+    fn named__index() {
+        assert_eq!(
+            "S",
+            FluentName::new("spades").index(&FluentName::US_ENGLISH)
+        );
+        assert_eq!("K", FluentName::new("clubs").index(&FluentName::DEUTSCH));
     }
 }
