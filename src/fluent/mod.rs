@@ -33,6 +33,7 @@ pub trait Named {
 
     fn fluent_name(&self) -> &FluentName;
     fn fluent_name_string(&self) -> &String;
+    fn is_blank(&self) -> bool;
 
     /// This is the core method for getting fluent values. the index, long, and default weight
     /// methods are all just methods simplifying the call to this method.
@@ -41,8 +42,10 @@ pub trait Named {
     /// ```
     /// use cardpack::fluent::*;
     ///
-    ///
-    ///
+    /// assert_eq!(
+    ///   "♠",
+    ///   FluentName::new("spades").fluent_value("symbol", &FluentName::US_ENGLISH)
+    /// );
     /// ```
     fn fluent_value(&self, key_section: &str, lid: &LanguageIdentifier) -> String {
         let id = format!("{}-{}", self.fluent_name_string(), key_section);
@@ -104,6 +107,39 @@ pub trait Named {
     fn long_default(&self) -> String {
         self.long(&Self::US_ENGLISH)
     }
+
+    /// Returns the weight for `Named`, used to sort cards. There is no need for an alternative
+    /// `LanguageIdentifier` to `US_ENGLISH`. Weights are stored in the `core.ftl` file.
+    ///
+    /// # Usage
+    /// ```
+    /// use cardpack::fluent::*;
+    ///
+    /// let queen = FluentName::new("queen");
+    /// assert_eq!(10, queen.weight());
+    /// ```
+    fn weight(&self) -> u32 {
+        let weight = self.fluent_value(Self::FLUENT_WEIGHT_SECTION, &Self::US_ENGLISH);
+        weight.parse().unwrap_or(0)
+    }
+
+    /// Returns the prime number for `Named`, used to generate binary signatures. There is no need
+    /// for an alternative `LanguageIdentifier` to `US_ENGLISH`. Primes are stored in the `core.ftl`
+    /// file.
+    ///
+    /// **ASIDE:** I'm not sure I like storing these as `FluentName`s.
+    ///
+    /// # Usage
+    /// ```
+    /// use cardpack::fluent::*;
+    ///
+    /// let queen = FluentName::new("queen");
+    /// assert_eq!(31, queen.prime());
+    /// ```
+    fn prime(&self) -> u32 {
+        let prime = self.fluent_value(Self::FLUENT_PRIME_SECTION, &Self::US_ENGLISH);
+        prime.parse().unwrap_or(0)
+    }
 }
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -144,12 +180,11 @@ impl FluentName {
     /// ```
     #[must_use]
     pub fn new(name_str: &str) -> Self {
-        match Self::is_alphanumeric_hyphen_dash(name_str) {
-            true => FluentName(name_str.to_string()),
-            false => {
-                log::warn!("Invalid name: {} - Defaulting to 'blank'.", name_str);
-                FluentName(Self::BLANK.to_string())
-            }
+        if Self::is_alphanumeric_hyphen_dash(name_str) {
+            FluentName(name_str.to_string())
+        } else {
+            log::warn!("Invalid name: {} - Defaulting to 'blank'.", name_str);
+            FluentName(Self::BLANK.to_string())
         }
     }
 
@@ -189,9 +224,10 @@ impl FromStr for FluentName {
     type Err = CardError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match Self::is_alphanumeric_hyphen_dash(s) {
-            true => Ok(FluentName(s.to_string())),
-            false => Err(CardError::InvalidFluentName(s.to_string())),
+        if Self::is_alphanumeric_hyphen_dash(s) {
+            Ok(FluentName(s.to_string()))
+        } else {
+            Err(CardError::InvalidFluentName(s.to_string()))
         }
     }
 }
@@ -203,6 +239,10 @@ impl Named for FluentName {
 
     fn fluent_name_string(&self) -> &String {
         &self.0
+    }
+
+    fn is_blank(&self) -> bool {
+        self.fluent_name_string() == Self::BLANK
     }
 }
 
@@ -257,13 +297,15 @@ mod fluent_tests {
             FluentName::new("+++").fluent_value("symbol", &FluentName::US_ENGLISH)
         );
         assert_eq!(
-            "♠",
-            FluentName::new("spades").fluent_value("symbol", &FluentName::US_ENGLISH)
-        );
-        assert_eq!(
             "Daus",
             FluentName::new("daus").fluent_value("long", &FluentName::DEUTSCH)
         );
+    }
+
+    #[test]
+    fn named__is_blank() {
+        assert!(FluentName::new("blank").is_blank());
+        assert!(!FluentName::new("long").is_blank());
     }
 
     #[test]
