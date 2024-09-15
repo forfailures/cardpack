@@ -26,7 +26,6 @@ impl Standard52Rank {
     pub const FOUR: &str = "four";
     pub const THREE: &str = "three";
     pub const TWO: &str = "two";
-    pub const BLANK: &str = "_";
 
     pub fn new(name_str: &str) -> Self {
         let name = FluentName::new(name_str);
@@ -56,17 +55,11 @@ impl From<char> for Standard52Rank {
             '7' => Standard52Rank::new(Standard52Rank::SEVEN),
             '8' => Standard52Rank::new(Standard52Rank::EIGHT),
             '9' => Standard52Rank::new(Standard52Rank::NINE),
-            'T' => Standard52Rank::new(Standard52Rank::TEN),
-            't' => Standard52Rank::new(Standard52Rank::TEN),
-            '0' => Standard52Rank::new(Standard52Rank::TEN),
-            'J' => Standard52Rank::new(Standard52Rank::JACK),
-            'j' => Standard52Rank::new(Standard52Rank::JACK),
-            'Q' => Standard52Rank::new(Standard52Rank::QUEEN),
-            'q' => Standard52Rank::new(Standard52Rank::QUEEN),
-            'K' => Standard52Rank::new(Standard52Rank::KING),
-            'k' => Standard52Rank::new(Standard52Rank::KING),
-            'A' => Standard52Rank::new(Standard52Rank::ACE),
-            'a' => Standard52Rank::new(Standard52Rank::ACE),
+            'T' | 't' | '0' => Standard52Rank::new(Standard52Rank::TEN),
+            'J' | 'j' => Standard52Rank::new(Standard52Rank::JACK),
+            'Q' | 'q' => Standard52Rank::new(Standard52Rank::QUEEN),
+            'K' | 'k' => Standard52Rank::new(Standard52Rank::KING),
+            'A' | 'a' => Standard52Rank::new(Standard52Rank::ACE),
             _ => Standard52Rank::new(FluentName::BLANK),
         }
     }
@@ -89,7 +82,7 @@ impl FromStr for Standard52Rank {
     }
 }
 
-impl Named for Standard52Rank {
+impl<'a> Named<'a> for Standard52Rank {
     fn fluent_name(&self) -> &FluentName {
         &self.name
     }
@@ -139,8 +132,8 @@ mod rank_tests {
     #[case('4', Standard52Rank::new(Standard52Rank::FOUR))]
     #[case('3', Standard52Rank::new(Standard52Rank::THREE))]
     #[case('2', Standard52Rank::new(Standard52Rank::TWO))]
-    #[case('_', Standard52Rank::new(Standard52Rank::BLANK))]
-    #[case(' ', Standard52Rank::new(Standard52Rank::BLANK))]
+    #[case('_', Standard52Rank::new(FluentName::BLANK))]
+    #[case(' ', Standard52Rank::new(FluentName::BLANK))]
     fn from__char(#[case] input: char, #[case] expected: Standard52Rank) {
         assert_eq!(expected, Standard52Rank::from(input));
     }

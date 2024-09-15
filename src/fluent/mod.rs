@@ -21,15 +21,15 @@ static_loader! {
 /// * `symbol` - the symbol representation of a card identifier, such as `♠` for Spades.
 /// * `weight` - the default weight of a card identifier. Used for sorting cards.
 /// * `prime` - the prime number representation of a card identifier. Used for generating binary signatures.
-pub trait Named {
+pub trait Named<'a> {
     const US_ENGLISH: LanguageIdentifier = langid!("en-US");
     const DEUTSCH: LanguageIdentifier = langid!("de");
 
-    const FLUENT_INDEX_SECTION: &str = "index";
-    const FLUENT_LONG_SECTION: &str = "long";
-    const FLUENT_SYMBOL_SECTION: &str = "symbol";
-    const FLUENT_WEIGHT_SECTION: &str = "weight";
-    const FLUENT_PRIME_SECTION: &str = "prime";
+    const FLUENT_INDEX_SECTION: &'a str = "index";
+    const FLUENT_LONG_SECTION: &'a str = "long";
+    const FLUENT_SYMBOL_SECTION: &'a str = "symbol";
+    const FLUENT_WEIGHT_SECTION: &'a str = "weight";
+    const FLUENT_PRIME_SECTION: &'a str = "prime";
 
     fn fluent_name(&self) -> &FluentName;
     fn fluent_name_string(&self) -> &String;
@@ -232,7 +232,7 @@ impl FromStr for FluentName {
     }
 }
 
-impl Named for FluentName {
+impl<'a> Named<'a> for FluentName {
     fn fluent_name(&self) -> &FluentName {
         self
     }
