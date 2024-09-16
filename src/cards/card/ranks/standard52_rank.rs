@@ -140,6 +140,7 @@ mod rank_tests {
     #[case('4', Standard52Rank::new(Standard52Rank::FOUR))]
     #[case('3', Standard52Rank::new(Standard52Rank::THREE))]
     #[case('2', Standard52Rank::new(Standard52Rank::TWO))]
+    #[cfg_attr(miri, ignore)]
     fn from(#[case] input: char, #[case] expected: Standard52Rank) {
         assert_eq!(expected, Standard52Rank::from(input));
         assert_eq!(
