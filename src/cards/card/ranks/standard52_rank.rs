@@ -104,6 +104,14 @@ impl Rank for Standard52Rank {
     fn get_weight(&self) -> u32 {
         self.weight
     }
+
+    fn update_weight(&self, weight: u32) -> Self {
+        Standard52Rank {
+            weight,
+            prime: self.prime,
+            name: self.name.clone(),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -132,9 +140,44 @@ mod rank_tests {
     #[case('4', Standard52Rank::new(Standard52Rank::FOUR))]
     #[case('3', Standard52Rank::new(Standard52Rank::THREE))]
     #[case('2', Standard52Rank::new(Standard52Rank::TWO))]
-    #[case('_', Standard52Rank::new(FluentName::BLANK))]
-    #[case(' ', Standard52Rank::new(FluentName::BLANK))]
-    fn from__char(#[case] input: char, #[case] expected: Standard52Rank) {
+    fn from(#[case] input: char, #[case] expected: Standard52Rank) {
         assert_eq!(expected, Standard52Rank::from(input));
+        assert_eq!(
+            expected,
+            Standard52Rank::from_str(Box::leak(input.to_string().into_boxed_str())).unwrap()
+        );
+    }
+
+    #[test]
+    fn from_blank() {
+        assert_eq!(
+            Standard52Rank::new(FluentName::BLANK),
+            Standard52Rank::from(' ')
+        );
+        assert_eq!(
+            Standard52Rank::new(FluentName::BLANK),
+            Standard52Rank::from('_')
+        );
+        assert!(Standard52Rank::from_str(" ").is_err());
+        assert!(Standard52Rank::from_str("_").is_err());
+    }
+
+    #[test]
+    fn rank_get_prime() {
+        assert_eq!(41, Standard52Rank::new(Standard52Rank::ACE).get_prime());
+    }
+
+    #[test]
+    fn rank_get_weight() {
+        assert_eq!(12, Standard52Rank::new(Standard52Rank::ACE).get_weight());
+    }
+
+    #[test]
+    fn rank_update_weight() {
+        let sut = Standard52Rank::new(Standard52Rank::ACE).update_weight(13);
+
+        assert_eq!(13, sut.get_weight());
+        assert_eq!(41, sut.get_prime());
+        assert_eq!(FluentName::new(Standard52Rank::ACE), sut.name);
     }
 }

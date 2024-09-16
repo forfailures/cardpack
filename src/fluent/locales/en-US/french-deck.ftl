@@ -28,8 +28,8 @@ four-long = Four
 three-long = Three
 two-long = Deuce
 
-big-joker-index = JB
-little-joker-index = JL
+big-joker-index = J
+little-joker-index = j
 ace-index = A
 king-index = K
 queen-index = Q

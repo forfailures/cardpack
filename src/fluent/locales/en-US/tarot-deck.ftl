@@ -5,7 +5,7 @@ cups-long = Chalices
 swords-long = Swords
 pentacles-long = Pentacles
 
-major-arcana-index = MA
+major-arcana-index = M
 wands-index = W
 cups-index = C
 swords-index = S

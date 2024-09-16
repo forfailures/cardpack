@@ -5,5 +5,9 @@ use std::str::FromStr;
 
 pub trait Rank: From<char> + FromStr + for<'a> Named<'a> {
     fn get_prime(&self) -> u32;
+
     fn get_weight(&self) -> u32;
+
+    #[must_use]
+    fn update_weight(&self, weight: u32) -> Self;
 }

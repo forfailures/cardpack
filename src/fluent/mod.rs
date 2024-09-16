@@ -21,6 +21,8 @@ static_loader! {
 /// * `symbol` - the symbol representation of a card identifier, such as `♠` for Spades.
 /// * `weight` - the default weight of a card identifier. Used for sorting cards.
 /// * `prime` - the prime number representation of a card identifier. Used for generating binary signatures.
+///
+/// **REREADME:** <https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html/>
 pub trait Named<'a> {
     const US_ENGLISH: LanguageIdentifier = langid!("en-US");
     const DEUTSCH: LanguageIdentifier = langid!("de");
