@@ -97,6 +97,34 @@ impl<'a> Named<'a> for Standard52Rank {
 }
 
 impl Rank for Standard52Rank {
+    fn new(name_str: &str) -> Self {
+        let name = FluentName::new(name_str);
+
+        Self {
+            weight: name.weight(),
+            prime: name.prime(),
+            name,
+        }
+    }
+
+    fn names() -> Vec<&'static str> {
+        vec![
+            Standard52Rank::ACE,
+            Standard52Rank::KING,
+            Standard52Rank::QUEEN,
+            Standard52Rank::JACK,
+            Standard52Rank::TEN,
+            Standard52Rank::NINE,
+            Standard52Rank::EIGHT,
+            Standard52Rank::SEVEN,
+            Standard52Rank::SIX,
+            Standard52Rank::FIVE,
+            Standard52Rank::FOUR,
+            Standard52Rank::THREE,
+            Standard52Rank::TWO,
+        ]
+    }
+
     fn get_prime(&self) -> u32 {
         self.prime
     }
@@ -143,6 +171,7 @@ mod rank_tests {
     #[cfg_attr(miri, ignore)]
     fn from(#[case] input: char, #[case] expected: Standard52Rank) {
         assert_eq!(expected, Standard52Rank::from(input));
+        // This assertion throws a miri error, but I love the simplicity.
         assert_eq!(
             expected,
             Standard52Rank::from_str(Box::leak(input.to_string().into_boxed_str())).unwrap()
