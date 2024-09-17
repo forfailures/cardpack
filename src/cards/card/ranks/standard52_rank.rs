@@ -26,21 +26,17 @@ impl Standard52Rank {
     pub const FOUR: &str = "four";
     pub const THREE: &str = "three";
     pub const TWO: &str = "two";
-
-    pub fn new(name_str: &str) -> Self {
-        let name = FluentName::new(name_str);
-
-        Self {
-            weight: name.weight(),
-            prime: name.prime(),
-            name,
-        }
-    }
 }
 
 impl fmt::Display for Standard52Rank {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.index_default())
+    }
+}
+
+impl Default for Standard52Rank {
+    fn default() -> Standard52Rank {
+        Standard52Rank::new(FluentName::BLANK)
     }
 }
 
@@ -149,6 +145,32 @@ impl Rank for Standard52Rank {
 mod rank_tests {
     use super::*;
     use rstest::rstest;
+
+    #[test]
+    fn default() {
+        assert_eq!(
+            Standard52Rank::new(FluentName::BLANK),
+            Standard52Rank::default()
+        );
+    }
+
+    #[test]
+    fn display() {
+        assert_eq!("A", Standard52Rank::new(Standard52Rank::ACE).to_string());
+        assert_eq!("K", Standard52Rank::new(Standard52Rank::KING).to_string());
+        assert_eq!("Q", Standard52Rank::new(Standard52Rank::QUEEN).to_string());
+        assert_eq!("J", Standard52Rank::new(Standard52Rank::JACK).to_string());
+        assert_eq!("T", Standard52Rank::new(Standard52Rank::TEN).to_string());
+        assert_eq!("9", Standard52Rank::new(Standard52Rank::NINE).to_string());
+        assert_eq!("8", Standard52Rank::new(Standard52Rank::EIGHT).to_string());
+        assert_eq!("7", Standard52Rank::new(Standard52Rank::SEVEN).to_string());
+        assert_eq!("6", Standard52Rank::new(Standard52Rank::SIX).to_string());
+        assert_eq!("5", Standard52Rank::new(Standard52Rank::FIVE).to_string());
+        assert_eq!("4", Standard52Rank::new(Standard52Rank::FOUR).to_string());
+        assert_eq!("3", Standard52Rank::new(Standard52Rank::THREE).to_string());
+        assert_eq!("2", Standard52Rank::new(Standard52Rank::TWO).to_string());
+        assert_eq!("_", Standard52Rank::new(FluentName::BLANK).to_string());
+    }
 
     #[rstest]
     #[case('A', Standard52Rank::new(Standard52Rank::ACE))]
