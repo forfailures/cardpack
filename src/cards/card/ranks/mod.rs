@@ -1,5 +1,5 @@
-mod standard52_rank;
 mod euchre_rank;
+mod standard52_rank;
 
 use crate::fluent::Named;
 use std::str::FromStr;
