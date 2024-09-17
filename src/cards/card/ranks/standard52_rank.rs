@@ -107,6 +107,16 @@ impl Rank for Standard52Rank {
         }
     }
 
+    fn new_with_weight(name_str: &str, weight: u32) -> Self {
+        let name = FluentName::new(name_str);
+
+        Self {
+            weight,
+            prime: name.prime(),
+            name,
+        }
+    }
+
     fn names() -> Vec<&'static str> {
         vec![
             Standard52Rank::ACE,
@@ -131,14 +141,6 @@ impl Rank for Standard52Rank {
 
     fn get_weight(&self) -> u32 {
         self.weight
-    }
-
-    fn update_weight(&self, weight: u32) -> Self {
-        Standard52Rank {
-            weight,
-            prime: self.prime,
-            name: self.name.clone(),
-        }
     }
 }
 
@@ -200,6 +202,26 @@ mod rank_tests {
     #[test]
     fn rank_get_weight() {
         assert_eq!(12, Standard52Rank::new(Standard52Rank::ACE).get_weight());
+    }
+
+    #[test]
+    fn rank_ranks() {
+        let ranks = Standard52Rank::ranks();
+
+        assert_eq!(13, ranks.len());
+        assert_eq!(Standard52Rank::new(Standard52Rank::ACE), ranks[0]);
+        assert_eq!(Standard52Rank::new(Standard52Rank::KING), ranks[1]);
+        assert_eq!(Standard52Rank::new(Standard52Rank::QUEEN), ranks[2]);
+        assert_eq!(Standard52Rank::new(Standard52Rank::JACK), ranks[3]);
+        assert_eq!(Standard52Rank::new(Standard52Rank::TEN), ranks[4]);
+        assert_eq!(Standard52Rank::new(Standard52Rank::NINE), ranks[5]);
+        assert_eq!(Standard52Rank::new(Standard52Rank::EIGHT), ranks[6]);
+        assert_eq!(Standard52Rank::new(Standard52Rank::SEVEN), ranks[7]);
+        assert_eq!(Standard52Rank::new(Standard52Rank::SIX), ranks[8]);
+        assert_eq!(Standard52Rank::new(Standard52Rank::FIVE), ranks[9]);
+        assert_eq!(Standard52Rank::new(Standard52Rank::FOUR), ranks[10]);
+        assert_eq!(Standard52Rank::new(Standard52Rank::THREE), ranks[11]);
+        assert_eq!(Standard52Rank::new(Standard52Rank::TWO), ranks[12]);
     }
 
     #[test]
