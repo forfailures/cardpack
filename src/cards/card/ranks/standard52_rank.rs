@@ -245,19 +245,58 @@ mod rank_tests {
         let weighted_ranks = Standard52Rank::weighted_vector(ranks);
 
         assert_eq!(13, weighted_ranks.len());
-        assert_eq!(Standard52Rank::new_with_weight(Standard52Rank::TWO, 0), weighted_ranks[0]);
-        assert_eq!(Standard52Rank::new_with_weight(Standard52Rank::THREE, 1), weighted_ranks[1]);
-        assert_eq!(Standard52Rank::new_with_weight(Standard52Rank::FOUR, 2), weighted_ranks[2]);
-        assert_eq!(Standard52Rank::new_with_weight(Standard52Rank::FIVE, 3), weighted_ranks[3]);
-        assert_eq!(Standard52Rank::new_with_weight(Standard52Rank::SIX, 4), weighted_ranks[4]);
-        assert_eq!(Standard52Rank::new_with_weight(Standard52Rank::SEVEN, 5), weighted_ranks[5]);
-        assert_eq!(Standard52Rank::new_with_weight(Standard52Rank::EIGHT, 6), weighted_ranks[6]);
-        assert_eq!(Standard52Rank::new_with_weight(Standard52Rank::NINE, 7), weighted_ranks[7]);
-        assert_eq!(Standard52Rank::new_with_weight(Standard52Rank::TEN, 8), weighted_ranks[8]);
-        assert_eq!(Standard52Rank::new_with_weight(Standard52Rank::JACK, 9), weighted_ranks[9]);
-        assert_eq!(Standard52Rank::new_with_weight(Standard52Rank::QUEEN, 10), weighted_ranks[10]);
-        assert_eq!(Standard52Rank::new_with_weight(Standard52Rank::KING, 11), weighted_ranks[11]);
-        assert_eq!(Standard52Rank::new_with_weight(Standard52Rank::ACE, 12), weighted_ranks[12]);
+        assert_eq!(
+            Standard52Rank::new_with_weight(Standard52Rank::TWO, 0),
+            weighted_ranks[0]
+        );
+        assert_eq!(
+            Standard52Rank::new_with_weight(Standard52Rank::THREE, 1),
+            weighted_ranks[1]
+        );
+        assert_eq!(
+            Standard52Rank::new_with_weight(Standard52Rank::FOUR, 2),
+            weighted_ranks[2]
+        );
+        assert_eq!(
+            Standard52Rank::new_with_weight(Standard52Rank::FIVE, 3),
+            weighted_ranks[3]
+        );
+        assert_eq!(
+            Standard52Rank::new_with_weight(Standard52Rank::SIX, 4),
+            weighted_ranks[4]
+        );
+        assert_eq!(
+            Standard52Rank::new_with_weight(Standard52Rank::SEVEN, 5),
+            weighted_ranks[5]
+        );
+        assert_eq!(
+            Standard52Rank::new_with_weight(Standard52Rank::EIGHT, 6),
+            weighted_ranks[6]
+        );
+        assert_eq!(
+            Standard52Rank::new_with_weight(Standard52Rank::NINE, 7),
+            weighted_ranks[7]
+        );
+        assert_eq!(
+            Standard52Rank::new_with_weight(Standard52Rank::TEN, 8),
+            weighted_ranks[8]
+        );
+        assert_eq!(
+            Standard52Rank::new_with_weight(Standard52Rank::JACK, 9),
+            weighted_ranks[9]
+        );
+        assert_eq!(
+            Standard52Rank::new_with_weight(Standard52Rank::QUEEN, 10),
+            weighted_ranks[10]
+        );
+        assert_eq!(
+            Standard52Rank::new_with_weight(Standard52Rank::KING, 11),
+            weighted_ranks[11]
+        );
+        assert_eq!(
+            Standard52Rank::new_with_weight(Standard52Rank::ACE, 12),
+            weighted_ranks[12]
+        );
     }
 
     #[test]

@@ -16,13 +16,17 @@ pub trait Rank: From<char> + FromStr + for<'a> Named<'a> {
         Self::names().iter().map(|name| Self::new(name)).collect()
     }
 
+    #[must_use]
     fn weighted_vector(names: Vec<&'static str>) -> Vec<Self> {
         let mut weight = 0;
-        names.iter().map(|name| {
-            let rank = Self::new_with_weight(name, weight);
-            weight += 1;
-            rank
-        }).collect()
+        names
+            .iter()
+            .map(|name| {
+                let rank = Self::new_with_weight(name, weight);
+                weight += 1;
+                rank
+            })
+            .collect()
     }
 
     fn get_prime(&self) -> u32;
