@@ -142,7 +142,7 @@ impl Rank for Standard52Rank {
 
 #[cfg(test)]
 #[allow(non_snake_case)]
-mod rank_tests {
+mod rank__standard52_tests {
     use super::*;
     use rstest::rstest;
 
