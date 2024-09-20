@@ -1,3 +1,4 @@
+use std::convert::From;
 use std::marker::PhantomData;
 use std::str::FromStr;
 use crate::card_error::CardError;
@@ -5,6 +6,8 @@ use crate::fluent::{FluentName, Named};
 
 pub trait Ranked: {
     fn names() -> Vec<&'static str>;
+
+    fn is_valid_char(c: char) -> bool;
 }
 
 struct Standard52Rank;
@@ -23,10 +26,12 @@ impl Standard52Rank {
     pub const FOUR: &str = "four";
     pub const THREE: &str = "three";
     pub const TWO: &str = "two";
+
+
 }
 
-impl From<char> for GRank<Standard52Rank> {
-    fn from(c: char) -> Self {
+impl<T: From<char> + Ranked> From<char> for GRank<T> {
+    fn from(c: char) -> GRank<T> {
         match c {
             '2' => GRank::new(crate::cards::card::ranks::standard52_rank::Standard52Rank::TWO),
             '3' => GRank::new(crate::cards::card::ranks::standard52_rank::Standard52Rank::THREE),
@@ -36,7 +41,7 @@ impl From<char> for GRank<Standard52Rank> {
             '7' => GRank::new(crate::cards::card::ranks::standard52_rank::Standard52Rank::SEVEN),
             '8' => GRank::new(crate::cards::card::ranks::standard52_rank::Standard52Rank::EIGHT),
             '9' => GRank::new(crate::cards::card::ranks::standard52_rank::Standard52Rank::NINE),
-            'T' | 't' | '0' => crate::cards::card::ranks::generic::GRank::new(crate::cards::card::ranks::standard52_rank::Standard52Rank::TEN),
+            'T' | 't' | '0' => GRank::new(crate::cards::card::ranks::standard52_rank::Standard52Rank::TEN),
             'J' | 'j' => GRank::new(crate::cards::card::ranks::standard52_rank::Standard52Rank::JACK),
             'Q' | 'q' => GRank::new(crate::cards::card::ranks::standard52_rank::Standard52Rank::QUEEN),
             'K' | 'k' => GRank::new(crate::cards::card::ranks::standard52_rank::Standard52Rank::KING),
@@ -46,22 +51,22 @@ impl From<char> for GRank<Standard52Rank> {
     }
 }
 
-impl<T: Ranked> FromStr for GRank<T> {
-    type Err = CardError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        if let Some(first_char) = s.chars().next() {
-            let rank = GRank::<T>::from(first_char);
-            if rank.name.is_blank() {
-                Err(CardError::InvalidFluentRank(s.to_string()))
-            } else {
-                Ok(rank)
-            }
-        } else {
-            Err(CardError::InvalidFluentRank(s.to_string()))
-        }
-    }
-}
+// impl<T: Ranked> FromStr for GRank<T> {
+//     type Err = CardError;
+//
+//     fn from_str(s: &str) -> Result<Self, Self::Err> {
+//         if let Some(first_char) = s.chars().next() {
+//             let rank = GRank::<T>::from(first_char);
+//             if rank.name.is_blank() {
+//                 Err(CardError::InvalidFluentRank(s.to_string()))
+//             } else {
+//                 Ok(rank)
+//             }
+//         } else {
+//             Err(CardError::InvalidFluentRank(s.to_string()))
+//         }
+//     }
+// }
 
 impl Ranked for Standard52Rank {
     fn names() -> Vec<&'static str> {
@@ -81,16 +86,41 @@ impl Ranked for Standard52Rank {
             crate::cards::card::ranks::standard52_rank::Standard52Rank::TWO,
         ]
     }
+
+    fn is_valid_char(c: char) -> bool {
+        match c {
+            '2'  |  '3'  |  '4'  |  '5'  |  '6'  |  '7'  |  '8'  |  '9'  |  'T'  |  't'  |  '0'  |  'J'  |  'j'  |  'Q'  |  'q'  |  'K'  |  'k'  |  'A'  |  'a' => true,
+            _ => false,
+        }
+    }
 }
 
-pub struct GRank<T : Ranked> {
+pub struct GRank<T : Ranked + From<char>> {
     weight: u32,
     prime: u32,
     name: FluentName,
     phantom_data: PhantomData<T>
 }
 
-impl<T: Ranked> GRank<T>  {
+
+impl<T: From<char> + Ranked> FromStr for GRank<T> {
+    type Err = CardError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if let Some(first_char) = s.chars().next() {
+            let rank = GRank::<T>::from(first_char);
+            if rank.value().is_blank() {
+                Err(CardError::InvalidFluentRank(s.to_string()))
+            } else {
+                Ok(rank)
+            }
+        } else {
+            Err(CardError::InvalidFluentRank(s.to_string()))
+        }
+    }
+}
+
+impl<T: Ranked + From<char>> GRank<T> {
     fn new(name_str: &str) -> GRank<T> {
         let name = FluentName::new(name_str);
 
@@ -102,8 +132,27 @@ impl<T: Ranked> GRank<T>  {
         }
     }
 
+    fn from_char(c: char) -> GRank<T> {
+        GRank::<T>::from(T::from(c))
+    }
+
     #[must_use]
     fn ranks() -> Vec<Self> {
         T::names().iter().map(|name| Self::new(name)).collect()
+    }
+}
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod rank__generic_tests {
+    use super::*;
+    use rstest::rstest;
+
+    #[test]
+    fn new() {
+        let rank = GRank::<Standard52Rank>::new(Standard52Rank::ACE);
+        assert_eq!(rank.name, FluentName::new(Standard52Rank::ACE));
+        assert_eq!(rank.weight, 12);
+        assert_eq!(rank.prime, 41);
     }
 }
