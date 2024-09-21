@@ -5,14 +5,21 @@ use crate::card_error::CardError;
 use crate::fluent::{FluentName, Named};
 
 pub trait Ranked: {
-    fn names() -> Vec<&'static str>;
+    fn names(&self) -> Vec<&str>;
 
-    fn is_valid_char(c: char) -> bool;
+    // fn is_valid_char(c: char) -> bool;
 }
 
-struct Standard52Rank;
+pub struct Rank<RankType> where RankType: Ranked {
+    weight: u32,
+    prime: u32,
+    name: FluentName,
+    phantom_data: PhantomData<RankType>
+}
 
-impl Standard52Rank {
+struct Standard52Rank{}
+
+impl Rank<Standard52Rank> {
     pub const ACE: &str = "ace";
     pub const KING: &str = "king";
     pub const QUEEN: &str = "queen";
@@ -26,8 +33,6 @@ impl Standard52Rank {
     pub const FOUR: &str = "four";
     pub const THREE: &str = "three";
     pub const TWO: &str = "two";
-
-
 }
 
 impl<T: From<char> + Ranked> From<char> for GRank<T> {
@@ -95,11 +100,11 @@ impl Ranked for Standard52Rank {
     }
 }
 
-pub struct GRank<T : Ranked + From<char>> {
+pub struct GRank<Rank> {
     weight: u32,
     prime: u32,
     name: FluentName,
-    phantom_data: PhantomData<T>
+    phantom_data: PhantomData<Rank>
 }
 
 
