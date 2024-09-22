@@ -3,92 +3,31 @@ use std::marker::PhantomData;
 use std::str::FromStr;
 use crate::card_error::CardError;
 use crate::fluent::{FluentName, Named};
+use crate::Rank;
+use crate::traits::Ranked;
 
-pub trait Ranked: {
-    fn chars() -> Vec<char>;
+struct Standard52 {}
 
-    fn names() -> Vec<&'static str>;
-
-    fn is_valid_char(c: &char) -> bool {
-        Self::chars().contains(c)
-    }
-}
-
-pub struct Rank<RankType> where RankType: Ranked {
-    weight: u32,
-    prime: u32,
-    name: FluentName,
-    phantom_data: PhantomData<RankType>
-}
-
-impl<RankType: Ranked> Ranked for Rank<RankType> {
-    fn chars() -> Vec<char> {
-        RankType::chars()
-    }
-
-    fn names() -> Vec<&'static str> {
-        RankType::names()
-    }
-}
-
-impl<RankType> Rank<RankType> where RankType: Ranked {
-    pub const ACE: &str = "ace";
-    pub const KING: &str = "king";
-    pub const QUEEN: &str = "queen";
-    pub const JACK: &str = "jack";
-    pub const TEN: &str = "ten";
-    pub const NINE: &str = "nine";
-    pub const EIGHT: &str = "eight";
-    pub const SEVEN: &str = "seven";
-    pub const SIX: &str = "six";
-    pub const FIVE: &str = "five";
-    pub const FOUR: &str = "four";
-    pub const THREE: &str = "three";
-    pub const TWO: &str = "two";
-
-    // Jokers
-    pub const BIG: &str = "big";
-    pub const LITTLE: &str = "little";
-
-    fn new(name_str: &str) -> Rank<RankType> {
-        let name = FluentName::new(name_str);
-
-        Rank::<RankType> {
-            weight: name.weight(),
-            prime: name.prime(),
-            name,
-            phantom_data: PhantomData
-        }
-    }
-
-    #[must_use]
-    fn ranks(&self) -> Vec<Self> {
-        RankType::names().iter().map(|name| Self::new(name)).collect()
-    }
-}
-
-struct Standard52Rank{}
-
-impl Ranked for Standard52Rank {
+impl Ranked for Standard52 {
     fn chars() -> Vec<char> {
         vec!['2', '3', '4', '5', '6', '7', '8', '9', 'T', 't', '0', 'J', 'j', 'Q', 'q', 'K', 'k', 'A', 'a']
     }
 
     fn names() -> Vec<&'static str> {
         vec![
-            Rank::<Standard52Rank>::ACE,
-            Rank::<Standard52Rank>::KING,
-            Rank::<Standard52Rank>::QUEEN,
-            Rank::<Standard52Rank>::JACK,
-            Rank::<Standard52Rank>::TEN,
-            Rank::<Standard52Rank>::NINE,
-            Rank::<Standard52Rank>::EIGHT,
-            Rank::<Standard52Rank>::SEVEN,
-            Rank::<Standard52Rank>::SIX,
-            Rank::<Standard52Rank>::FIVE,
-            Rank::<Standard52Rank>::FOUR,
-            Rank::<Standard52Rank>::THREE,
-            Rank::<Standard52Rank>::TWO,
+            Rank::<Standard52>::ACE,
+            Rank::<Standard52>::KING,
+            Rank::<Standard52>::QUEEN,
+            Rank::<Standard52>::JACK,
+            Rank::<Standard52>::TEN,
+            Rank::<Standard52>::NINE,
+            Rank::<Standard52>::EIGHT,
+            Rank::<Standard52>::SEVEN,
+            Rank::<Standard52>::SIX,
+            Rank::<Standard52>::FIVE,
+            Rank::<Standard52>::FOUR,
+            Rank::<Standard52>::THREE,
+            Rank::<Standard52>::TWO,
         ]
     }
 }
@@ -132,9 +71,9 @@ mod rank__generic_tests {
 
     #[test]
     fn new() {
-        let rank = Rank::<Standard52Rank>::new(Rank::<Standard52Rank>::ACE);
+        let rank = Rank::<Standard52>::new(Rank::<Standard52>::ACE);
 
-        assert_eq!(rank.name, FluentName::new(Rank::<Standard52Rank>::ACE));
+        assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
     }
@@ -151,30 +90,30 @@ mod rank__generic_tests {
 
     #[test]
     fn from_char() {
-        let rank = Rank::<Standard52Rank>::from('A');
+        let rank = Rank::<Standard52>::from('A');
 
-        assert_eq!(rank.name, FluentName::new(Rank::<Standard52Rank>::ACE));
+        assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
     }
 
     #[test]
     fn standard52_names() {
-        let names = Rank::<Standard52Rank>::names();
+        let names = Rank::<Standard52>::names();
 
         assert_eq!(names.len(), 13);
-        assert_eq!(names[0], Rank::<Standard52Rank>::ACE);
-        assert_eq!(names[1], Rank::<Standard52Rank>::KING);
-        assert_eq!(names[2], Rank::<Standard52Rank>::QUEEN);
-        assert_eq!(names[3], Rank::<Standard52Rank>::JACK);
-        assert_eq!(names[4], Rank::<Standard52Rank>::TEN);
-        assert_eq!(names[5], Rank::<Standard52Rank>::NINE);
-        assert_eq!(names[6], Rank::<Standard52Rank>::EIGHT);
-        assert_eq!(names[7], Rank::<Standard52Rank>::SEVEN);
-        assert_eq!(names[8], Rank::<Standard52Rank>::SIX);
-        assert_eq!(names[9], Rank::<Standard52Rank>::FIVE);
-        assert_eq!(names[10], Rank::<Standard52Rank>::FOUR);
-        assert_eq!(names[11], Rank::<Standard52Rank>::THREE);
-        assert_eq!(names[12], Rank::<Standard52Rank>::TWO);
+        assert_eq!(names[0], Rank::<Standard52>::ACE);
+        assert_eq!(names[1], Rank::<Standard52>::KING);
+        assert_eq!(names[2], Rank::<Standard52>::QUEEN);
+        assert_eq!(names[3], Rank::<Standard52>::JACK);
+        assert_eq!(names[4], Rank::<Standard52>::TEN);
+        assert_eq!(names[5], Rank::<Standard52>::NINE);
+        assert_eq!(names[6], Rank::<Standard52>::EIGHT);
+        assert_eq!(names[7], Rank::<Standard52>::SEVEN);
+        assert_eq!(names[8], Rank::<Standard52>::SIX);
+        assert_eq!(names[9], Rank::<Standard52>::FIVE);
+        assert_eq!(names[10], Rank::<Standard52>::FOUR);
+        assert_eq!(names[11], Rank::<Standard52>::THREE);
+        assert_eq!(names[12], Rank::<Standard52>::TWO);
     }
 }
