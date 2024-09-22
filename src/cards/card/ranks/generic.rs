@@ -47,6 +47,10 @@ impl<RankType> Rank<RankType> where RankType: Ranked {
     pub const THREE: &str = "three";
     pub const TWO: &str = "two";
 
+    // Jokers
+    pub const BIG: &str = "big";
+    pub const LITTLE: &str = "little";
+
     fn new(name_str: &str) -> Rank<RankType> {
         let name = FluentName::new(name_str);
 
@@ -103,6 +107,14 @@ impl Ranked for Standard52Rank {
 
 impl<RankType: Ranked> From<char> for Rank<RankType> {
     fn from(value: char) -> Self {
+        if !RankType::is_valid_char(&value) {
+            return Rank::<RankType> {
+                weight: 0,
+                prime: 0,
+                name: FluentName::default(),
+                phantom_data: PhantomData
+            }
+        }
         match value {
             '2' => Rank::new(Rank::<RankType>::TWO),
             '3' => Rank::new(Rank::<RankType>::THREE),
@@ -117,6 +129,8 @@ impl<RankType: Ranked> From<char> for Rank<RankType> {
             'Q' | 'q' => Rank::new(Rank::<RankType>::QUEEN),
             'K' | 'k' => Rank::new(Rank::<RankType>::KING),
             'A' | 'a' => Rank::new(Rank::<RankType>::ACE),
+            'B' | 'b' => Rank::new(Rank::<RankType>::BIG),
+            'L' | 'l' => Rank::new(Rank::<RankType>::LITTLE),
             _ => Rank::new(FluentName::BLANK),
         }
     }
@@ -145,6 +159,15 @@ mod rank__generic_tests {
     #[test]
     fn names() {
         // let names = Rank::names();
+    }
+
+    #[test]
+    fn from_char() {
+        let rank = Rank::<Standard52Rank>::from('A');
+
+        assert_eq!(rank.name, FluentName::new(Rank::<Standard52Rank>::ACE));
+        assert_eq!(rank.weight, 12);
+        assert_eq!(rank.prime, 41);
     }
 
     #[test]

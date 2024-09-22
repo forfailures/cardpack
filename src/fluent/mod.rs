@@ -196,6 +196,12 @@ impl FluentName {
     }
 }
 
+impl Default for FluentName {
+    fn default() -> Self {
+        FluentName(Self::BLANK.to_string())
+    }
+}
+
 /// USAGE:
 /// ```
 /// use std::str::FromStr;
