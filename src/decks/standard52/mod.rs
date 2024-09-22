@@ -1,16 +1,17 @@
-use std::convert::From;
-use std::marker::PhantomData;
-use std::str::FromStr;
-use crate::card_error::CardError;
-use crate::fluent::{FluentName, Named};
-use crate::Rank;
+use crate::fluent::FluentName;
 use crate::traits::Ranked;
+use crate::Rank;
+use std::marker::PhantomData;
 
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 struct Standard52 {}
 
 impl Ranked for Standard52 {
     fn chars() -> Vec<char> {
-        vec!['2', '3', '4', '5', '6', '7', '8', '9', 'T', 't', '0', 'J', 'j', 'Q', 'q', 'K', 'k', 'A', 'a']
+        vec![
+            '2', '3', '4', '5', '6', '7', '8', '9', 'T', 't', '0', 'J', 'j', 'Q', 'q', 'K', 'k',
+            'A', 'a',
+        ]
     }
 
     fn names() -> Vec<&'static str> {
@@ -32,36 +33,7 @@ impl Ranked for Standard52 {
     }
 }
 
-impl<RankType: Ranked> From<char> for Rank<RankType> {
-    fn from(value: char) -> Self {
-        if !RankType::is_valid_char(&value) {
-            return Rank::<RankType> {
-                weight: 0,
-                prime: 0,
-                name: FluentName::default(),
-                phantom_data: PhantomData
-            }
-        }
-        match value {
-            '2' => Rank::new(Rank::<RankType>::TWO),
-            '3' => Rank::new(Rank::<RankType>::THREE),
-            '4' => Rank::new(Rank::<RankType>::FOUR),
-            '5' => Rank::new(Rank::<RankType>::FIVE),
-            '6' => Rank::new(Rank::<RankType>::SIX),
-            '7' => Rank::new(Rank::<RankType>::SEVEN),
-            '8' => Rank::new(Rank::<RankType>::EIGHT),
-            '9' => Rank::new(Rank::<RankType>::NINE),
-            'T' | 't' | '0' => Rank::new(Rank::<RankType>::TEN),
-            'J' | 'j' => Rank::new(Rank::<RankType>::JACK),
-            'Q' | 'q' => Rank::new(Rank::<RankType>::QUEEN),
-            'K' | 'k' => Rank::new(Rank::<RankType>::KING),
-            'A' | 'a' => Rank::new(Rank::<RankType>::ACE),
-            'B' | 'b' => Rank::new(Rank::<RankType>::BIG),
-            'L' | 'l' => Rank::new(Rank::<RankType>::LITTLE),
-            _ => Rank::new(FluentName::BLANK),
-        }
-    }
-}
+
 
 #[cfg(test)]
 #[allow(non_snake_case)]
@@ -80,12 +52,8 @@ mod rank__generic_tests {
 
     #[test]
     fn is_valid_char() {
-        // let chars = Rank::chars();
-    }
-
-    #[test]
-    fn names() {
-        // let names = Rank::names();
+        assert!(Rank::<Standard52>::is_valid_char(&'A'));
+        assert!(!Rank::<Standard52>::is_valid_char(&'Z'));
     }
 
     #[test]
@@ -98,7 +66,7 @@ mod rank__generic_tests {
     }
 
     #[test]
-    fn standard52_names() {
+    fn names() {
         let names = Rank::<Standard52>::names();
 
         assert_eq!(names.len(), 13);

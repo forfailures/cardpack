@@ -21,7 +21,7 @@ pub enum CardError {
 
     #[error("Not enough cards: `{0}` missing")]
     NotEnoughCards(usize),
-    
+
     #[error("Too many cards: `{0}` extra")]
     TooManyCards(usize),
 }

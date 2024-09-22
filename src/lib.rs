@@ -1,21 +1,24 @@
 #![warn(clippy::pedantic)]
-#![allow(clippy::module_name_repetitions)]
+// #![allow(clippy::module_name_repetitions)]
 
-use std::marker::PhantomData;
 use crate::fluent::{FluentName, Named};
 use crate::traits::Ranked;
+use std::marker::PhantomData;
 
 pub mod card;
 pub mod card_error;
+pub mod decks;
 pub mod fluent;
 pub mod traits;
-pub mod decks;
 
-pub struct Rank<RankType> where RankType: Ranked {
-    weight: u32,
-    prime: u32,
-    name: FluentName,
-    phantom_data: PhantomData<RankType>
+pub struct Rank<RankType>
+where
+    RankType: Ranked,
+{
+    pub weight: u32,
+    pub prime: u32,
+    pub  name: FluentName,
+    phantom_data: PhantomData<RankType>,
 }
 
 impl<RankType: Ranked> Ranked for Rank<RankType> {
@@ -28,7 +31,10 @@ impl<RankType: Ranked> Ranked for Rank<RankType> {
     }
 }
 
-impl<RankType> Rank<RankType> where RankType: Ranked {
+impl<RankType> Rank<RankType>
+where
+    RankType: Ranked,
+{
     pub const ACE: &str = "ace";
     pub const KING: &str = "king";
     pub const QUEEN: &str = "queen";
@@ -54,12 +60,46 @@ impl<RankType> Rank<RankType> where RankType: Ranked {
             weight: name.weight(),
             prime: name.prime(),
             name,
-            phantom_data: PhantomData
+            phantom_data: PhantomData,
         }
     }
 
     #[must_use]
     fn ranks(&self) -> Vec<Self> {
-        RankType::names().iter().map(|name| Self::new(name)).collect()
+        RankType::names()
+            .iter()
+            .map(|name| Self::new(name))
+            .collect()
+    }
+}
+
+impl<RankType: Ranked> From<char> for Rank<RankType> {
+    fn from(value: char) -> Self {
+        if !RankType::is_valid_char(&value) {
+            return Rank::<RankType> {
+                weight: 0,
+                prime: 0,
+                name: FluentName::default(),
+                phantom_data: PhantomData,
+            };
+        }
+        match value {
+            '2' => Rank::new(Rank::<RankType>::TWO),
+            '3' => Rank::new(Rank::<RankType>::THREE),
+            '4' => Rank::new(Rank::<RankType>::FOUR),
+            '5' => Rank::new(Rank::<RankType>::FIVE),
+            '6' => Rank::new(Rank::<RankType>::SIX),
+            '7' => Rank::new(Rank::<RankType>::SEVEN),
+            '8' => Rank::new(Rank::<RankType>::EIGHT),
+            '9' => Rank::new(Rank::<RankType>::NINE),
+            'T' | 't' | '0' => Rank::new(Rank::<RankType>::TEN),
+            'J' | 'j' => Rank::new(Rank::<RankType>::JACK),
+            'Q' | 'q' => Rank::new(Rank::<RankType>::QUEEN),
+            'K' | 'k' => Rank::new(Rank::<RankType>::KING),
+            'A' | 'a' => Rank::new(Rank::<RankType>::ACE),
+            'B' | 'b' => Rank::new(Rank::<RankType>::BIG),
+            'L' | 'l' => Rank::new(Rank::<RankType>::LITTLE),
+            _ => Rank::new(FluentName::BLANK),
+        }
     }
 }

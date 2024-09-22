@@ -1,4 +1,4 @@
-pub trait Ranked: {
+pub trait Ranked {
     fn chars() -> Vec<char>;
 
     fn names() -> Vec<&'static str>;
