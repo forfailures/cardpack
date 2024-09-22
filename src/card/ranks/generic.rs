@@ -6,9 +6,12 @@ use crate::fluent::{FluentName, Named};
 
 pub trait Ranked: {
     fn chars() -> Vec<char>;
+
     fn names() -> Vec<&'static str>;
 
-    fn is_valid_char(c: &char) -> bool;
+    fn is_valid_char(c: &char) -> bool {
+        Self::chars().contains(c)
+    }
 }
 
 pub struct Rank<RankType> where RankType: Ranked {
@@ -25,10 +28,6 @@ impl<RankType: Ranked> Ranked for Rank<RankType> {
 
     fn names() -> Vec<&'static str> {
         RankType::names()
-    }
-
-    fn is_valid_char(c: &char) -> bool {
-        RankType::chars().contains(c)
     }
 }
 
@@ -62,10 +61,6 @@ impl<RankType> Rank<RankType> where RankType: Ranked {
         }
     }
 
-    // fn from_char(c: char) -> Rank<RankType> {
-    //     Rank::<RankType>::from(RankType::from(c))
-    // }
-
     #[must_use]
     fn ranks(&self) -> Vec<Self> {
         RankType::names().iter().map(|name| Self::new(name)).collect()
@@ -95,13 +90,6 @@ impl Ranked for Standard52Rank {
             Rank::<Standard52Rank>::THREE,
             Rank::<Standard52Rank>::TWO,
         ]
-    }
-
-    fn is_valid_char(c: &char) -> bool {
-        match c {
-            '2'  |  '3'  |  '4'  |  '5'  |  '6'  |  '7'  |  '8'  |  '9'  |  'T'  |  't'  |  '0'  |  'J'  |  'j'  |  'Q'  |  'q'  |  'K'  |  'k'  |  'A'  |  'a' => true,
-            _ => false,
-        }
     }
 }
 

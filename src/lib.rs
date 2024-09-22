@@ -3,5 +3,7 @@
 
 pub mod card;
 pub mod card_error;
-pub mod cards;
 pub mod fluent;
+pub mod traits;
+pub mod decks;
+

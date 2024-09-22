@@ -1,5 +1,5 @@
 use crate::card_error::CardError;
-use crate::cards::card::ranks::Rank;
+use crate::card::ranks::Rank;
 use crate::fluent::{FluentName, Named};
 use std::fmt;
 use std::str::FromStr;

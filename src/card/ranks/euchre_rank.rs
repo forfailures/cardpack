@@ -1,6 +1,6 @@
 use crate::card_error::CardError;
-use crate::cards::card::ranks::standard52_rank::Standard52Rank;
-use crate::cards::card::ranks::Rank;
+use crate::card::ranks::standard52_rank::Standard52Rank;
+use crate::card::ranks::Rank;
 use crate::fluent::{FluentName, Named};
 use std::fmt;
 use std::str::FromStr;
