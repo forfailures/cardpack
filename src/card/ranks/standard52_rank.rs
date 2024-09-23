@@ -217,16 +217,6 @@ mod rank__standard52_tests {
     }
 
     #[test]
-    fn rank_get_prime() {
-        assert_eq!(41, Standard52Rank::new(Standard52Rank::ACE).get_prime());
-    }
-
-    #[test]
-    fn rank_get_weight() {
-        assert_eq!(12, Standard52Rank::new(Standard52Rank::ACE).get_weight());
-    }
-
-    #[test]
     fn rank_ranks() {
         let ranks = Standard52Rank::ranks();
 

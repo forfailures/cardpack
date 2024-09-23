@@ -34,6 +34,7 @@ impl Ranked for Standard52 {
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod decks_standard52_tests {
+    use std::str::FromStr;
     use super::*;
     use crate::fluent::{FluentName, Named};
     use rstest::rstest;
@@ -65,6 +66,15 @@ mod decks_standard52_tests {
     #[test]
     fn from_char() {
         let rank = Rank::<Standard52>::from('A');
+
+        assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
+        assert_eq!(rank.weight, 12);
+        assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn from_str() {
+        let rank = Rank::<Standard52>::from_str("A'").unwrap();;
 
         assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
         assert_eq!(rank.weight, 12);

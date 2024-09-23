@@ -4,6 +4,8 @@
 use crate::fluent::{FluentName, Named};
 use crate::traits::Ranked;
 use std::marker::PhantomData;
+use std::str::FromStr;
+use crate::card_error::CardError;
 
 pub mod card;
 pub mod card_error;
@@ -128,6 +130,23 @@ impl<RankType: Ranked> From<char> for Rank<RankType> {
             'B' | 'b' => Rank::new(Rank::<RankType>::BIG),
             'L' | 'l' => Rank::new(Rank::<RankType>::LITTLE),
             _ => Rank::new(FluentName::BLANK),
+        }
+    }
+}
+
+impl<RankType: Ranked> FromStr for Rank<RankType> {
+    type Err = CardError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if let Some(first_char) = s.chars().next() {
+            let rank = Rank::<RankType>::from(first_char);
+            if rank.name.is_blank() {
+                Err(CardError::InvalidFluentRank(s.to_string()))
+            } else {
+                Ok(rank)
+            }
+        } else {
+            Err(CardError::InvalidFluentRank(s.to_string()))
         }
     }
 }
