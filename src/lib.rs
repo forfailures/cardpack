@@ -13,6 +13,7 @@ pub mod decks;
 pub mod fluent;
 pub mod traits;
 
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Rank<RankType>
 where
     RankType: Ranked,
