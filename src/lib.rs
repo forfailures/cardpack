@@ -74,6 +74,11 @@ where
             .map(|name| Self::new(name))
             .collect()
     }
+
+    #[must_use]
+    fn update_weight(&self, weight: u32) -> Self {
+        Self::new_with_weight(self.fluent_name_string().as_str(), weight)
+    }
 }
 
 impl<RankType> Named<'_> for Rank<RankType>

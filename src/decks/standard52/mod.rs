@@ -58,7 +58,17 @@ mod decks_standard52_tests {
     }
 
     #[test]
-    fn is_valid_char() {
+    fn update_weight() {
+        let rank = Rank::<Standard52>::new(Rank::<Standard52>::ACE);
+        let updated_rank = rank.update_weight(14);
+
+        assert_eq!(updated_rank.name, FluentName::new(Rank::<Standard52>::ACE));
+        assert_eq!(updated_rank.weight, 14);
+        assert_eq!(updated_rank.prime, 41);
+    }
+
+    #[test]
+    fn ranked__is_valid_char() {
         assert!(Rank::<Standard52>::is_valid_char(&'A'));
         assert!(!Rank::<Standard52>::is_valid_char(&'Z'));
     }
