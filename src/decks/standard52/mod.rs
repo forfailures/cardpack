@@ -72,6 +72,20 @@ mod decks_standard52_tests {
     }
 
     #[test]
+    fn named__fluent_name() {
+        let rank = Rank::<Standard52>::new(Rank::<Standard52>::KING);
+
+        assert_eq!(rank.fluent_name(), &FluentName::new(Rank::<Standard52>::KING));
+    }
+
+    #[test]
+    fn named__fluent_name_string() {
+        let rank = Rank::<Standard52>::new(Rank::<Standard52>::QUEEN);
+
+        assert_eq!(rank.fluent_name_string(), Rank::<Standard52>::QUEEN);
+    }
+
+    #[test]
     fn named__is_blank() {
         let rank = Rank::<Standard52>::new(Rank::<Standard52>::ACE);
 
