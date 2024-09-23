@@ -21,16 +21,6 @@ where
     phantom_data: PhantomData<RankType>,
 }
 
-impl<RankType: Ranked> Ranked for Rank<RankType> {
-    fn chars() -> Vec<char> {
-        RankType::chars()
-    }
-
-    fn names() -> Vec<&'static str> {
-        RankType::names()
-    }
-}
-
 impl<RankType> Rank<RankType>
 where
     RankType: Ranked,
@@ -64,12 +54,50 @@ where
         }
     }
 
+    fn new_with_weight(name_str: &str, weight: u32) -> Rank<RankType> {
+        let name = FluentName::new(name_str);
+
+        Rank::<RankType> {
+            weight,
+            prime: name.prime(),
+            name,
+            phantom_data: PhantomData,
+        }
+    }
+
     #[must_use]
     fn ranks(&self) -> Vec<Self> {
         RankType::names()
             .iter()
             .map(|name| Self::new(name))
             .collect()
+    }
+}
+
+impl<RankType> Named<'_> for Rank<RankType>
+where
+    RankType: Ranked,
+{
+    fn fluent_name(&self) -> &FluentName {
+       &self.name
+    }
+
+    fn fluent_name_string(&self) -> &String {
+        self.name.fluent_name_string()
+    }
+
+    fn is_blank(&self) -> bool {
+        self.name.is_blank()
+    }
+}
+
+impl<RankType: Ranked> Ranked for Rank<RankType> {
+    fn chars() -> Vec<char> {
+        RankType::chars()
+    }
+
+    fn names() -> Vec<&'static str> {
+        RankType::names()
     }
 }
 

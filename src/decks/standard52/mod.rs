@@ -1,7 +1,5 @@
-use crate::fluent::FluentName;
 use crate::traits::Ranked;
 use crate::Rank;
-use std::marker::PhantomData;
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 struct Standard52 {}
@@ -33,12 +31,11 @@ impl Ranked for Standard52 {
     }
 }
 
-
-
 #[cfg(test)]
 #[allow(non_snake_case)]
-mod rank__generic_tests {
+mod decks_standard52_tests {
     use super::*;
+    use crate::fluent::{FluentName, Named};
     use rstest::rstest;
 
     #[test]
@@ -47,6 +44,15 @@ mod rank__generic_tests {
 
         assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
         assert_eq!(rank.weight, 12);
+        assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn new_with_weight() {
+        let rank = Rank::<Standard52>::new_with_weight(Rank::<Standard52>::ACE, 13);
+
+        assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
+        assert_eq!(rank.weight, 13);
         assert_eq!(rank.prime, 41);
     }
 
@@ -66,7 +72,14 @@ mod rank__generic_tests {
     }
 
     #[test]
-    fn names() {
+    fn named__is_blank() {
+        let rank = Rank::<Standard52>::new(Rank::<Standard52>::ACE);
+
+        assert!(!rank.is_blank());
+    }
+
+    #[test]
+    fn ranked__names() {
         let names = Rank::<Standard52>::names();
 
         assert_eq!(names.len(), 13);
