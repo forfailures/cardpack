@@ -39,7 +39,6 @@ impl Ranked for Modern {
 mod decks__modern__tests {
     use super::*;
     use crate::localization::{FluentName, Named};
-    use rstest::rstest;
     use std::str::FromStr;
 
     #[test]

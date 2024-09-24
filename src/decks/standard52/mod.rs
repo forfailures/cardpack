@@ -36,7 +36,6 @@ impl Ranked for Standard52 {
 mod decks__standard52__tests {
     use super::*;
     use crate::localization::{FluentName, Named};
-    use rstest::rstest;
     use std::str::FromStr;
 
     #[test]
