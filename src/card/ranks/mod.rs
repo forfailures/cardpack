@@ -1,7 +1,7 @@
 mod euchre_rank;
 mod standard52_rank;
 
-use crate::fluent::Named;
+use crate::localization::Named;
 use std::str::FromStr;
 
 pub trait Rank: From<char> + FromStr + for<'a> Named<'a> {

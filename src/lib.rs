@@ -1,16 +1,16 @@
 #![warn(clippy::pedantic)]
 // #![allow(clippy::module_name_repetitions)]
 
-use crate::fluent::{FluentName, Named};
+use crate::card_error::CardError;
+use crate::localization::{FluentName, Named};
 use crate::traits::Ranked;
 use std::marker::PhantomData;
 use std::str::FromStr;
-use crate::card_error::CardError;
 
 pub mod card;
 pub mod card_error;
 pub mod decks;
-pub mod fluent;
+pub mod localization;
 pub mod traits;
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -20,7 +20,7 @@ where
 {
     pub weight: u32,
     pub prime: u32,
-    pub  name: FluentName,
+    pub name: FluentName,
     phantom_data: PhantomData<RankType>,
 }
 
@@ -46,7 +46,8 @@ where
     pub const BIG: &str = "big";
     pub const LITTLE: &str = "little";
 
-    fn new(name_str: &str) -> Rank<RankType> {
+    #[must_use]
+    pub fn new(name_str: &str) -> Rank<RankType> {
         let name = FluentName::new(name_str);
 
         Rank::<RankType> {
@@ -57,7 +58,8 @@ where
         }
     }
 
-    fn new_with_weight(name_str: &str, weight: u32) -> Rank<RankType> {
+    #[must_use]
+    pub fn new_with_weight(name_str: &str, weight: u32) -> Rank<RankType> {
         let name = FluentName::new(name_str);
 
         Rank::<RankType> {
@@ -69,7 +71,7 @@ where
     }
 
     #[must_use]
-    fn ranks(&self) -> Vec<Self> {
+    pub fn ranks(&self) -> Vec<Self> {
         RankType::names()
             .iter()
             .map(|name| Self::new(name))
@@ -77,7 +79,7 @@ where
     }
 
     #[must_use]
-    fn update_weight(&self, weight: u32) -> Self {
+    pub fn update_weight(&self, weight: u32) -> Self {
         Self::new_with_weight(self.fluent_name_string().as_str(), weight)
     }
 }
@@ -87,7 +89,7 @@ where
     RankType: Ranked,
 {
     fn fluent_name(&self) -> &FluentName {
-       &self.name
+        &self.name
     }
 
     fn fluent_name_string(&self) -> &String {

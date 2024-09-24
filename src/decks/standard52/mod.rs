@@ -2,7 +2,7 @@ use crate::traits::Ranked;
 use crate::Rank;
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-struct Standard52 {}
+pub struct Standard52 {}
 
 impl Ranked for Standard52 {
     fn chars() -> Vec<char> {
@@ -33,11 +33,11 @@ impl Ranked for Standard52 {
 
 #[cfg(test)]
 #[allow(non_snake_case)]
-mod decks_standard52_tests {
-    use std::str::FromStr;
+mod decks__standard52__tests {
     use super::*;
-    use crate::fluent::{FluentName, Named};
+    use crate::localization::{FluentName, Named};
     use rstest::rstest;
+    use std::str::FromStr;
 
     #[test]
     fn new() {
@@ -84,7 +84,7 @@ mod decks_standard52_tests {
 
     #[test]
     fn from_str() {
-        let rank = Rank::<Standard52>::from_str("A'").unwrap();;
+        let rank = Rank::<Standard52>::from_str("A'").unwrap();
 
         assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
         assert_eq!(rank.weight, 12);
@@ -95,7 +95,10 @@ mod decks_standard52_tests {
     fn named__fluent_name() {
         let rank = Rank::<Standard52>::new(Rank::<Standard52>::KING);
 
-        assert_eq!(rank.fluent_name(), &FluentName::new(Rank::<Standard52>::KING));
+        assert_eq!(
+            rank.fluent_name(),
+            &FluentName::new(Rank::<Standard52>::KING)
+        );
     }
 
     #[test]
