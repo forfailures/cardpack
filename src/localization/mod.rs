@@ -5,10 +5,10 @@ use std::string::ToString;
 
 static_loader! {
     pub static LOCALES = {
-        locales: "./src/fluent/locales",
+        locales: "./src/localization/locales",
         fallback_language: "en-US",
         // A fluent resource that is shared with every locale.
-        core_locales: "./src/fluent/locales/core.ftl",
+        core_locales: "./src/localization/locales/core.ftl",
     };
 }
 
@@ -42,7 +42,7 @@ pub trait Named<'a> {
     ///
     /// ## Usage
     /// ```
-    /// use cardpack::fluent::*;
+    /// use cardpack::localization::*;
     ///
     /// assert_eq!(
     ///   "♠",
@@ -62,7 +62,7 @@ pub trait Named<'a> {
     ///
     /// ## Usage
     /// ```
-    /// use cardpack::fluent::*;
+    /// use cardpack::localization::*;
     ///
     /// let jack = FluentName::new("jack");
     /// assert_eq!("B", jack.index(&FluentName::DEUTSCH));
@@ -75,7 +75,7 @@ pub trait Named<'a> {
     ///
     /// ## Usage
     /// ```
-    /// use cardpack::fluent::*;
+    /// use cardpack::localization::*;
     ///
     /// let ten = FluentName::new("ten");
     /// assert_eq!("T", ten.index_default());
@@ -88,7 +88,7 @@ pub trait Named<'a> {
     ///
     /// ## Usage
     /// ```
-    /// use cardpack::fluent::*;
+    /// use cardpack::localization::*;
     ///
     /// let big_joker = FluentName::new("big-joker");
     /// assert_eq!("Großer Joker", big_joker.long(&FluentName::DEUTSCH));
@@ -101,7 +101,7 @@ pub trait Named<'a> {
     ///
     /// ## Usage
     /// ```
-    /// use cardpack::fluent::*;
+    /// use cardpack::localization::*;
     ///
     /// let big_joker = FluentName::new("big-joker");
     /// assert_eq!("Full-Color Joker", big_joker.long_default());
@@ -115,7 +115,7 @@ pub trait Named<'a> {
     ///
     /// # Usage
     /// ```
-    /// use cardpack::fluent::*;
+    /// use cardpack::localization::*;
     ///
     /// let queen = FluentName::new("queen");
     /// assert_eq!(10, queen.weight());
@@ -133,7 +133,7 @@ pub trait Named<'a> {
     ///
     /// # Usage
     /// ```
-    /// use cardpack::fluent::*;
+    /// use cardpack::localization::*;
     ///
     /// let queen = FluentName::new("queen");
     /// assert_eq!(31, queen.prime());
@@ -170,7 +170,7 @@ impl FluentName {
     ///
     /// ## Usage
     /// ```
-    /// use cardpack::fluent::*;
+    /// use cardpack::localization::*;
     ///
     /// assert_eq!("spades", FluentName::new("spades").fluent_name_string());
     ///
@@ -196,10 +196,16 @@ impl FluentName {
     }
 }
 
+impl Default for FluentName {
+    fn default() -> Self {
+        FluentName(Self::BLANK.to_string())
+    }
+}
+
 /// USAGE:
 /// ```
 /// use std::str::FromStr;
-/// use cardpack::fluent::*;
+/// use cardpack::localization::*;
 ///
 /// assert_eq!(
 ///   "hierophant",
@@ -213,7 +219,7 @@ impl FluentName {
 /// ```
 /// use std::str::FromStr;
 /// use cardpack::card_error::CardError;
-/// use cardpack::fluent::*;
+/// use cardpack::localization::*;
 ///
 /// let sut = FluentName::from_str("Only alphanumeric and hyphens please.");
 ///

@@ -1,0 +1,164 @@
+use crate::traits::Ranked;
+use crate::Rank;
+
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct Standard52 {}
+
+impl Ranked for Standard52 {
+    fn rank_chars() -> Vec<char> {
+        vec![
+            '2', '3', '4', '5', '6', '7', '8', '9', 'T', 't', '0', 'J', 'j', 'Q', 'q', 'K', 'k',
+            'A', 'a',
+        ]
+    }
+
+    fn rank_names() -> Vec<&'static str> {
+        vec![
+            Rank::<Standard52>::ACE,
+            Rank::<Standard52>::KING,
+            Rank::<Standard52>::QUEEN,
+            Rank::<Standard52>::JACK,
+            Rank::<Standard52>::TEN,
+            Rank::<Standard52>::NINE,
+            Rank::<Standard52>::EIGHT,
+            Rank::<Standard52>::SEVEN,
+            Rank::<Standard52>::SIX,
+            Rank::<Standard52>::FIVE,
+            Rank::<Standard52>::FOUR,
+            Rank::<Standard52>::THREE,
+            Rank::<Standard52>::TWO,
+        ]
+    }
+}
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod decks__standard52__tests {
+    use super::*;
+    use crate::card_error::CardError;
+    use crate::localization::{FluentName, Named};
+    use std::str::FromStr;
+
+    #[test]
+    fn new() {
+        let rank = Rank::<Standard52>::new(Rank::<Standard52>::ACE);
+
+        assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
+        assert_eq!(rank.weight, 12);
+        assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn new_with_weight() {
+        let rank = Rank::<Standard52>::new_with_weight(Rank::<Standard52>::ACE, 13);
+
+        assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
+        assert_eq!(rank.weight, 13);
+        assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn update_weight() {
+        let rank = Rank::<Standard52>::new(Rank::<Standard52>::ACE);
+        let updated_rank = rank.update_weight(14);
+
+        assert_eq!(updated_rank.name, FluentName::new(Rank::<Standard52>::ACE));
+        assert_eq!(updated_rank.weight, 14);
+        assert_eq!(updated_rank.prime, 41);
+    }
+
+    #[test]
+    fn rank_weighted_vector() {
+        let mut v = Rank::<Standard52>::rank_names();
+        v.reverse();
+
+        let ranks = Rank::<Standard52>::weighted_vector(&v);
+
+        assert_eq!(ranks.len(), 13);
+        assert_eq!(ranks[0].weight, 0);
+        assert_eq!(ranks[0].name.fluent_name_string(), "two");
+        assert_eq!(ranks[1].weight, 1);
+        assert_eq!(ranks[1].name.fluent_name_string(), "three");
+    }
+
+    #[test]
+    fn ranked__is_valid_char() {
+        assert!(Rank::<Standard52>::is_valid_rank_char(&'A'));
+        assert!(!Rank::<Standard52>::is_valid_rank_char(&'Z'));
+    }
+
+    #[test]
+    fn from_char() {
+        let rank = Rank::<Standard52>::from('A');
+
+        assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
+        assert_eq!(rank.weight, 12);
+        assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn from_str() {
+        let rank = Rank::<Standard52>::from_str("A'").unwrap();
+
+        assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
+        assert_eq!(rank.weight, 12);
+        assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn from_str__invalid() {
+        let rank = Rank::<Standard52>::from_str("Z'");
+
+        assert!(rank.is_err());
+        if let Err(CardError::InvalidFluentRank(_)) = rank {
+            // The error is of type CardError::InvalidFluentRank
+            // There has got to be a better way to test this.
+        } else {
+            panic!("Expected CardError::InvalidFluentRank");
+        }
+    }
+
+    #[test]
+    fn named__fluent_name() {
+        let rank = Rank::<Standard52>::new(Rank::<Standard52>::KING);
+
+        assert_eq!(
+            rank.fluent_name(),
+            &FluentName::new(Rank::<Standard52>::KING)
+        );
+    }
+
+    #[test]
+    fn named__fluent_name_string() {
+        let rank = Rank::<Standard52>::new(Rank::<Standard52>::QUEEN);
+
+        assert_eq!(rank.fluent_name_string(), Rank::<Standard52>::QUEEN);
+    }
+
+    #[test]
+    fn named__is_blank() {
+        let rank = Rank::<Standard52>::new(Rank::<Standard52>::ACE);
+
+        assert!(!rank.is_blank());
+    }
+
+    #[test]
+    fn ranked__names() {
+        let names = Rank::<Standard52>::rank_names();
+
+        assert_eq!(names.len(), 13);
+        assert_eq!(names[0], Rank::<Standard52>::ACE);
+        assert_eq!(names[1], Rank::<Standard52>::KING);
+        assert_eq!(names[2], Rank::<Standard52>::QUEEN);
+        assert_eq!(names[3], Rank::<Standard52>::JACK);
+        assert_eq!(names[4], Rank::<Standard52>::TEN);
+        assert_eq!(names[5], Rank::<Standard52>::NINE);
+        assert_eq!(names[6], Rank::<Standard52>::EIGHT);
+        assert_eq!(names[7], Rank::<Standard52>::SEVEN);
+        assert_eq!(names[8], Rank::<Standard52>::SIX);
+        assert_eq!(names[9], Rank::<Standard52>::FIVE);
+        assert_eq!(names[10], Rank::<Standard52>::FOUR);
+        assert_eq!(names[11], Rank::<Standard52>::THREE);
+        assert_eq!(names[12], Rank::<Standard52>::TWO);
+    }
+}
