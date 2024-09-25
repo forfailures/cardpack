@@ -6,14 +6,14 @@ use crate::Rank;
 struct Modern {}
 
 impl Ranked for Modern {
-    fn chars() -> Vec<char> {
+    fn rank_chars() -> Vec<char> {
         vec![
             '2', '3', '4', '5', '6', '7', '8', '9', 'T', 't', '0', 'J', 'j', 'Q', 'q', 'K', 'k',
             'A', 'a', 'B', 'b', 'L', 'l',
         ]
     }
 
-    fn names() -> Vec<&'static str> {
+    fn rank_names() -> Vec<&'static str> {
         vec![
             Rank::<Modern>::BIG,
             Rank::<Modern>::LITTLE,
@@ -71,8 +71,8 @@ mod decks__modern__tests {
 
     #[test]
     fn ranked__is_valid_char() {
-        assert!(Rank::<Modern>::is_valid_char(&'A'));
-        assert!(!Rank::<Modern>::is_valid_char(&'Z'));
+        assert!(Rank::<Modern>::is_valid_rank_char(&'A'));
+        assert!(!Rank::<Modern>::is_valid_rank_char(&'Z'));
     }
 
     #[test]
@@ -116,7 +116,7 @@ mod decks__modern__tests {
 
     #[test]
     fn ranked__names() {
-        let names = Rank::<Modern>::names();
+        let names = Rank::<Modern>::rank_names();
 
         assert_eq!(names.len(), 15);
         assert_eq!(names[0], Rank::<Modern>::BIG);

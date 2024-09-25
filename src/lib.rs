@@ -7,7 +7,6 @@ use crate::traits::Ranked;
 use std::marker::PhantomData;
 use std::str::FromStr;
 
-pub mod card;
 pub mod card_error;
 pub mod decks;
 pub mod localization;
@@ -72,7 +71,7 @@ where
 
     #[must_use]
     pub fn ranks(&self) -> Vec<Self> {
-        RankType::names()
+        RankType::rank_names()
             .iter()
             .map(|name| Self::new(name))
             .collect()
@@ -81,6 +80,19 @@ where
     #[must_use]
     pub fn update_weight(&self, weight: u32) -> Self {
         Self::new_with_weight(self.fluent_name_string().as_str(), weight)
+    }
+
+    #[must_use]
+    pub fn weighted_vector(names: &[&'static str]) -> Vec<Self> {
+        let mut weight = 0;
+        names
+            .iter()
+            .map(|name| {
+                let rank = Self::new_with_weight(name, weight);
+                weight += 1;
+                rank
+            })
+            .collect()
     }
 }
 
@@ -102,18 +114,18 @@ where
 }
 
 impl<RankType: Ranked> Ranked for Rank<RankType> {
-    fn chars() -> Vec<char> {
-        RankType::chars()
+    fn rank_chars() -> Vec<char> {
+        RankType::rank_chars()
     }
 
-    fn names() -> Vec<&'static str> {
-        RankType::names()
+    fn rank_names() -> Vec<&'static str> {
+        RankType::rank_names()
     }
 }
 
 impl<RankType: Ranked> From<char> for Rank<RankType> {
     fn from(value: char) -> Self {
-        if !RankType::is_valid_char(&value) {
+        if !RankType::is_valid_rank_char(&value) {
             return Rank::<RankType> {
                 weight: 0,
                 prime: 0,

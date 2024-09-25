@@ -5,14 +5,14 @@ use crate::Rank;
 pub struct Standard52 {}
 
 impl Ranked for Standard52 {
-    fn chars() -> Vec<char> {
+    fn rank_chars() -> Vec<char> {
         vec![
             '2', '3', '4', '5', '6', '7', '8', '9', 'T', 't', '0', 'J', 'j', 'Q', 'q', 'K', 'k',
             'A', 'a',
         ]
     }
 
-    fn names() -> Vec<&'static str> {
+    fn rank_names() -> Vec<&'static str> {
         vec![
             Rank::<Standard52>::ACE,
             Rank::<Standard52>::KING,
@@ -35,6 +35,7 @@ impl Ranked for Standard52 {
 #[allow(non_snake_case)]
 mod decks__standard52__tests {
     use super::*;
+    use crate::card_error::CardError;
     use crate::localization::{FluentName, Named};
     use std::str::FromStr;
 
@@ -67,9 +68,23 @@ mod decks__standard52__tests {
     }
 
     #[test]
+    fn rank_weighted_vector() {
+        let mut v = Rank::<Standard52>::rank_names();
+        v.reverse();
+
+        let ranks = Rank::<Standard52>::weighted_vector(&v);
+
+        assert_eq!(ranks.len(), 13);
+        assert_eq!(ranks[0].weight, 0);
+        assert_eq!(ranks[0].name.fluent_name_string(), "two");
+        assert_eq!(ranks[1].weight, 1);
+        assert_eq!(ranks[1].name.fluent_name_string(), "three");
+    }
+
+    #[test]
     fn ranked__is_valid_char() {
-        assert!(Rank::<Standard52>::is_valid_char(&'A'));
-        assert!(!Rank::<Standard52>::is_valid_char(&'Z'));
+        assert!(Rank::<Standard52>::is_valid_rank_char(&'A'));
+        assert!(!Rank::<Standard52>::is_valid_rank_char(&'Z'));
     }
 
     #[test]
@@ -88,6 +103,19 @@ mod decks__standard52__tests {
         assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn from_str__invalid() {
+        let rank = Rank::<Standard52>::from_str("Z'");
+
+        assert!(rank.is_err());
+        if let Err(CardError::InvalidFluentRank(_)) = rank {
+            // The error is of type CardError::InvalidFluentRank
+            // There has got to be a better way to test this.
+        } else {
+            panic!("Expected CardError::InvalidFluentRank");
+        }
     }
 
     #[test]
@@ -116,7 +144,7 @@ mod decks__standard52__tests {
 
     #[test]
     fn ranked__names() {
-        let names = Rank::<Standard52>::names();
+        let names = Rank::<Standard52>::rank_names();
 
         assert_eq!(names.len(), 13);
         assert_eq!(names[0], Rank::<Standard52>::ACE);
