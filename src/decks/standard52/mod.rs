@@ -1,5 +1,5 @@
-use crate::traits::Ranked;
-use crate::Rank;
+use crate::types::rank::Rank;
+use crate::types::{Ranked, Suited};
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Standard52 {}
@@ -31,12 +31,24 @@ impl Ranked for Standard52 {
     }
 }
 
+impl Suited for Standard52 {
+    fn suit_chars() -> Vec<char> {
+        vec![
+            '♤', '♠', 'S', 's', '♡', '♥', 'H', 'h', '♢', '♦', 'D', 'd', '♧', '♣', 'C', 'c',
+        ]
+    }
+
+    fn suit_names() -> Vec<&'static str> {
+        todo!()
+    }
+}
+
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod decks__standard52__tests {
     use super::*;
-    use crate::card_error::CardError;
     use crate::localization::{FluentName, Named};
+    use crate::types::card_error::CardError;
     use std::str::FromStr;
 
     #[test]

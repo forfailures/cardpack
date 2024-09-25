@@ -1,5 +1,5 @@
-use crate::traits::Ranked;
-use crate::Rank;
+use crate::types::rank::Rank;
+use crate::types::Ranked;
 
 /// `Standard52` with Jokers.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]

@@ -1,5 +1,5 @@
-use crate::traits::Ranked;
-use crate::Rank;
+use crate::types::rank::Rank;
+use crate::types::Ranked;
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Euchre24 {}

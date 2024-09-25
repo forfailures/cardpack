@@ -1,4 +1,4 @@
-use crate::card_error::CardError;
+use crate::types::card_error::CardError;
 use fluent_templates::{langid, static_loader, LanguageIdentifier, Loader};
 use std::str::FromStr;
 use std::string::ToString;
@@ -218,7 +218,7 @@ impl Default for FluentName {
 ///
 /// ```
 /// use std::str::FromStr;
-/// use cardpack::card_error::CardError;
+/// use cardpack::types::card_error::CardError;
 /// use cardpack::localization::*;
 ///
 /// let sut = FluentName::from_str("Only alphanumeric and hyphens please.");

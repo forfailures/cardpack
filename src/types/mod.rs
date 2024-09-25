@@ -1,3 +1,7 @@
+pub mod card_error;
+pub mod rank;
+pub mod suit;
+
 pub trait Ranked {
     fn rank_chars() -> Vec<char>;
 
