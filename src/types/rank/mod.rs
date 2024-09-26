@@ -116,8 +116,8 @@ impl<RankType: Ranked> Ranked for Rank<RankType> {
 }
 
 impl<RankType: Ranked> From<char> for Rank<RankType> {
-    fn from(value: char) -> Self {
-        if !RankType::is_valid_rank_char(&value) {
+    fn from(c: char) -> Self {
+        if !RankType::is_valid_rank_char(&c) {
             return Rank::<RankType> {
                 weight: 0,
                 prime: 0,
@@ -125,7 +125,7 @@ impl<RankType: Ranked> From<char> for Rank<RankType> {
                 phantom_data: PhantomData,
             };
         }
-        match value {
+        match c {
             '2' => Rank::new(Rank::<RankType>::TWO),
             '3' => Rank::new(Rank::<RankType>::THREE),
             '4' => Rank::new(Rank::<RankType>::FOUR),

@@ -1,4 +1,5 @@
 use crate::types::rank::Rank;
+use crate::types::suit::Suit;
 use crate::types::{Ranked, Suited};
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -39,7 +40,12 @@ impl Suited for Standard52 {
     }
 
     fn suit_names() -> Vec<&'static str> {
-        todo!()
+        vec![
+            Suit::<Standard52>::SPADES,
+            Suit::<Standard52>::HEARTS,
+            Suit::<Standard52>::DIAMONDS,
+            Suit::<Standard52>::CLUBS,
+        ]
     }
 }
 
@@ -131,7 +137,7 @@ mod decks__standard52__tests {
     }
 
     #[test]
-    fn named__fluent_name() {
+    fn ranked__named__fluent_name() {
         let rank = Rank::<Standard52>::new(Rank::<Standard52>::KING);
 
         assert_eq!(
@@ -141,21 +147,21 @@ mod decks__standard52__tests {
     }
 
     #[test]
-    fn named__fluent_name_string() {
+    fn ranked__named__fluent_name_string() {
         let rank = Rank::<Standard52>::new(Rank::<Standard52>::QUEEN);
 
         assert_eq!(rank.fluent_name_string(), Rank::<Standard52>::QUEEN);
     }
 
     #[test]
-    fn named__is_blank() {
+    fn ranked__named__is_blank() {
         let rank = Rank::<Standard52>::new(Rank::<Standard52>::ACE);
 
         assert!(!rank.is_blank());
     }
 
     #[test]
-    fn ranked__names() {
+    fn ranked__ranked__names() {
         let names = Rank::<Standard52>::rank_names();
 
         assert_eq!(names.len(), 13);
@@ -172,5 +178,30 @@ mod decks__standard52__tests {
         assert_eq!(names[10], Rank::<Standard52>::FOUR);
         assert_eq!(names[11], Rank::<Standard52>::THREE);
         assert_eq!(names[12], Rank::<Standard52>::TWO);
+    }
+
+    #[test]
+    fn suited__suit_chars() {
+        let expected = vec![
+            '♤', '♠', 'S', 's', '♡', '♥', 'H', 'h', '♢', '♦', 'D', 'd', '♧', '♣', 'C', 'c',
+        ];
+
+        let chars = Suit::<Standard52>::suit_chars();
+
+        assert_eq!(chars, expected);
+    }
+
+    #[test]
+    fn suited__suit_names() {
+        let expected = vec![
+            Suit::<Standard52>::SPADES,
+            Suit::<Standard52>::HEARTS,
+            Suit::<Standard52>::DIAMONDS,
+            Suit::<Standard52>::CLUBS,
+        ];
+
+        let names = Suit::<Standard52>::suit_names();
+
+        assert_eq!(names, expected);
     }
 }
