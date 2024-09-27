@@ -2,6 +2,7 @@ use crate::localization::{FluentName, Named};
 use crate::types::Suited;
 use std::marker::PhantomData;
 
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Suit<SuitType>
 where
     SuitType: Suited,
@@ -92,7 +93,7 @@ impl<SuitType: Suited> From<char> for Suit<SuitType> {
         match c {
             'S' | 's' | '♤' | '♠' => Suit::<SuitType>::new(Suit::<SuitType>::SPADES),
             'H' | 'h' | '♡' | '♥' => Suit::<SuitType>::new(Suit::<SuitType>::HEARTS),
-            'D' => Suit::<SuitType>::new(Suit::<SuitType>::DIAMONDS),
+            'D' | 'd' | '' | '♦' => Suit::<SuitType>::new(Suit::<SuitType>::DIAMONDS),
             'C' => Suit::<SuitType>::new(Suit::<SuitType>::CLUBS),
             _ => Suit::new(FluentName::BLANK),
         }

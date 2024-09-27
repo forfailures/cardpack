@@ -56,6 +56,7 @@ mod decks__standard52__tests {
     use crate::localization::{FluentName, Named};
     use crate::types::card_error::CardError;
     use std::str::FromStr;
+    use rstest::rstest;
 
     #[test]
     fn new() {
@@ -203,5 +204,28 @@ mod decks__standard52__tests {
         let names = Suit::<Standard52>::suit_names();
 
         assert_eq!(names, expected);
+    }
+
+    #[rstest]
+    #[case('♠', Suit::<Standard52>::SPADES)]
+    #[case('♤', Suit::<Standard52>::SPADES)]
+    #[case('S', Suit::<Standard52>::SPADES)]
+    #[case('s', Suit::<Standard52>::SPADES)]
+    #[case('♥', Suit::<Standard52>::HEARTS)]
+    #[case('H', Suit::<Standard52>::HEARTS)]
+    #[case('h', Suit::<Standard52>::HEARTS)]
+    #[case('♦', Suit::<Standard52>::DIAMONDS)]
+    #[case('D', Suit::<Standard52>::DIAMONDS)]
+    #[case('d', Suit::<Standard52>::DIAMONDS)]
+    #[case('♣', Suit::<Standard52>::CLUBS)]
+    #[case('C', Suit::<Standard52>::CLUBS)]
+    #[case('c', Suit::<Standard52>::CLUBS)]
+    #[case('🃟', FluentName::BLANK)]
+    #[case('T', FluentName::BLANK)]
+    #[case('t', FluentName::BLANK)]
+    #[case(' ', FluentName::BLANK)]
+    #[case('F', FluentName::BLANK)]
+    fn from__char(#[case] input: char, #[case] expected: &str) {
+        assert_eq!(Suit::<Standard52>::new(expected), Suit::<Standard52>::from(input));
     }
 }
