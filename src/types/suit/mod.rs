@@ -20,6 +20,7 @@ where
     pub const HEARTS: &str = "hearts";
     pub const DIAMONDS: &str = "diamonds";
     pub const CLUBS: &str = "clubs";
+    pub const TRUMP: &str = "trump";
 
     #[must_use]
     pub fn new(name_str: &str) -> Suit<SuitType> {
@@ -93,8 +94,9 @@ impl<SuitType: Suited> From<char> for Suit<SuitType> {
         match c {
             'S' | 's' | '♤' | '♠' => Suit::<SuitType>::new(Suit::<SuitType>::SPADES),
             'H' | 'h' | '♡' | '♥' => Suit::<SuitType>::new(Suit::<SuitType>::HEARTS),
-            'D' | 'd' | '' | '♦' => Suit::<SuitType>::new(Suit::<SuitType>::DIAMONDS),
-            'C' => Suit::<SuitType>::new(Suit::<SuitType>::CLUBS),
+            'D' | 'd' | '♢' | '♦' => Suit::<SuitType>::new(Suit::<SuitType>::DIAMONDS),
+            'C' | 'c' | '♧' | '♣' => Suit::<SuitType>::new(Suit::<SuitType>::CLUBS),
+            '🃟' | 'T' | 't' => Suit::new(Suit::<SuitType>::TRUMP),
             _ => Suit::new(FluentName::BLANK),
         }
     }
