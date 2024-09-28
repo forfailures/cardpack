@@ -87,7 +87,7 @@ mod decks__standard52__tests {
     }
 
     #[test]
-    fn rank_weighted_vector() {
+    fn rank__weighted_vector() {
         let mut v = Rank::<Standard52>::rank_names();
         v.reverse();
 
@@ -101,9 +101,21 @@ mod decks__standard52__tests {
     }
 
     #[test]
-    fn ranked__is_valid_char() {
-        assert!(Rank::<Standard52>::is_valid_rank_char(&'A'));
-        assert!(!Rank::<Standard52>::is_valid_rank_char(&'Z'));
+    fn suit__binary_signature() {
+        assert_eq!(4096, Suit::<Standard52>::from('S').binary_signature());
+        assert_eq!(8192, Suit::<Standard52>::from('H').binary_signature());
+        assert_eq!(16384, Suit::<Standard52>::from('D').binary_signature());
+        assert_eq!(32768, Suit::<Standard52>::from('C').binary_signature());
+        assert_eq!(61440, Suit::<Standard52>::from('_').binary_signature());
+    }
+
+    #[test]
+    fn suit__binary_signature_revised() {
+        assert_eq!(32768, Suit::<Standard52>::from('S').binary_signature_revised());
+        assert_eq!(16384, Suit::<Standard52>::from('H').binary_signature_revised());
+        assert_eq!(8192, Suit::<Standard52>::from('D').binary_signature_revised());
+        assert_eq!(4096, Suit::<Standard52>::from('C').binary_signature_revised());
+        assert_eq!(61440, Suit::<Standard52>::from('_').binary_signature_revised());
     }
 
     #[test]
@@ -179,6 +191,12 @@ mod decks__standard52__tests {
         assert_eq!(names[10], Rank::<Standard52>::FOUR);
         assert_eq!(names[11], Rank::<Standard52>::THREE);
         assert_eq!(names[12], Rank::<Standard52>::TWO);
+    }
+
+    #[test]
+    fn ranked__is_valid_char() {
+        assert!(Rank::<Standard52>::is_valid_rank_char(&'A'));
+        assert!(!Rank::<Standard52>::is_valid_rank_char(&'Z'));
     }
 
     #[test]

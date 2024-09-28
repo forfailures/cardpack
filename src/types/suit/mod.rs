@@ -44,14 +44,32 @@ where
         }
     }
 
+    /// Used to generate the `Card`'s binary signature.
+    ///
+    /// The value that is used to generate [Cactus Kev](https://suffe.cool/poker/evaluator.html)
+    /// numbers.
     #[must_use]
     pub fn binary_signature(&self) -> u32 {
-        2u32.pow(self.weight)
+        match self.weight {
+            4 => 0x1000,
+            3 => 0x2000,
+            2 => 0x4000,
+            1 => 0x8000,
+            _ => 0xF000,
+        }
     }
 
+    /// Revised version of the `binary_signature()` method that inverts the weight for sorting
+    /// Spades first. Has no effect on the generated card ranks, but does make sorting easier.
     #[must_use]
     pub fn binary_signature_revised(&self) -> u32 {
-        2u32.pow(15 - self.weight)
+        match self.weight {
+            1 => 0x1000,
+            2 => 0x2000,
+            3 => 0x4000,
+            4 => 0x8000,
+            _ => 0xF000,
+        }
     }
 }
 
