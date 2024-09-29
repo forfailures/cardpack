@@ -2,6 +2,8 @@ use crate::localization::{FluentName, Named};
 use crate::types::Suited;
 use std::marker::PhantomData;
 
+/// TODO: Create a five suited deck to test the boundaries.
+/// <https://cards.fandom.com/wiki/Suit_(cards)#Five_Suit_Decks/>
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Suit<SuitType>
 where
@@ -70,6 +72,19 @@ where
             4 => 0x8000,
             _ => 0xF000,
         }
+    }
+
+    #[must_use]
+    pub fn weighted_vector(names: &[&'static str]) -> Vec<Self> {
+        let mut weight = 0;
+        names
+            .iter()
+            .map(|name| {
+                let suit = Self::new_with_weight(name, weight);
+                weight += 1;
+                suit
+            })
+            .collect()
     }
 }
 

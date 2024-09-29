@@ -74,6 +74,8 @@ where
         Self::new_with_weight(self.fluent_name_string().as_str(), weight)
     }
 
+    /// Returns a Vector of Ranks with their weights determined by the order they're passed in, high to
+    /// low. This facilitates the easy creation of custom decks, such as for pinochle.
     #[must_use]
     pub fn weighted_vector(names: &[&'static str]) -> Vec<Self> {
         let mut weight = 0;

@@ -55,8 +55,8 @@ mod decks__standard52__tests {
     use super::*;
     use crate::localization::{FluentName, Named};
     use crate::types::card_error::CardError;
-    use std::str::FromStr;
     use rstest::rstest;
+    use std::str::FromStr;
 
     #[test]
     fn new() {
@@ -111,11 +111,44 @@ mod decks__standard52__tests {
 
     #[test]
     fn suit__binary_signature_revised() {
-        assert_eq!(32768, Suit::<Standard52>::from('S').binary_signature_revised());
-        assert_eq!(16384, Suit::<Standard52>::from('H').binary_signature_revised());
-        assert_eq!(8192, Suit::<Standard52>::from('D').binary_signature_revised());
-        assert_eq!(4096, Suit::<Standard52>::from('C').binary_signature_revised());
-        assert_eq!(61440, Suit::<Standard52>::from('_').binary_signature_revised());
+        assert_eq!(
+            32768,
+            Suit::<Standard52>::from('S').binary_signature_revised()
+        );
+        assert_eq!(
+            16384,
+            Suit::<Standard52>::from('H').binary_signature_revised()
+        );
+        assert_eq!(
+            8192,
+            Suit::<Standard52>::from('D').binary_signature_revised()
+        );
+        assert_eq!(
+            4096,
+            Suit::<Standard52>::from('C').binary_signature_revised()
+        );
+        assert_eq!(
+            61440,
+            Suit::<Standard52>::from('_').binary_signature_revised()
+        );
+    }
+
+    #[test]
+    fn suit__weighted_vector() {
+        let mut v = Suit::<Standard52>::suit_names();
+        v.reverse();
+
+        let suits = Suit::<Standard52>::weighted_vector(&v);
+
+        assert_eq!(suits.len(), 4);
+        assert_eq!(suits[0].fluent_name_string(), "clubs");
+        assert_eq!(suits[0].weight, 0);
+        assert_eq!(suits[1].fluent_name_string(), "diamonds");
+        assert_eq!(suits[1].weight, 1);
+        assert_eq!(suits[2].fluent_name_string(), "hearts");
+        assert_eq!(suits[2].weight, 2);
+        assert_eq!(suits[3].fluent_name_string(), "spades");
+        assert_eq!(suits[3].weight, 3);
     }
 
     #[test]
@@ -247,6 +280,9 @@ mod decks__standard52__tests {
     #[case(' ', FluentName::BLANK)]
     #[case('F', FluentName::BLANK)]
     fn from__char(#[case] input: char, #[case] expected: &str) {
-        assert_eq!(Suit::<Standard52>::new(expected), Suit::<Standard52>::from(input));
+        assert_eq!(
+            Suit::<Standard52>::new(expected),
+            Suit::<Standard52>::from(input)
+        );
     }
 }
