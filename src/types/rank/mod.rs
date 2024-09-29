@@ -50,18 +50,6 @@ where
     }
 
     #[must_use]
-    pub fn new_with_weight(name_str: &str, weight: u32) -> Rank<RankType> {
-        let name = FluentName::new(name_str);
-
-        Rank::<RankType> {
-            weight,
-            prime: name.prime(),
-            name,
-            phantom_data: PhantomData,
-        }
-    }
-
-    #[must_use]
     pub fn ranks(&self) -> Vec<Self> {
         RankType::rank_names()
             .iter()
@@ -73,27 +61,23 @@ where
     pub fn update_weight(&self, weight: u32) -> Self {
         Self::new_with_weight(self.fluent_name_string().as_str(), weight)
     }
-
-    /// Returns a Vector of Ranks with their weights determined by the order they're passed in, high to
-    /// low. This facilitates the easy creation of custom decks, such as for pinochle.
-    #[must_use]
-    pub fn weighted_vector(names: &[&'static str]) -> Vec<Self> {
-        let mut weight = 0;
-        names
-            .iter()
-            .map(|name| {
-                let rank = Self::new_with_weight(name, weight);
-                weight += 1;
-                rank
-            })
-            .collect()
-    }
 }
 
 impl<RankType> Named<'_> for Rank<RankType>
 where
     RankType: Ranked,
 {
+    fn new_with_weight(name_str: &str, weight: u32) -> Rank<RankType> {
+        let name = FluentName::new(name_str);
+
+        Rank::<RankType> {
+            weight,
+            prime: name.prime(),
+            name,
+            phantom_data: PhantomData,
+        }
+    }
+
     fn fluent_name(&self) -> &FluentName {
         &self.name
     }

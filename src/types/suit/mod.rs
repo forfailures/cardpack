@@ -35,17 +35,6 @@ where
         }
     }
 
-    #[must_use]
-    pub fn new_with_weight(name_str: &str, weight: u32) -> Suit<SuitType> {
-        let name = FluentName::new(name_str);
-
-        Suit::<SuitType> {
-            weight,
-            name,
-            phantom_data: PhantomData,
-        }
-    }
-
     /// Used to generate the `Card`'s binary signature.
     ///
     /// The value that is used to generate [Cactus Kev](https://suffe.cool/poker/evaluator.html)
@@ -73,25 +62,22 @@ where
             _ => 0xF000,
         }
     }
-
-    #[must_use]
-    pub fn weighted_vector(names: &[&'static str]) -> Vec<Self> {
-        let mut weight = 0;
-        names
-            .iter()
-            .map(|name| {
-                let suit = Self::new_with_weight(name, weight);
-                weight += 1;
-                suit
-            })
-            .collect()
-    }
 }
 
 impl<SuitType> Named<'_> for Suit<SuitType>
 where
     SuitType: Suited,
 {
+    fn new_with_weight(name_str: &str, weight: u32) -> Suit<SuitType> {
+        let name = FluentName::new(name_str);
+
+        Suit::<SuitType> {
+            weight,
+            name,
+            phantom_data: PhantomData,
+        }
+    }
+
     fn fluent_name(&self) -> &FluentName {
         &self.name
     }

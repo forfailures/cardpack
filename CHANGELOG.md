@@ -7,3 +7,6 @@
 * I love the `thiserror` crate. 
 * REVISION: Prefer doctests over unit tests for basic validation.
 * REVISION: Updated Named::fluent_name_string to return &String
+* Revision trying to move weighted vector into Named trait.
+  * Got new_with_weight moved. 
+  * Holy shit it worked. 
