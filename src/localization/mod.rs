@@ -33,6 +33,26 @@ pub trait Named<'a> {
     const FLUENT_WEIGHT_SECTION: &'a str = "weight";
     const FLUENT_PRIME_SECTION: &'a str = "prime";
 
+    fn new_with_weight(name_str: &str, weight: u32) -> Self;
+
+    /// Returns a Vector of Ranks with their weights determined by the order they're passed in, high to
+    /// low. This facilitates the easy creation of custom decks, such as for pinochle.
+    #[must_use]
+    fn weighted_vector(names: &[&'static str]) -> Vec<Self>
+    where
+        Self: Sized,
+    {
+        let mut weight = 0;
+        names
+            .iter()
+            .map(|name| {
+                let named = Self::new_with_weight(name, weight);
+                weight += 1;
+                named
+            })
+            .collect()
+    }
+
     fn fluent_name(&self) -> &FluentName;
     fn fluent_name_string(&self) -> &String;
     fn is_blank(&self) -> bool;
@@ -241,6 +261,10 @@ impl FromStr for FluentName {
 }
 
 impl<'a> Named<'a> for FluentName {
+    fn new_with_weight(_name_str: &str, _weight: u32) -> Self {
+        todo!()
+    }
+
     fn fluent_name(&self) -> &FluentName {
         self
     }

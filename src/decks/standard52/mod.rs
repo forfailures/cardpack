@@ -55,6 +55,7 @@ mod decks__standard52__tests {
     use super::*;
     use crate::localization::{FluentName, Named};
     use crate::types::card_error::CardError;
+    use rstest::rstest;
     use std::str::FromStr;
 
     #[test]
@@ -86,7 +87,7 @@ mod decks__standard52__tests {
     }
 
     #[test]
-    fn rank_weighted_vector() {
+    fn rank__weighted_vector() {
         let mut v = Rank::<Standard52>::rank_names();
         v.reverse();
 
@@ -100,9 +101,54 @@ mod decks__standard52__tests {
     }
 
     #[test]
-    fn ranked__is_valid_char() {
-        assert!(Rank::<Standard52>::is_valid_rank_char(&'A'));
-        assert!(!Rank::<Standard52>::is_valid_rank_char(&'Z'));
+    fn suit__binary_signature() {
+        assert_eq!(4096, Suit::<Standard52>::from('S').binary_signature());
+        assert_eq!(8192, Suit::<Standard52>::from('H').binary_signature());
+        assert_eq!(16384, Suit::<Standard52>::from('D').binary_signature());
+        assert_eq!(32768, Suit::<Standard52>::from('C').binary_signature());
+        assert_eq!(61440, Suit::<Standard52>::from('_').binary_signature());
+    }
+
+    #[test]
+    fn suit__binary_signature_revised() {
+        assert_eq!(
+            32768,
+            Suit::<Standard52>::from('S').binary_signature_revised()
+        );
+        assert_eq!(
+            16384,
+            Suit::<Standard52>::from('H').binary_signature_revised()
+        );
+        assert_eq!(
+            8192,
+            Suit::<Standard52>::from('D').binary_signature_revised()
+        );
+        assert_eq!(
+            4096,
+            Suit::<Standard52>::from('C').binary_signature_revised()
+        );
+        assert_eq!(
+            61440,
+            Suit::<Standard52>::from('_').binary_signature_revised()
+        );
+    }
+
+    #[test]
+    fn suit__weighted_vector() {
+        let mut v = Suit::<Standard52>::suit_names();
+        v.reverse();
+
+        let suits = Suit::<Standard52>::weighted_vector(&v);
+
+        assert_eq!(suits.len(), 4);
+        assert_eq!(suits[0].fluent_name_string(), "clubs");
+        assert_eq!(suits[0].weight, 0);
+        assert_eq!(suits[1].fluent_name_string(), "diamonds");
+        assert_eq!(suits[1].weight, 1);
+        assert_eq!(suits[2].fluent_name_string(), "hearts");
+        assert_eq!(suits[2].weight, 2);
+        assert_eq!(suits[3].fluent_name_string(), "spades");
+        assert_eq!(suits[3].weight, 3);
     }
 
     #[test]
@@ -181,6 +227,12 @@ mod decks__standard52__tests {
     }
 
     #[test]
+    fn ranked__is_valid_char() {
+        assert!(Rank::<Standard52>::is_valid_rank_char(&'A'));
+        assert!(!Rank::<Standard52>::is_valid_rank_char(&'Z'));
+    }
+
+    #[test]
     fn suited__suit_chars() {
         let expected = vec![
             '♤', '♠', 'S', 's', '♡', '♥', 'H', 'h', '♢', '♦', 'D', 'd', '♧', '♣', 'C', 'c',
@@ -203,5 +255,34 @@ mod decks__standard52__tests {
         let names = Suit::<Standard52>::suit_names();
 
         assert_eq!(names, expected);
+    }
+
+    #[rstest]
+    #[case('♠', Suit::<Standard52>::SPADES)]
+    #[case('♤', Suit::<Standard52>::SPADES)]
+    #[case('S', Suit::<Standard52>::SPADES)]
+    #[case('s', Suit::<Standard52>::SPADES)]
+    #[case('♥', Suit::<Standard52>::HEARTS)]
+    #[case('♡', Suit::<Standard52>::HEARTS)]
+    #[case('H', Suit::<Standard52>::HEARTS)]
+    #[case('h', Suit::<Standard52>::HEARTS)]
+    #[case('♦', Suit::<Standard52>::DIAMONDS)]
+    #[case('♢', Suit::<Standard52>::DIAMONDS)]
+    #[case('D', Suit::<Standard52>::DIAMONDS)]
+    #[case('d', Suit::<Standard52>::DIAMONDS)]
+    #[case('♣', Suit::<Standard52>::CLUBS)]
+    #[case('♧', Suit::<Standard52>::CLUBS)]
+    #[case('C', Suit::<Standard52>::CLUBS)]
+    #[case('c', Suit::<Standard52>::CLUBS)]
+    #[case('🃟', FluentName::BLANK)]
+    #[case('T', FluentName::BLANK)]
+    #[case('t', FluentName::BLANK)]
+    #[case(' ', FluentName::BLANK)]
+    #[case('F', FluentName::BLANK)]
+    fn from__char(#[case] input: char, #[case] expected: &str) {
+        assert_eq!(
+            Suit::<Standard52>::new(expected),
+            Suit::<Standard52>::from(input)
+        );
     }
 }

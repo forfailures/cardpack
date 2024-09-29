@@ -2,6 +2,9 @@ use crate::localization::{FluentName, Named};
 use crate::types::Suited;
 use std::marker::PhantomData;
 
+/// TODO: Create a five suited deck to test the boundaries.
+/// <https://cards.fandom.com/wiki/Suit_(cards)#Five_Suit_Decks/>
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Suit<SuitType>
 where
     SuitType: Suited,
@@ -19,6 +22,7 @@ where
     pub const HEARTS: &str = "hearts";
     pub const DIAMONDS: &str = "diamonds";
     pub const CLUBS: &str = "clubs";
+    pub const TRUMP: &str = "trump";
 
     #[must_use]
     pub fn new(name_str: &str) -> Suit<SuitType> {
@@ -31,8 +35,40 @@ where
         }
     }
 
+    /// Used to generate the `Card`'s binary signature.
+    ///
+    /// The value that is used to generate [Cactus Kev](https://suffe.cool/poker/evaluator.html)
+    /// numbers.
     #[must_use]
-    pub fn new_with_weight(name_str: &str, weight: u32) -> Suit<SuitType> {
+    pub fn binary_signature(&self) -> u32 {
+        match self.weight {
+            4 => 0x1000,
+            3 => 0x2000,
+            2 => 0x4000,
+            1 => 0x8000,
+            _ => 0xF000,
+        }
+    }
+
+    /// Revised version of the `binary_signature()` method that inverts the weight for sorting
+    /// Spades first. Has no effect on the generated card ranks, but does make sorting easier.
+    #[must_use]
+    pub fn binary_signature_revised(&self) -> u32 {
+        match self.weight {
+            1 => 0x1000,
+            2 => 0x2000,
+            3 => 0x4000,
+            4 => 0x8000,
+            _ => 0xF000,
+        }
+    }
+}
+
+impl<SuitType> Named<'_> for Suit<SuitType>
+where
+    SuitType: Suited,
+{
+    fn new_with_weight(name_str: &str, weight: u32) -> Suit<SuitType> {
         let name = FluentName::new(name_str);
 
         Suit::<SuitType> {
@@ -42,21 +78,6 @@ where
         }
     }
 
-    #[must_use]
-    pub fn binary_signature(&self) -> u32 {
-        2u32.pow(self.weight)
-    }
-
-    #[must_use]
-    pub fn binary_signature_revised(&self) -> u32 {
-        2u32.pow(15 - self.weight)
-    }
-}
-
-impl<SuitType> Named<'_> for Suit<SuitType>
-where
-    SuitType: Suited,
-{
     fn fluent_name(&self) -> &FluentName {
         &self.name
     }
@@ -92,8 +113,9 @@ impl<SuitType: Suited> From<char> for Suit<SuitType> {
         match c {
             'S' | 's' | '♤' | '♠' => Suit::<SuitType>::new(Suit::<SuitType>::SPADES),
             'H' | 'h' | '♡' | '♥' => Suit::<SuitType>::new(Suit::<SuitType>::HEARTS),
-            'D' => Suit::<SuitType>::new(Suit::<SuitType>::DIAMONDS),
-            'C' => Suit::<SuitType>::new(Suit::<SuitType>::CLUBS),
+            'D' | 'd' | '♢' | '♦' => Suit::<SuitType>::new(Suit::<SuitType>::DIAMONDS),
+            'C' | 'c' | '♧' | '♣' => Suit::<SuitType>::new(Suit::<SuitType>::CLUBS),
+            '🃟' | 'T' | 't' => Suit::new(Suit::<SuitType>::TRUMP),
             _ => Suit::new(FluentName::BLANK),
         }
     }
