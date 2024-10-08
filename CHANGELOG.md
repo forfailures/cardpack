@@ -10,3 +10,5 @@
 * Revision trying to move weighted vector into Named trait.
   * Got new_with_weight moved. 
   * Holy shit it worked. 
+* REFACTOR: Can I consolidate the Suited and Ranked traits into Named?
+  * NOPE - they are at the deck level, not at the type level BUT they can be consolidated into one trait.
