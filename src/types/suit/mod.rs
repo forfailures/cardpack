@@ -1,6 +1,6 @@
-use std::fmt::Display;
 use crate::localization::{FluentName, Named};
 use crate::types::Suited;
+use std::fmt::Display;
 use std::marker::PhantomData;
 
 /// TODO: Create a five suited deck to test the boundaries.
@@ -66,7 +66,10 @@ where
 
     #[must_use]
     pub fn symbol(&self) -> String {
-        self.name.fluent_value(Suit::<SuitType>::FLUENT_SYMBOL_SECTION, &Suit::<SuitType>::US_ENGLISH)
+        self.name.fluent_value(
+            Suit::<SuitType>::FLUENT_SYMBOL_SECTION,
+            &Suit::<SuitType>::US_ENGLISH,
+        )
     }
 }
 

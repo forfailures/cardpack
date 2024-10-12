@@ -1,9 +1,9 @@
-use std::str::FromStr;
 use crate::localization::Named;
+use crate::types::card_error::CardError;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::{Ranked, Suited};
-use crate::types::card_error::CardError;
+use std::str::FromStr;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Card<RankType, SuitType>
@@ -74,7 +74,7 @@ mod types__card__tests {
         let spades = Suit::<Standard52>::from('S');
         let expected_card: Card<Standard52, Standard52> = Card::new(ace, spades);
 
-        let card  = Card::<Standard52, Standard52>::from_str("  AS   ").unwrap();
+        let card = Card::<Standard52, Standard52>::from_str("  AS   ").unwrap();
 
         assert_eq!(card, expected_card);
         assert!(!card.is_blank());
