@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use crate::localization::{FluentName, Named};
 use crate::types::card_error::CardError;
 use crate::types::Ranked;
@@ -60,6 +61,15 @@ where
     #[must_use]
     pub fn update_weight(&self, weight: u32) -> Self {
         Self::new_with_weight(self.fluent_name_string().as_str(), weight)
+    }
+}
+
+impl<RankType> Display for Rank<RankType>
+where
+    RankType: Ranked,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name.index_default())
     }
 }
 

@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use crate::localization::{FluentName, Named};
 use crate::types::Suited;
 use std::marker::PhantomData;
@@ -61,6 +62,20 @@ where
             4 => 0x8000,
             _ => 0xF000,
         }
+    }
+
+    #[must_use]
+    pub fn symbol(&self) -> String {
+        self.name.fluent_value(Suit::<SuitType>::FLUENT_SYMBOL_SECTION, &Suit::<SuitType>::US_ENGLISH)
+    }
+}
+
+impl<SuitType> Display for Suit<SuitType>
+where
+    SuitType: Suited,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.symbol())
     }
 }
 

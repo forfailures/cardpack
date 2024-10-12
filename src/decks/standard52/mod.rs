@@ -101,6 +101,13 @@ mod decks__standard52__tests {
     }
 
     #[test]
+    fn rank__display() {
+        let rank = Rank::<Standard52>::new(Rank::<Standard52>::ACE);
+
+        assert_eq!("A", format!("{rank}"));
+    }
+
+    #[test]
     fn suit__binary_signature() {
         assert_eq!(4096, Suit::<Standard52>::from('S').binary_signature());
         assert_eq!(8192, Suit::<Standard52>::from('H').binary_signature());
@@ -149,6 +156,14 @@ mod decks__standard52__tests {
         assert_eq!(suits[2].weight, 2);
         assert_eq!(suits[3].fluent_name_string(), "spades");
         assert_eq!(suits[3].weight, 3);
+    }
+
+    #[test]
+    fn suit__symbol() {
+        let suit = Suit::<Standard52>::new(Suit::<Standard52>::SPADES);
+
+        assert_eq!(suit.symbol(), "♠");
+        assert_eq!(suit.to_string(), suit.symbol())
     }
 
     #[test]

@@ -1,4 +1,5 @@
 use std::str::FromStr;
+use crate::localization::Named;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::{Ranked, Suited};
@@ -23,15 +24,30 @@ where
     pub fn new(rank: Rank<RankType>, suit: Suit<SuitType>) -> Self {
         Self { rank, suit }
     }
+
+    #[must_use]
+    pub fn is_blank(&self) -> bool {
+        self.rank.name.is_blank() || self.suit.name.is_blank()
+    }
 }
 
 impl<RankType: Ranked, SuitType: Suited> FromStr for Card<RankType, SuitType> {
     type Err = CardError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let s = s.trim();;
+        let s = s.trim();
+        if s.len() != 2 {
+            return Err(CardError::InvalidIndex(s.to_string()));
+        }
+        if let Some(c) = s.chars().next() {
+            let rank = Rank::<RankType>::from(c);
+            if let Some(c) = s.chars().last() {
+                let suit = Suit::<SuitType>::from(c);
+                return Ok(Card::new(rank, suit));
+            }
+        }
 
-        todo!()
+        Err(CardError::Fubar)
     }
 }
 
@@ -58,6 +74,16 @@ mod types__card__tests {
         let spades = Suit::<Standard52>::from('S');
         let expected_card: Card<Standard52, Standard52> = Card::new(ace, spades);
 
-        let card  = Card::<Standard52, Standard52>::from_str("AS").unwrap();
+        let card  = Card::<Standard52, Standard52>::from_str("  AS   ").unwrap();
+
+        assert_eq!(card, expected_card);
+        assert!(!card.is_blank());
+    }
+
+    #[test]
+    fn from_str_blank() {
+        let card = Card::<Standard52, Standard52>::from_str(" BW ").unwrap();
+
+        assert!(card.is_blank());
     }
 }
