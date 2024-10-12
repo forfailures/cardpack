@@ -38,8 +38,9 @@ where
     // Private methods
 
     /// The index is the most boring way to represent a `Card` as a `String` using
-    /// only basic characters. For example, the Jack of Diamonds index value is `JD`,
-    /// while it's display value is `J♦`:
+    /// only basic characters. Used to set `Card.index` when `Card::new()` is called.
+    /// For example, the Jack of Diamonds index value is `JD`, while it's display
+    /// value is `J♦`:
     ///
     /// ```rust
     /// use std::str::FromStr;
