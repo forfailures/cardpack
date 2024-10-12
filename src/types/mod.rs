@@ -1,3 +1,4 @@
+pub mod card;
 pub mod card_error;
 pub mod rank;
 pub mod suit;
