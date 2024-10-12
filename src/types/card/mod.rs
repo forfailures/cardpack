@@ -2,18 +2,23 @@ use crate::localization::Named;
 use crate::types::card_error::CardError;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
-use crate::types::{Ranked, Suited};
-use std::str::FromStr;
-
+use std::fmt::Display;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Card<RankType, SuitType>
 where
     RankType: Ranked,
     SuitType: Suited,
 {
-    pub rank: Rank<RankType>,
+    /// Used to sort Cards.
+    pub weight: u32,
+    /// The identity indicator in the corner of a playing card, such as `AS` for ace of spades.
+    pub index: String,
     pub suit: Suit<SuitType>,
+    pub rank: Rank<RankType>,
 }
+use crate::types::{Ranked, Suited};
+
+use std::str::FromStr;
 
 impl<RankType, SuitType> Card<RankType, SuitType>
 where
@@ -22,12 +27,27 @@ where
 {
     #[must_use]
     pub fn new(rank: Rank<RankType>, suit: Suit<SuitType>) -> Self {
-        Self { rank, suit }
+        Self {
+            weight: 0,
+            index: String::new(),
+            suit,
+            rank,
+        }
     }
 
     #[must_use]
     pub fn is_blank(&self) -> bool {
         self.rank.name.is_blank() || self.suit.name.is_blank()
+    }
+}
+
+impl<RankType: Ranked, SuitType: Suited> Display for Card<RankType, SuitType> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if self.is_blank() {
+            write!(f, "__")
+        } else {
+            write!(f, "{}{}", self.rank, self.suit)
+        }
     }
 }
 
@@ -66,6 +86,13 @@ mod types__card__tests {
 
         assert_eq!(card.rank.name, FluentName::new(Rank::<Standard52>::ACE));
         assert_eq!(card.suit.name, FluentName::new(Suit::<Standard52>::SPADES));
+    }
+
+    #[test]
+    fn display() {
+        let card = Card::<Standard52, Standard52>::from_str("KD").unwrap();
+
+        assert_eq!("K♦", format!("{card}"));
     }
 
     #[test]
