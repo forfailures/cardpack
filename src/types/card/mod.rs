@@ -3,7 +3,7 @@ use crate::types::card_error::CardError;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use std::fmt::Display;
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub struct Card<RankType, SuitType>
 where
     RankType: Ranked,
@@ -122,6 +122,31 @@ mod types__card__tests {
         let card: Card<Standard52, Standard52> = Card::new(ace, spades);
 
         assert_eq!(card, expected);
+    }
+
+    /// I want to make sure that the weight field in the `Card` struct correctly affects the sorting
+    /// of cards. For Decks of cards, the sort would be in reverse, with the higher weighted `Card`
+    /// coming first.
+    #[test]
+    fn test_sort_from_weight() {
+        let ace_of_spades = Card::<Standard52, Standard52>::from_str("AS").unwrap();
+        let ace_of_hearts = Card::<Standard52, Standard52>::from_str("AH").unwrap();
+        let ace_of_diamonds = Card::<Standard52, Standard52>::from_str("AD").unwrap();
+        let ace_of_clubs = Card::<Standard52, Standard52>::from_str("AC").unwrap();
+
+        let mut cards = vec![
+            ace_of_clubs.clone(),
+            ace_of_hearts.clone(),
+            ace_of_spades.clone(),
+            ace_of_diamonds.clone(),
+        ];
+
+        cards.sort();
+
+        assert_eq!(cards[0], ace_of_clubs);
+        assert_eq!(cards[1], ace_of_diamonds);
+        assert_eq!(cards[2], ace_of_hearts);
+        assert_eq!(cards[3], ace_of_spades);
     }
 
     #[test]
