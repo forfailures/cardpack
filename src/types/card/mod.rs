@@ -3,11 +3,12 @@ use crate::types::card_error::CardError;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use std::fmt::Display;
+
 #[derive(Debug, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub struct Card<RankType, SuitType>
 where
-    RankType: Ranked,
-    SuitType: Suited,
+    RankType: Ranked + Clone,
+    SuitType: Suited + Clone,
 {
     /// Used to sort Cards.
     pub weight: u32,
@@ -22,8 +23,8 @@ use std::str::FromStr;
 
 impl<RankType, SuitType> Card<RankType, SuitType>
 where
-    RankType: Ranked,
-    SuitType: Suited,
+    RankType: Ranked + Clone,
+    SuitType: Suited + Clone,
 {
     #[must_use]
     pub fn new(rank: Rank<RankType>, suit: Suit<SuitType>) -> Self {
@@ -72,7 +73,9 @@ where
     }
 }
 
-impl<RankType: Ranked, SuitType: Suited> Display for Card<RankType, SuitType> {
+impl<RankType: Ranked + std::clone::Clone, SuitType: Suited + std::clone::Clone> Display
+    for Card<RankType, SuitType>
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if self.is_blank() {
             write!(f, "__")
@@ -82,7 +85,9 @@ impl<RankType: Ranked, SuitType: Suited> Display for Card<RankType, SuitType> {
     }
 }
 
-impl<RankType: Ranked, SuitType: Suited> FromStr for Card<RankType, SuitType> {
+impl<RankType: Ranked + std::clone::Clone, SuitType: Suited + std::clone::Clone> FromStr
+    for Card<RankType, SuitType>
+{
     type Err = CardError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
