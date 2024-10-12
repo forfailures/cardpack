@@ -107,20 +107,9 @@ impl<RankType: Ranked, SuitType: Suited> FromStr for Card<RankType, SuitType> {
 mod types__card__tests {
     use super::*;
     use crate::decks::standard52::Standard52;
-    use crate::localization::FluentName;
 
     #[test]
     fn new() {
-        let ace = Rank::<Standard52>::from('A');
-        let spades = Suit::<Standard52>::from('S');
-        let card: Card<Standard52, Standard52> = Card::new(ace, spades);
-
-        assert_eq!(card.rank.name, FluentName::new(Rank::<Standard52>::ACE));
-        assert_eq!(card.suit.name, FluentName::new(Suit::<Standard52>::SPADES));
-    }
-
-    #[test]
-    fn new_new() {
         let expected: Card<Standard52, Standard52> = Card {
             weight: 4012,
             index: "AS".to_string(),
