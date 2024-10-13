@@ -10,6 +10,10 @@ pub mod rank;
 pub mod suit;
 
 pub trait Decked<SuitType: Suited + Clone + Ord, RankType: Ranked + Clone + Ord> {
+    /// This trait makes me very happy. It feels like it has an elegance that I really love.
+    ///
+    /// NOTE: We are going to need to override it for decks that have two tiers of suits, such
+    /// as tarot decks and ones with jokers.
     #[must_use]
     fn deck() -> Pile<RankType, SuitType> {
         let ranks = Rank::<RankType>::ranks();
