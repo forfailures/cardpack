@@ -1,5 +1,3 @@
-use crate::types::card::Card;
-use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::{Decked, Ranked, Suited};
@@ -7,25 +5,7 @@ use crate::types::{Decked, Ranked, Suited};
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Standard52 {}
 
-impl Decked<Standard52, Standard52> for Standard52 {
-    fn deck() -> Pile<Standard52, Standard52> {
-        let ranks = Rank::<Standard52>::ranks();
-        let suits = Suit::<Standard52>::suits();
-
-        let mut pile = Pile::<Standard52, Standard52>::new(Vec::new());
-
-        for suit in &suits {
-            for rank in &ranks {
-                pile.push(Card::<Standard52, Standard52>::new(
-                    rank.clone(),
-                    suit.clone(),
-                ));
-            }
-        }
-
-        pile
-    }
-}
+impl Decked<Standard52, Standard52> for Standard52 {}
 
 impl Ranked for Standard52 {
     fn rank_chars() -> Vec<char> {
