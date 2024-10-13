@@ -19,6 +19,10 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
         Self(cards)
     }
 
+    pub fn extend(&mut self, other: &Self) {
+        self.0.extend(other.0.clone());
+    }
+
     #[must_use]
     pub fn get(&self, index: usize) -> Option<&Card<RankType, SuitType>> {
         self.0.get(index)
@@ -138,6 +142,17 @@ mod types__pile__tests {
         assert_eq!(pile2.get(1).unwrap().index, "2S");
         assert_eq!(pile2.get(2).unwrap().index, "AH");
         assert_eq!(pile2.get(3).unwrap().index, "TD");
+    }
+
+    #[test]
+    fn extend() {
+        let mut pile = test_pile();
+        let pile2 = Pile::<Standard52, Standard52>::from_str("3S 9D").unwrap();
+        pile.extend(&pile2);
+
+        assert_eq!(pile.len(), 6);
+        assert_eq!(pile.get(4).unwrap().index, "3S");
+        assert_eq!(pile.get(5).unwrap().index, "9D");
     }
 
     #[test]
