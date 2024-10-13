@@ -4,6 +4,10 @@ pub mod pile;
 pub mod rank;
 pub mod suit;
 
+pub trait Decked: Ranked + Suited {
+
+}
+
 pub trait Ranked {
     fn rank_chars() -> Vec<char>;
 

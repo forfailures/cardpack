@@ -117,8 +117,10 @@ mod decks__standard52__tests {
     #[test]
     fn rank__ranks() {
         let ranks = Rank::<Standard52>::ranks();
-        let single_string = ranks.join(" ");
-
+        // let single_string = ranks.iter().map(|r| r.to_string()).into_iter().join(" ");
+        //
+        // assert_eq!(ranks.len(), 13);
+        // assert_eq!(single_string, "two three four five six seven eight nine ten jack queen king ace");
     }
 
     #[test]
@@ -267,6 +269,15 @@ mod decks__standard52__tests {
     fn ranked__is_valid_char() {
         assert!(Rank::<Standard52>::is_valid_rank_char(&'A'));
         assert!(!Rank::<Standard52>::is_valid_rank_char(&'Z'));
+    }
+
+    #[test]
+    fn ranked__join_rank_chars() {
+        let expected = "23456789TJQKA";
+
+        // let joined = Rank::<Standard52>::join_rank_chars("");
+
+        // assert_eq!(joined, expected);
     }
 
     #[test]
