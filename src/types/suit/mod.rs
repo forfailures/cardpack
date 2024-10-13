@@ -65,6 +65,14 @@ where
     }
 
     #[must_use]
+    pub fn suits() -> Vec<Self> {
+        SuitType::suit_names()
+            .iter()
+            .map(|name| Self::new(name))
+            .collect()
+    }
+
+    #[must_use]
     pub fn symbol(&self) -> String {
         self.name.fluent_value(
             Suit::<SuitType>::FLUENT_SYMBOL_SECTION,

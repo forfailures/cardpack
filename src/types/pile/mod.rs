@@ -191,6 +191,7 @@ mod types__pile__tests {
 
     #[test]
     fn fold_in() {
-
+        let ranks = Rank::<Standard52>::ranks();
+        let suits = Suit::<Standard52>::suits();
     }
 }

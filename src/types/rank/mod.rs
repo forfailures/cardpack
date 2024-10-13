@@ -3,6 +3,7 @@ use crate::types::card_error::CardError;
 use crate::types::Ranked;
 use std::fmt::Display;
 use std::marker::PhantomData;
+use std::slice::Join;
 use std::str::FromStr;
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -51,7 +52,7 @@ where
     }
 
     #[must_use]
-    pub fn ranks(&self) -> Vec<Self> {
+    pub fn ranks() -> Vec<Self> {
         RankType::rank_names()
             .iter()
             .map(|name| Self::new(name))
@@ -156,5 +157,18 @@ impl<RankType: Ranked> FromStr for Rank<RankType> {
         } else {
             Err(CardError::InvalidFluentRank(s.to_string()))
         }
+    }
+}
+
+impl<RankType, Separator> Join<Separator> for Rank<RankType>
+where
+    RankType: Ranked,
+{
+    fn join(ranks: Vec<Self>, separator: &str) -> String {
+        ranks
+            .iter()
+            .map(|rank| rank.index_default())
+            .collect::<Vec<_>>()
+            .join(separator)
     }
 }

@@ -115,6 +115,13 @@ mod decks__standard52__tests {
     }
 
     #[test]
+    fn rank__ranks() {
+        let ranks = Rank::<Standard52>::ranks();
+        let single_string = ranks.join(" ");
+
+    }
+
+    #[test]
     fn suit__binary_signature() {
         assert_eq!(4096, Suit::<Standard52>::from('S').binary_signature());
         assert_eq!(8192, Suit::<Standard52>::from('H').binary_signature());
