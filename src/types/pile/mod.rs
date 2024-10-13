@@ -1,3 +1,5 @@
+use crate::types::suit::Suit;
+use crate::types::rank::Rank;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::Ranked;
@@ -21,6 +23,14 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
 
     pub fn extend(&mut self, other: &Self) {
         self.0.extend(other.0.clone());
+    }
+
+    fn fold_in(&mut self, suits: &[Suit<SuitType>], ranks: &[Rank<RankType>]) {
+        for suit in suits {
+            for rank in ranks {
+                self.push(Card::<RankType, SuitType>::new(rank.clone(), suit.clone()));
+            }
+        }
     }
 
     #[must_use]
@@ -177,5 +187,10 @@ mod types__pile__tests {
     fn from_str_invalid() {
         assert!(Pile::<Standard52, Standard52>::from_str("2S TD AH AS 2X").is_err());
         assert!(Pile::<Standard52, Standard52>::from_str("   ").is_err());
+    }
+
+    #[test]
+    fn fold_in() {
+
     }
 }
