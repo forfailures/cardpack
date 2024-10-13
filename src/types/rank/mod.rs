@@ -58,6 +58,17 @@ where
             .collect()
     }
 
+    /// Hackie utility function to create a quick way to validate the returned ranks.
+    #[must_use]
+    pub fn ranks_index(joiner: &str) -> String {
+        let ranks = Rank::<RankType>::ranks();
+        ranks
+            .iter()
+            .map(std::string::ToString::to_string)
+            .collect::<Vec<_>>()
+            .join(joiner)
+    }
+
     #[must_use]
     pub fn update_weight(&self, weight: u32) -> Self {
         Self::new_with_weight(self.fluent_name_string().as_str(), weight)

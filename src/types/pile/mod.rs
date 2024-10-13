@@ -1,9 +1,8 @@
-use crate::types::suit::Suit;
-use crate::types::rank::Rank;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::Ranked;
 use crate::types::Suited;
+use std::fmt::Display;
 use std::str::FromStr;
 
 #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
@@ -23,14 +22,6 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
 
     pub fn extend(&mut self, other: &Self) {
         self.0.extend(other.0.clone());
-    }
-
-    fn fold_in(&mut self, suits: &[Suit<SuitType>], ranks: &[Rank<RankType>]) {
-        for suit in suits {
-            for rank in ranks {
-                self.push(Card::<RankType, SuitType>::new(rank.clone(), suit.clone()));
-            }
-        }
     }
 
     #[must_use]
@@ -99,6 +90,19 @@ impl<SuitType: Suited + Ord + Clone, RankType: Ranked + Ord + Clone> Default
 {
     fn default() -> Self {
         Self(Vec::new())
+    }
+}
+
+impl<SuitType: Suited + Ord + Clone, RankType: Ranked + Ord + Clone> Display
+    for Pile<RankType, SuitType>
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut s = String::new();
+        for card in &self.0 {
+            s.push_str(&card.index);
+            s.push(' ');
+        }
+        write!(f, "{}", s.trim())
     }
 }
 
@@ -187,11 +191,5 @@ mod types__pile__tests {
     fn from_str_invalid() {
         assert!(Pile::<Standard52, Standard52>::from_str("2S TD AH AS 2X").is_err());
         assert!(Pile::<Standard52, Standard52>::from_str("   ").is_err());
-    }
-
-    #[test]
-    fn fold_in() {
-        let ranks = Rank::<Standard52>::ranks();
-        let suits = Suit::<Standard52>::suits();
     }
 }

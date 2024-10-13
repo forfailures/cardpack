@@ -1,9 +1,31 @@
+use crate::types::card::Card;
+use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
-use crate::types::{Ranked, Suited};
+use crate::types::{Decked, Ranked, Suited};
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Standard52 {}
+
+impl Decked<Standard52, Standard52> for Standard52 {
+    fn deck() -> Pile<Standard52, Standard52> {
+        let ranks = Rank::<Standard52>::ranks();
+        let suits = Suit::<Standard52>::suits();
+
+        let mut pile = Pile::<Standard52, Standard52>::new(Vec::new());
+
+        for suit in &suits {
+            for rank in &ranks {
+                pile.push(Card::<Standard52, Standard52>::new(
+                    rank.clone(),
+                    suit.clone(),
+                ));
+            }
+        }
+
+        pile
+    }
+}
 
 impl Ranked for Standard52 {
     fn rank_chars() -> Vec<char> {
@@ -116,11 +138,10 @@ mod decks__standard52__tests {
 
     #[test]
     fn rank__ranks() {
-        let ranks = Rank::<Standard52>::ranks();
-        // let single_string = ranks.iter().map(|r| r.to_string()).into_iter().join(" ");
-        //
-        // assert_eq!(ranks.len(), 13);
-        // assert_eq!(single_string, "two three four five six seven eight nine ten jack queen king ace");
+        assert_eq!(
+            "A K Q J T 9 8 7 6 5 4 3 2",
+            Rank::<Standard52>::ranks_index(" ")
+        );
     }
 
     #[test]
@@ -269,15 +290,6 @@ mod decks__standard52__tests {
     fn ranked__is_valid_char() {
         assert!(Rank::<Standard52>::is_valid_rank_char(&'A'));
         assert!(!Rank::<Standard52>::is_valid_rank_char(&'Z'));
-    }
-
-    #[test]
-    fn ranked__join_rank_chars() {
-        let expected = "23456789TJQKA";
-
-        // let joined = Rank::<Standard52>::join_rank_chars("");
-
-        // assert_eq!(joined, expected);
     }
 
     #[test]
