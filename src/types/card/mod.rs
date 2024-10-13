@@ -85,9 +85,7 @@ impl<RankType: Ranked + std::clone::Clone, SuitType: Suited + std::clone::Clone>
     }
 }
 
-impl<RankType: Ranked + std::clone::Clone, SuitType: Suited + std::clone::Clone> FromStr
-    for Card<RankType, SuitType>
-{
+impl<RankType: Ranked + Clone, SuitType: Suited + Clone> FromStr for Card<RankType, SuitType> {
     type Err = CardError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
