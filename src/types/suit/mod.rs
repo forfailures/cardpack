@@ -129,7 +129,7 @@ impl<SuiteType: Suited> Suited for Suit<SuiteType> {
 
 impl<SuitType: Suited> From<char> for Suit<SuitType> {
     fn from(c: char) -> Self {
-        if !SuitType::is_valid_char(&c) {
+        if !SuitType::is_valid_suit_char(&c) {
             return Suit::<SuitType> {
                 weight: 0,
                 name: FluentName::default(),
