@@ -1,6 +1,6 @@
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
-use crate::types::{Decked, Ranked, Suited};
+use crate::types::traits::{Decked, Ranked, Suited};
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Standard52 {}

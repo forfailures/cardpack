@@ -1,7 +1,7 @@
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
-use crate::types::Ranked;
-use crate::types::Suited;
+use crate::types::traits::Ranked;
+use crate::types::traits::Suited;
 use std::fmt::Display;
 use std::str::FromStr;
 

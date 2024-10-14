@@ -1,6 +1,6 @@
 use crate::localization::{FluentName, Named};
 use crate::types::card_error::CardError;
-use crate::types::Ranked;
+use crate::types::traits::Ranked;
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::str::FromStr;

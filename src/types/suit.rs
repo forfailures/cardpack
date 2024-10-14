@@ -1,5 +1,5 @@
 use crate::localization::{FluentName, Named};
-use crate::types::Suited;
+use crate::types::traits::Suited;
 use std::fmt::Display;
 use std::marker::PhantomData;
 

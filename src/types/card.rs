@@ -17,7 +17,7 @@ where
     pub suit: Suit<SuitType>,
     pub rank: Rank<RankType>,
 }
-use crate::types::{Ranked, Suited};
+use crate::types::traits::{Ranked, Suited};
 
 use std::str::FromStr;
 
