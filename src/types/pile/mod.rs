@@ -190,6 +190,12 @@ mod types__pile__tests {
     }
 
     #[test]
+    fn len() {
+        assert_eq!(Pile::<Standard52, Standard52>::default().len(), 0);
+        assert_eq!(test_pile().len(), 4);
+    }
+
+    #[test]
     fn push() {
         let mut pile = Pile::<Standard52, Standard52>::default();
         pile.push(Card::from_str("2S").unwrap());
