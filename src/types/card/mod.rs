@@ -73,7 +73,7 @@ where
     }
 }
 
-impl<RankType: Ranked + std::clone::Clone, SuitType: Suited + std::clone::Clone> Display
+impl<RankType: Ranked + Clone, SuitType: Suited + Clone> Display
     for Card<RankType, SuitType>
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

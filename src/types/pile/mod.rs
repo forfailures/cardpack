@@ -99,7 +99,7 @@ impl<SuitType: Suited + Ord + Clone, RankType: Ranked + Ord + Clone> Display
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut s = String::new();
         for card in &self.0 {
-            s.push_str(&card.index);
+            s.push_str(&card.to_string());
             s.push(' ');
         }
         write!(f, "{}", s.trim())
