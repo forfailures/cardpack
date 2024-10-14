@@ -181,6 +181,15 @@ mod types__pile__tests {
     }
 
     #[test]
+    fn is_empty() {
+        let mut pile = Pile::<Standard52, Standard52>::default();
+        assert!(pile.is_empty());
+
+        pile.push(Card::from_str("2S").unwrap());
+        assert!(!pile.is_empty());
+    }
+
+    #[test]
     fn push() {
         let mut pile = Pile::<Standard52, Standard52>::default();
         pile.push(Card::from_str("2S").unwrap());
