@@ -35,31 +35,32 @@ pub const KNIGHT: &str = "knight";
 pub const PAGE: &str = "page";
 
 // Tarot Deck Rank Symbols
-pub const FOOL_SYMBOL: &str = "🤡";
-pub const MAGICIAN_SYMBOL: &str = "🪄";
-pub const PRIESTESS_SYMBOL: &str = "😇";
-pub const EMPRESS_SYMBOL: &str = "👑";
-pub const EMPEROR_SYMBOL: &str = "🤴";
-pub const HIEROPHANT_SYMBOL: &str = "🧎";
-pub const LOVERS_SYMBOL: &str = "💏";
-pub const CHARIOT_SYMBOL: &str = "🏎️";
-pub const STRENGTH_SYMBOL: &str = "💪";
-pub const HERMIT_SYMBOL: &str = "🧙";
-pub const FORTUNE_SYMBOL: &str = "🍀";
-pub const JUSTICE_SYMBOL: &str = "⚖️";
-pub const HANGED_SYMBOL: &str = "🙃";
-pub const DEATH_SYMBOL: &str = "💀";
-pub const TEMPERANCE_SYMBOL: &str = "🍷";
-pub const DEVIL_SYMBOL: &str = "😈";
-pub const TOWER_SYMBOL: &str = "🏢";
-pub const STAR_SYMBOL: &str = "⭐";
-pub const MOON_SYMBOL: &str = "🌙";
-pub const SUN_SYMBOL: &str = "☀️";
-pub const JUDGEMENT_SYMBOL: &str = "🔔";
-pub const WORLD_SYMBOL: &str = "🌍";
-pub const KNIGHT_SYMBOL: &str = "🗡️";
-pub const PAGE_SYMBOL: &str = "📜";
+pub const FOOL_SYMBOL: char = '🤡';
+pub const MAGICIAN_SYMBOL: char = '🧙';
+pub const PRIESTESS_SYMBOL: char = '😇';
+pub const EMPRESS_SYMBOL: char = '👑';
+pub const EMPEROR_SYMBOL: char = '🤴';
+pub const HIEROPHANT_SYMBOL: char = '🧎';
+pub const LOVERS_SYMBOL: char = '💏';
+pub const CHARIOT_SYMBOL: char = '🏎';
+pub const STRENGTH_SYMBOL: char = '💪';
+pub const HERMIT_SYMBOL: char = '💡';
+pub const FORTUNE_SYMBOL: char = '🍀';
+pub const JUSTICE_SYMBOL: char = '⚖';
+pub const HANGED_SYMBOL: char = '🙃';
+pub const DEATH_SYMBOL: char = '💀';
+pub const TEMPERANCE_SYMBOL: char = '🚭';
+pub const DEVIL_SYMBOL: char = '😈';
+pub const TOWER_SYMBOL: char = '🏢';
+pub const STAR_SYMBOL: char = '⭐';
+pub const MOON_SYMBOL: char = '🌙';
+pub const SUN_SYMBOL: char = '🌞';
+pub const JUDGEMENT_SYMBOL: char = '🔔';
+pub const WORLD_SYMBOL: char = '🌍';
+pub const KNIGHT_SYMBOL: char = '🗡';
+pub const PAGE_SYMBOL: char = '📜';
 
+/// The great thing about trying to get T
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Tarot {}
 

@@ -65,8 +65,8 @@ ober-weight = 12
 unter-weight = 11
 
 # Tarot Deck
-major-arcana-symbol = 👑
-wands-symbol = ♣
+major-arcana-symbol = M
+wands-symbol = 🪄
 cups-symbol = 🏆
 swords-symbol = ⚔
 pentacles-symbol = ☆
