@@ -51,13 +51,13 @@ justice-index = ⚖
 hanged-index = 🙃
 death-index = 💀
 temperance-index = 🚭
-devil-index = 15
-tower-index = 16
-star-index = 17
-moon-index = 18
+devil-index = 😈
+tower-index = 🏢
+star-index = ⭐
+moon-index = 🌙
 sun-index = 🌞
-judgement-index = 20
-world-index = 21
+judgement-index = 🔔
+world-index = 🌍
 
 ## Minor Arcana
 

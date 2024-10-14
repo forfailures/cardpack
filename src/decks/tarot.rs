@@ -1,4 +1,8 @@
+use crate::decks::standard52::Standard52;
+use crate::types::card::Card;
 use crate::types::pile::Pile;
+use crate::types::rank::Rank;
+use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked, Suited};
 
 // Tarot Deck Suit Fluent Identifiers
@@ -64,28 +68,85 @@ pub const PAGE_SYMBOL: char = '📜';
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Tarot {}
 
+impl Tarot {
+
+}
+
 impl Decked<Tarot, Tarot> for Tarot {
     fn deck() -> Pile<Tarot, Tarot> {
-        todo!()
+        let ranks = Rank::<Tarot>::ranks();
+        let suits = Suit::<Tarot>::suits();
+
+        let mut pile = Pile::<Tarot, Tarot>::new(Vec::new());
+
+        for suit in &suits {
+            for rank in &ranks {
+                pile.push(Card::<Tarot, Tarot>::new(rank.clone(), suit.clone()));
+            }
+        }
+
+        pile
     }
 }
 
 impl Ranked for Tarot {
     fn rank_chars() -> Vec<char> {
-        todo!()
+        vec![
+            '2', '3', '4', '5', '6', '7', '8', '9', 'T', 't', '0', 'P', 'p', 'J', 'j', 'Q', 'q', 'K', 'k',
+            'A', 'a', '🤡', '🧙', '😇', '👑', '🤴', '🧎', '💏', '🏎', '💪', '💡', '🍀', '⚖', '🙃', '💀', '🚭', '😈',
+            '🏢', '⭐', '🌙', '🌞', '🔔', '🌍', '🗡', '📜',
+        ]
     }
 
     fn rank_names() -> Vec<&'static str> {
-        todo!()
+        vec![
+            Rank::<Tarot>::KING,
+            Rank::<Tarot>::QUEEN,
+            Rank::<Tarot>::KNIGHT,
+            Rank::<Tarot>::PAGE,
+            Rank::<Tarot>::TEN,
+            Rank::<Tarot>::NINE,
+            Rank::<Tarot>::EIGHT,
+            Rank::<Tarot>::SEVEN,
+            Rank::<Tarot>::SIX,
+            Rank::<Tarot>::FIVE,
+            Rank::<Tarot>::FOUR,
+            Rank::<Tarot>::THREE,
+            Rank::<Tarot>::TWO,
+            Rank::<Tarot>::ACE,
+        ]
     }
 }
 
 impl Suited for Tarot {
     fn suit_chars() -> Vec<char> {
-        todo!()
+        vec![
+            'M', 'm', '🪄', 'W', 'w', '🏆', 'C', 'c', '⚔', 'S', 's', '☆', 'P', 'p',
+        ]
     }
 
     fn suit_names() -> Vec<&'static str> {
-        todo!()
+        vec![
+            // Suit::<Tarot>::MAJOR_ARCANA,
+            Suit::<Tarot>::WANDS,
+            Suit::<Tarot>::CUPS,
+            Suit::<Tarot>::SWORDS,
+            Suit::<Tarot>::PENTACLES,
+        ]
+    }
+}
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod decks__tarot__tests {
+    use super::*;
+
+    #[test]
+    fn deck() {
+        let deck = Tarot::deck();
+
+        println!("{deck}");
+
+        // assert_eq!(78, deck.len());
     }
 }
