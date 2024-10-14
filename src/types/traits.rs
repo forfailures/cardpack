@@ -11,7 +11,7 @@ pub trait Decked<SuitType: Suited + Clone + Ord, RankType: Ranked + Clone + Ord>
     ///
     /// ```rust
     /// use cardpack::decks::standard52::Standard52;
-    /// use cardpack::types::Decked;
+    /// use cardpack::types::traits::Decked;
     /// use cardpack::types::pile::Pile;
     ///
     /// assert_eq!(
