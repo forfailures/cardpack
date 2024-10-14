@@ -170,6 +170,17 @@ mod types__pile__tests {
     }
 
     #[test]
+    fn get() {
+        let pile = test_pile();
+
+        assert_eq!(pile.get(0).unwrap().index, "2S");
+        assert_eq!(pile.get(1).unwrap().index, "TD");
+        assert_eq!(pile.get(2).unwrap().index, "AH");
+        assert_eq!(pile.get(3).unwrap().index, "AS");
+        assert!(pile.get(4).is_none());
+    }
+
+    #[test]
     fn push() {
         let mut pile = Pile::<Standard52, Standard52>::default();
         pile.push(Card::from_str("2S").unwrap());

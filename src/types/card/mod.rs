@@ -73,9 +73,7 @@ where
     }
 }
 
-impl<RankType: Ranked + Clone, SuitType: Suited + Clone> Display
-    for Card<RankType, SuitType>
-{
+impl<RankType: Ranked + Clone, SuitType: Suited + Clone> Display for Card<RankType, SuitType> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if self.is_blank() {
             write!(f, "__")
