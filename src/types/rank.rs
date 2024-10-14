@@ -1,6 +1,7 @@
 use crate::localization::{FluentName, Named};
 use crate::types::card_error::CardError;
-use crate::types::Ranked;
+use crate::types::traits::Ranked;
+use std::fmt::Display;
 use std::marker::PhantomData;
 use std::str::FromStr;
 
@@ -50,16 +51,36 @@ where
     }
 
     #[must_use]
-    pub fn ranks(&self) -> Vec<Self> {
+    pub fn ranks() -> Vec<Self> {
         RankType::rank_names()
             .iter()
             .map(|name| Self::new(name))
             .collect()
     }
 
+    /// Hackie utility function to create a quick way to validate the returned ranks.
+    #[must_use]
+    pub fn ranks_index(joiner: &str) -> String {
+        let ranks = Rank::<RankType>::ranks();
+        ranks
+            .iter()
+            .map(std::string::ToString::to_string)
+            .collect::<Vec<_>>()
+            .join(joiner)
+    }
+
     #[must_use]
     pub fn update_weight(&self, weight: u32) -> Self {
         Self::new_with_weight(self.fluent_name_string().as_str(), weight)
+    }
+}
+
+impl<RankType> Display for Rank<RankType>
+where
+    RankType: Ranked,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name.index_default())
     }
 }
 

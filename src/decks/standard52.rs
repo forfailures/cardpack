@@ -1,9 +1,11 @@
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
-use crate::types::{Ranked, Suited};
+use crate::types::traits::{Decked, Ranked, Suited};
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Standard52 {}
+
+impl Decked<Standard52, Standard52> for Standard52 {}
 
 impl Ranked for Standard52 {
     fn rank_chars() -> Vec<char> {
@@ -87,6 +89,16 @@ mod decks__standard52__tests {
     }
 
     #[test]
+    fn decked__decks() {
+        let pile = Standard52::decks(2);
+
+        assert_eq!(
+            pile.to_string(),
+            "A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠ 5♠ 4♠ 3♠ 2♠ A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥ 5♥ 4♥ 3♥ 2♥ A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦ 5♦ 4♦ 3♦ 2♦ A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣ 5♣ 4♣ 3♣ 2♣ A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠ 5♠ 4♠ 3♠ 2♠ A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥ 5♥ 4♥ 3♥ 2♥ A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦ 5♦ 4♦ 3♦ 2♦ A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣ 5♣ 4♣ 3♣ 2♣"
+        );
+    }
+
+    #[test]
     fn rank__weighted_vector() {
         let mut v = Rank::<Standard52>::rank_names();
         v.reverse();
@@ -98,6 +110,28 @@ mod decks__standard52__tests {
         assert_eq!(ranks[0].name.fluent_name_string(), "two");
         assert_eq!(ranks[1].weight, 1);
         assert_eq!(ranks[1].name.fluent_name_string(), "three");
+    }
+
+    #[test]
+    fn rank__display() {
+        let rank = Rank::<Standard52>::new(Rank::<Standard52>::ACE);
+
+        assert_eq!("A", format!("{rank}"));
+    }
+
+    #[test]
+    fn rank__display_blank() {
+        let rank = Rank::<Standard52>::from('_');
+
+        assert_eq!("_", format!("{rank}"));
+    }
+
+    #[test]
+    fn rank__ranks() {
+        assert_eq!(
+            "A K Q J T 9 8 7 6 5 4 3 2",
+            Rank::<Standard52>::ranks_index(" ")
+        );
     }
 
     #[test]
@@ -149,6 +183,22 @@ mod decks__standard52__tests {
         assert_eq!(suits[2].weight, 2);
         assert_eq!(suits[3].fluent_name_string(), "spades");
         assert_eq!(suits[3].weight, 3);
+    }
+
+    #[test]
+    fn suit__symbol() {
+        let suit = Suit::<Standard52>::new(Suit::<Standard52>::SPADES);
+
+        assert_eq!(suit.symbol(), "♠");
+        assert_eq!(suit.to_string(), suit.symbol())
+    }
+
+    #[test]
+    fn suit__symbol_blank() {
+        let suit = Suit::<Standard52>::from('_');
+
+        assert_eq!(suit.symbol(), "_");
+        assert_eq!(suit.to_string(), suit.symbol())
     }
 
     #[test]

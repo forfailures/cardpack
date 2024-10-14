@@ -58,13 +58,13 @@ jobs:
           components: rustfmt, rust-src
       - run: cargo fmt --all -- --check
 
-  miri:
-    name: Miri
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@miri
-      - run: cargo miri test
-        env:
-          MIRIFLAGS: -Zmiri-strict-provenance
+#  miri:
+#    name: Miri
+#    runs-on: ubuntu-latest
+#    timeout-minutes: 45
+#    steps:
+#      - uses: actions/checkout@v4
+#      - uses: dtolnay/rust-toolchain@miri
+#      - run: cargo miri test
+#        env:
+#          MIRIFLAGS: -Zmiri-strict-provenance

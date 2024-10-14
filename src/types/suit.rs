@@ -1,5 +1,6 @@
 use crate::localization::{FluentName, Named};
-use crate::types::Suited;
+use crate::types::traits::Suited;
+use std::fmt::Display;
 use std::marker::PhantomData;
 
 /// TODO: Create a five suited deck to test the boundaries.
@@ -62,6 +63,31 @@ where
             _ => 0xF000,
         }
     }
+
+    #[must_use]
+    pub fn suits() -> Vec<Self> {
+        SuitType::suit_names()
+            .iter()
+            .map(|name| Self::new(name))
+            .collect()
+    }
+
+    #[must_use]
+    pub fn symbol(&self) -> String {
+        self.name.fluent_value(
+            Suit::<SuitType>::FLUENT_SYMBOL_SECTION,
+            &Suit::<SuitType>::US_ENGLISH,
+        )
+    }
+}
+
+impl<SuitType> Display for Suit<SuitType>
+where
+    SuitType: Suited,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.symbol())
+    }
 }
 
 impl<SuitType> Named<'_> for Suit<SuitType>
@@ -103,7 +129,7 @@ impl<SuiteType: Suited> Suited for Suit<SuiteType> {
 
 impl<SuitType: Suited> From<char> for Suit<SuitType> {
     fn from(c: char) -> Self {
-        if !SuitType::is_valid_char(&c) {
+        if !SuitType::is_valid_suit_char(&c) {
             return Suit::<SuitType> {
                 weight: 0,
                 name: FluentName::default(),

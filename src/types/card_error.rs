@@ -2,6 +2,9 @@ use thiserror::Error;
 
 #[derive(Error, Debug, Eq, PartialEq)]
 pub enum CardError {
+    #[error("Fubar should not be possible.")]
+    Fubar,
+
     #[error("Invalid Card: `{0}`")]
     InvalidCard(String),
 
