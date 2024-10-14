@@ -40,6 +40,16 @@ pub trait Decked<SuitType: Suited + Clone + Ord, RankType: Ranked + Clone + Ord>
 
         pile
     }
+
+    /// This function was `Pile::pile_on()` in the v.0 cardpack library.
+    #[must_use]
+    fn decks(n: usize) -> Pile<RankType, SuitType> {
+        let mut pile = Pile::<RankType, SuitType>::new(Vec::new());
+        for _ in 0..n {
+            pile.extend(&Self::deck());
+        }
+        pile
+    }
 }
 
 pub trait Ranked {

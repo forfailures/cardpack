@@ -39,15 +39,6 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
         self.0.len()
     }
 
-    #[must_use]
-    pub fn pile_on(piles: Vec<Pile<RankType, SuitType>>) -> Self {
-        let mut cards = Vec::new();
-        for pile in piles {
-            cards.extend(pile.0);
-        }
-        Self(cards)
-    }
-
     pub fn pile_up(n: usize, f: fn() -> Vec<Card<RankType, SuitType>>) -> Self {
         let mut cards = Vec::new();
         for _ in 0..n {
