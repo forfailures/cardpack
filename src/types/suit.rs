@@ -25,6 +25,13 @@ where
     pub const CLUBS: &str = "clubs";
     pub const TRUMP: &str = "trump";
 
+    // Tarot Suites
+    pub const MAJOR_ARCANA: &str = "major-arcana";
+    pub const WANDS: &str = "wands";
+    pub const CUPS: &str = "cups";
+    pub const SWORDS: &str = "swords";
+    pub const PENTACLES: &str = "pentacles";
+
     #[must_use]
     pub fn new(name_str: &str) -> Suit<SuitType> {
         let name = FluentName::new(name_str);

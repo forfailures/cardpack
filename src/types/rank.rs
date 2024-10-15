@@ -38,6 +38,10 @@ where
     pub const BIG: &str = "big";
     pub const LITTLE: &str = "little";
 
+    // Tarot
+    pub const KNIGHT: &str = "knight";
+    pub const PAGE: &str = "page";
+
     #[must_use]
     pub fn new(name_str: &str) -> Rank<RankType> {
         let name = FluentName::new(name_str);

@@ -1,8 +1,11 @@
 use crate::types::rank::Rank;
-use crate::types::traits::Ranked;
+use crate::types::suit::Suit;
+use crate::types::traits::{Decked, Ranked, Suited};
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Euchre24 {}
+
+impl Decked<Euchre24, Euchre24> for Euchre24 {}
 
 impl Ranked for Euchre24 {
     fn rank_chars() -> Vec<char> {
@@ -17,6 +20,23 @@ impl Ranked for Euchre24 {
             Rank::<Euchre24>::JACK,
             Rank::<Euchre24>::TEN,
             Rank::<Euchre24>::NINE,
+        ]
+    }
+}
+
+impl Suited for Euchre24 {
+    fn suit_chars() -> Vec<char> {
+        vec![
+            '♤', '♠', 'S', 's', '♡', '♥', 'H', 'h', '♢', '♦', 'D', 'd', '♧', '♣', 'C', 'c',
+        ]
+    }
+
+    fn suit_names() -> Vec<&'static str> {
+        vec![
+            Suit::<Euchre24>::SPADES,
+            Suit::<Euchre24>::HEARTS,
+            Suit::<Euchre24>::DIAMONDS,
+            Suit::<Euchre24>::CLUBS,
         ]
     }
 }
