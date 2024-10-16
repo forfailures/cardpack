@@ -20,27 +20,42 @@ impl<RankType> Rank<RankType>
 where
     RankType: Ranked,
 {
-    pub const ACE: &str = "ace";
-    pub const KING: &str = "king";
-    pub const QUEEN: &str = "queen";
-    pub const JACK: &str = "jack";
-    pub const TEN: &str = "ten";
-    pub const NINE: &str = "nine";
-    pub const EIGHT: &str = "eight";
-    pub const SEVEN: &str = "seven";
-    pub const SIX: &str = "six";
-    pub const FIVE: &str = "five";
-    pub const FOUR: &str = "four";
-    pub const THREE: &str = "three";
-    pub const TWO: &str = "two";
+    // https://github.com/forfailures/cardpack/actions/runs/11375156606/job/31645291021
+    // I can't believe that running the tests through GitHub Actions against
+    // Rust version 1.74 finally showed why the IDE was complaining about
+    // `pub const ACE: & str = "ace";`. It needed the `'static` lifeline, which
+    // for some reason still worked for the earlier and later versions of Rust.
+    //
+    // Here's the error from the logs:
+    // error: `&` without an explicit lifetime name cannot be used here
+    //   --> src/types/rank.rs:39:23
+    //    |
+    // 39 |     pub const LITTLE: &str = "little";
+    //    |                       ^
+    //    |
+    //    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    //    = note: for more information, see issue #115010 <https://github.com/rust-lang/rust/issues/115010>
+    // help: use the `'static` lifetime
+    //    |
+    // 39 |     pub const LITTLE: &'static str = "little";
+    //    |                        +++++++
+    pub const ACE: &'static str = "ace";
+    pub const KING: &'static str = "king";
+    pub const QUEEN: &'static str = "queen";
+    pub const JACK: &'static str = "jack";
+    pub const TEN: &'static str = "ten";
+    pub const NINE: &'static str = "nine";
+    pub const EIGHT: &'static str = "eight";
+    pub const SEVEN: &'static str = "seven";
+    pub const SIX: &'static str = "six";
+    pub const FIVE: &'static str = "five";
+    pub const FOUR: &'static str = "four";
+    pub const THREE: &'static str = "three";
+    pub const TWO: &'static str = "two";
 
     // Jokers
-    pub const BIG: &str = "big";
-    pub const LITTLE: &str = "little";
-
-    // Tarot
-    pub const KNIGHT: &str = "knight";
-    pub const PAGE: &str = "page";
+    pub const BIG: &'static str = "big";
+    pub const LITTLE: &'static str = "little";
 
     #[must_use]
     pub fn new(name_str: &str) -> Rank<RankType> {

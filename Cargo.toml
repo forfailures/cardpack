@@ -2,7 +2,7 @@
 name = "cardpack"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.74" 
+rust-version = "1.74"
 
 [dependencies]
 fluent-templates = "0.11"

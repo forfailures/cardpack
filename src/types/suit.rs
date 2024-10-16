@@ -19,18 +19,18 @@ impl<SuitType> Suit<SuitType>
 where
     SuitType: Suited,
 {
-    pub const SPADES: &str = "spades";
-    pub const HEARTS: &str = "hearts";
-    pub const DIAMONDS: &str = "diamonds";
-    pub const CLUBS: &str = "clubs";
-    pub const TRUMP: &str = "trump";
+    pub const SPADES: &'static str = "spades";
+    pub const HEARTS: &'static str = "hearts";
+    pub const DIAMONDS: &'static str = "diamonds";
+    pub const CLUBS: &'static str = "clubs";
+    pub const TRUMP: &'static str = "trump";
 
     // Tarot Suites
-    pub const MAJOR_ARCANA: &str = "major-arcana";
-    pub const WANDS: &str = "wands";
-    pub const CUPS: &str = "cups";
-    pub const SWORDS: &str = "swords";
-    pub const PENTACLES: &str = "pentacles";
+    pub const MAJOR_ARCANA: &'static str = "major-arcana";
+    pub const WANDS: &'static str = "wands";
+    pub const CUPS: &'static str = "cups";
+    pub const SWORDS: &'static str = "swords";
+    pub const PENTACLES: &'static str = "pentacles";
 
     #[must_use]
     pub fn new(name_str: &str) -> Suit<SuitType> {
