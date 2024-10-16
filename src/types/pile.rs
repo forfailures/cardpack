@@ -47,6 +47,14 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
         Self(cards)
     }
 
+    // Takes a reference to the prepended entity, clones it, appends the original to the passed in
+    // entity, and replaces the original with the new one.
+    pub fn prepend(&mut self, other: &Pile<RankType, SuitType>) {
+        let mut product = other.0.clone();
+        product.append(&mut self.0);
+        self.0 = product;
+    }
+
     /// Places the Card at the bottom (end) of the Pile.
     pub fn push(&mut self, card: Card<RankType, SuitType>) -> bool {
         if card.is_blank() {
@@ -184,6 +192,15 @@ mod types__pile__tests {
     fn len() {
         assert_eq!(Pile::<Standard52, Standard52>::default().len(), 0);
         assert_eq!(test_pile().len(), 4);
+    }
+
+    #[test]
+    fn prepend() {
+        let mut pile = test_pile();
+        let pile2 = Pile::<Standard52, Standard52>::from_str("3S 9D").unwrap();
+        pile.prepend(&pile2);
+
+        assert_eq!(pile.to_string(), "3♠ 9♦ 2♠ T♦ A♥ A♠");
     }
 
     #[test]

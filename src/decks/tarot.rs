@@ -183,8 +183,6 @@ mod decks__tarot__tests {
     fn deck() {
         let deck = Tarot::deck();
 
-        println!("{deck}");
-
         assert_eq!(78, deck.len());
     }
 }
