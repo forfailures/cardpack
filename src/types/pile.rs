@@ -195,6 +195,15 @@ mod types__pile__tests {
     }
 
     #[test]
+    fn prepend() {
+        let mut pile = test_pile();
+        let pile2 = Pile::<Standard52, Standard52>::from_str("3S 9D").unwrap();
+        pile.prepend(&pile2);
+
+        assert_eq!(pile.to_string(), "3♠ 9♦ 2♠ T♦ A♥ A♠");
+    }
+
+    #[test]
     fn push() {
         let mut pile = Pile::<Standard52, Standard52>::default();
         pile.push(Card::from_str("2S").unwrap());
