@@ -4,101 +4,111 @@ use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked, Suited};
 
-// Tarot Deck Suit Fluent Identifiers
-pub const MAJOR_ARCANA: &str = "major-arcana";
-pub const WANDS: &str = "wands";
-pub const CUPS: &str = "cups";
-pub const SWORDS: &str = "swords";
-pub const PENTACLES: &str = "pentacles";
-
-// Tarot Deck Ranks:
-pub const FOOL: &str = "fool";
-pub const MAGICIAN: &str = "magician";
-pub const PRIESTESS: &str = "priestess";
-pub const EMPRESS: &str = "empress";
-pub const EMPEROR: &str = "emperor";
-pub const HIEROPHANT: &str = "hierophant";
-pub const LOVERS: &str = "lovers";
-pub const CHARIOT: &str = "chariot";
-pub const STRENGTH: &str = "strength";
-pub const HERMIT: &str = "hermit";
-pub const FORTUNE: &str = "fortune";
-pub const JUSTICE: &str = "justice";
-pub const HANGED: &str = "hanged";
-pub const DEATH: &str = "death";
-pub const TEMPERANCE: &str = "temperance";
-pub const DEVIL: &str = "devil";
-pub const TOWER: &str = "tower";
-pub const STAR: &str = "star";
-pub const MOON: &str = "moon";
-pub const SUN: &str = "sun";
-pub const JUDGEMENT: &str = "judgement";
-pub const WORLD: &str = "world";
-pub const KNIGHT: &str = "knight";
-pub const PAGE: &str = "page";
-
-// Tarot Deck Rank Symbols
-pub const FOOL_SYMBOL: char = '🤡';
-pub const MAGICIAN_SYMBOL: char = '🧙';
-pub const PRIESTESS_SYMBOL: char = '😇';
-pub const EMPRESS_SYMBOL: char = '👑';
-pub const EMPEROR_SYMBOL: char = '🤴';
-pub const HIEROPHANT_SYMBOL: char = '🧎';
-pub const LOVERS_SYMBOL: char = '💏';
-pub const CHARIOT_SYMBOL: char = '🏎';
-pub const STRENGTH_SYMBOL: char = '💪';
-pub const HERMIT_SYMBOL: char = '💡';
-pub const FORTUNE_SYMBOL: char = '🍀';
-pub const JUSTICE_SYMBOL: char = '⚖';
-pub const HANGED_SYMBOL: char = '🙃';
-pub const DEATH_SYMBOL: char = '💀';
-pub const TEMPERANCE_SYMBOL: char = '🚭';
-pub const DEVIL_SYMBOL: char = '😈';
-pub const TOWER_SYMBOL: char = '🏢';
-pub const STAR_SYMBOL: char = '⭐';
-pub const MOON_SYMBOL: char = '🌙';
-pub const SUN_SYMBOL: char = '🌞';
-pub const JUDGEMENT_SYMBOL: char = '🔔';
-pub const WORLD_SYMBOL: char = '🌍';
-pub const KNIGHT_SYMBOL: char = '🗡';
-pub const PAGE_SYMBOL: char = '📜';
-
 /// The great thing about trying to get T
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Tarot {}
 
 impl Tarot {
+    //  Suit Fluent Identifiers
+    pub const MAJOR_ARCANA: &'static str = "major-arcana";
+    pub const WANDS: &'static str = "wands";
+    pub const CUPS: &'static str = "cups";
+    pub const SWORDS: &'static str = "swords";
+    pub const PENTACLES: &'static str = "pentacles";
+
+    // Suit Symbols
+    pub const MAJOR_ARCANA_SYMBOL: char = 'M';
+    pub const WANDS_SYMBOL: char = '🪄';
+    pub const CUPS_SYMBOL: char = '🏆';
+    pub const SWORDS_SYMBOL: char = '⚔';
+    pub const PENTACLES_SYMBOL: char = '☆';
+
+    // Rank Fluent Identifiers
+    pub const FOOL: &'static str = "fool";
+    pub const MAGICIAN: &'static str = "magician";
+    pub const PRIESTESS: &'static str = "priestess";
+    pub const EMPRESS: &'static str = "empress";
+    pub const EMPEROR: &'static str = "emperor";
+    pub const HIEROPHANT: &'static str = "hierophant";
+    pub const LOVERS: &'static str = "lovers";
+    pub const CHARIOT: &'static str = "chariot";
+    pub const STRENGTH: &'static str = "strength";
+    pub const HERMIT: &'static str = "hermit";
+    pub const FORTUNE: &'static str = "fortune";
+    pub const JUSTICE: &'static str = "justice";
+    pub const HANGED: &'static str = "hanged";
+    pub const DEATH: &'static str = "death";
+    pub const TEMPERANCE: &'static str = "temperance";
+    pub const DEVIL: &'static str = "devil";
+    pub const TOWER: &'static str = "tower";
+    pub const STAR: &'static str = "star";
+    pub const MOON: &'static str = "moon";
+    pub const SUN: &'static str = "sun";
+    pub const JUDGEMENT: &'static str = "judgement";
+    pub const WORLD: &'static str = "world";
+    pub const KNIGHT: &'static str = "knight";
+    pub const PAGE: &'static str = "page";
+
+    // Tarot Deck Rank Symbols
+    pub const FOOL_SYMBOL: char = '🤡';
+    pub const MAGICIAN_SYMBOL: char = '🧙';
+    pub const PRIESTESS_SYMBOL: char = '😇';
+    pub const EMPRESS_SYMBOL: char = '👑';
+    pub const EMPEROR_SYMBOL: char = '🤴';
+    pub const HIEROPHANT_SYMBOL: char = '🧎';
+    pub const LOVERS_SYMBOL: char = '💏';
+    pub const CHARIOT_SYMBOL: char = '🏎';
+    pub const STRENGTH_SYMBOL: char = '💪';
+    pub const HERMIT_SYMBOL: char = '💡';
+    pub const FORTUNE_SYMBOL: char = '🍀';
+    pub const JUSTICE_SYMBOL: char = '⚖';
+    pub const HANGED_SYMBOL: char = '🙃';
+    pub const DEATH_SYMBOL: char = '💀';
+    pub const TEMPERANCE_SYMBOL: char = '🚭';
+    pub const DEVIL_SYMBOL: char = '😈';
+    pub const TOWER_SYMBOL: char = '🏢';
+    pub const STAR_SYMBOL: char = '⭐';
+    pub const MOON_SYMBOL: char = '🌙';
+    pub const SUN_SYMBOL: char = '🌞';
+    pub const JUDGEMENT_SYMBOL: char = '🔔';
+    pub const WORLD_SYMBOL: char = '🌍';
+    pub const KNIGHT_SYMBOL: char = '🗡';
+    pub const PAGE_SYMBOL: char = '📜';
+
     fn major_arcana() -> Pile<Tarot, Tarot> {
         let mut pile = Pile::<Tarot, Tarot>::new(Vec::new());
 
-        pile.push(Tarot::major_arcana_card_factory(FOOL));
-        pile.push(Tarot::major_arcana_card_factory(MAGICIAN));
-        pile.push(Tarot::major_arcana_card_factory(PRIESTESS));
-        pile.push(Tarot::major_arcana_card_factory(EMPRESS));
-        pile.push(Tarot::major_arcana_card_factory(EMPEROR));
-        pile.push(Tarot::major_arcana_card_factory(HIEROPHANT));
-        pile.push(Tarot::major_arcana_card_factory(LOVERS));
-        pile.push(Tarot::major_arcana_card_factory(CHARIOT));
-        pile.push(Tarot::major_arcana_card_factory(STRENGTH));
-        pile.push(Tarot::major_arcana_card_factory(HERMIT));
-        pile.push(Tarot::major_arcana_card_factory(FORTUNE));
-        pile.push(Tarot::major_arcana_card_factory(JUSTICE));
-        pile.push(Tarot::major_arcana_card_factory(HANGED));
-        pile.push(Tarot::major_arcana_card_factory(DEATH));
-        pile.push(Tarot::major_arcana_card_factory(TEMPERANCE));
-        pile.push(Tarot::major_arcana_card_factory(DEVIL));
-        pile.push(Tarot::major_arcana_card_factory(TOWER));
-        pile.push(Tarot::major_arcana_card_factory(STAR));
-        pile.push(Tarot::major_arcana_card_factory(MOON));
-        pile.push(Tarot::major_arcana_card_factory(SUN));
-        pile.push(Tarot::major_arcana_card_factory(JUDGEMENT));
-        pile.push(Tarot::major_arcana_card_factory(WORLD));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::FOOL));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::MAGICIAN));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::PRIESTESS));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::EMPRESS));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::EMPEROR));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::HIEROPHANT));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::LOVERS));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::CHARIOT));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::STRENGTH));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::HERMIT));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::FORTUNE));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::JUSTICE));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::HANGED));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::DEATH));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::TEMPERANCE));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::DEVIL));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::TOWER));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::STAR));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::MOON));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::SUN));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::JUDGEMENT));
+        pile.push(Tarot::major_arcana_card_factory(Tarot::WORLD));
 
         pile
     }
 
     fn major_arcana_card_factory(raw: &str) -> Card<Tarot, Tarot> {
-        Card::<Tarot, Tarot>::new(Rank::<Tarot>::new(raw), Suit::<Tarot>::new(MAJOR_ARCANA))
+        Card::<Tarot, Tarot>::new(
+            Rank::<Tarot>::new(raw),
+            Suit::<Tarot>::new(Tarot::MAJOR_ARCANA),
+        )
     }
 
     fn minor_arcana() -> Pile<Tarot, Tarot> {
@@ -141,8 +151,8 @@ impl Ranked for Tarot {
         vec![
             Rank::<Tarot>::KING,
             Rank::<Tarot>::QUEEN,
-            Rank::<Tarot>::KNIGHT,
-            Rank::<Tarot>::PAGE,
+            Tarot::KNIGHT,
+            Tarot::PAGE,
             Rank::<Tarot>::TEN,
             Rank::<Tarot>::NINE,
             Rank::<Tarot>::EIGHT,
@@ -160,17 +170,25 @@ impl Ranked for Tarot {
 impl Suited for Tarot {
     fn suit_chars() -> Vec<char> {
         vec![
-            'M', 'm', '🪄', 'W', 'w', '🏆', 'C', 'c', '⚔', 'S', 's', '☆', 'P', 'p',
+            Tarot::MAJOR_ARCANA_SYMBOL,
+            'm',
+            Tarot::WANDS_SYMBOL,
+            'W',
+            'w',
+            Tarot::CUPS_SYMBOL,
+            'C',
+            'c',
+            Tarot::SWORDS_SYMBOL,
+            'S',
+            's',
+            Tarot::PENTACLES_SYMBOL,
+            'P',
+            'p',
         ]
     }
 
     fn suit_names() -> Vec<&'static str> {
-        vec![
-            Suit::<Tarot>::WANDS,
-            Suit::<Tarot>::CUPS,
-            Suit::<Tarot>::SWORDS,
-            Suit::<Tarot>::PENTACLES,
-        ]
+        vec![Tarot::WANDS, Tarot::CUPS, Tarot::SWORDS, Tarot::PENTACLES]
     }
 }
 

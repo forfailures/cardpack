@@ -2,6 +2,7 @@
 name = "cardpack"
 version = "0.1.0"
 edition = "2021"
+rust-version = "1.74"
 
 [dependencies]
 fluent-templates = "0.11"
@@ -9,4 +10,5 @@ log = "0.4"
 thiserror = "1.0"
 
 [dev-dependencies]
+clap = { version = "4.5.20", features = ["derive", "unicode"] }
 rstest = "0.23"
