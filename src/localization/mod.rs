@@ -168,7 +168,7 @@ pub trait Named<'a> {
 pub struct FluentName(String);
 
 impl FluentName {
-    pub const BLANK: &str = "blank";
+    pub const BLANK: &'static str = "blank";
 
     ///  The difference between `new` and `from_str` is that `new` will default to
     /// `BLANK` if the passed in `&str` isn't  valid, whereas with `from_str` it
