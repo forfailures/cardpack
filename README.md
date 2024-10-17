@@ -28,6 +28,7 @@ decks of various sizes and suites. Possibilities include:
 
 ## Dependencies
 
+* [Clap](https://crates.io/crates/clap)
 * [thiserror](https://github.com/dtolnay/thiserror)
 
 ## Refactoring Goals

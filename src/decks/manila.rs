@@ -1,5 +1,4 @@
 use crate::decks::standard52::Standard52;
-use crate::types::rank::Rank;
 use crate::types::traits::{Decked, Ranked};
 
 /// Manila, aka Six Plus aka Short-deck.
@@ -17,15 +16,15 @@ impl Ranked for Manila {
 
     fn rank_names() -> Vec<&'static str> {
         vec![
-            Rank::<Manila>::ACE,
-            Rank::<Manila>::KING,
-            Rank::<Manila>::QUEEN,
-            Rank::<Manila>::JACK,
-            Rank::<Manila>::TEN,
-            Rank::<Manila>::NINE,
-            Rank::<Manila>::EIGHT,
-            Rank::<Manila>::SEVEN,
-            Rank::<Manila>::SIX,
+            Standard52::ACE,
+            Standard52::KING,
+            Standard52::QUEEN,
+            Standard52::JACK,
+            Standard52::TEN,
+            Standard52::NINE,
+            Standard52::EIGHT,
+            Standard52::SEVEN,
+            Standard52::SIX,
         ]
     }
 }
@@ -34,6 +33,7 @@ impl Ranked for Manila {
 #[allow(non_snake_case)]
 mod decks__manila__tests {
     use super::*;
+    use crate::types::rank::Rank;
 
     #[test]
     fn deck() {
