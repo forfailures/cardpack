@@ -1,3 +1,5 @@
+use crate::decks::modern::Modern;
+use crate::decks::standard52::Standard52;
 use crate::localization::{FluentName, Named};
 use crate::types::card_error::CardError;
 use crate::types::traits::Ranked;
@@ -20,43 +22,6 @@ impl<RankType> Rank<RankType>
 where
     RankType: Ranked,
 {
-    // https://github.com/forfailures/cardpack/actions/runs/11375156606/job/31645291021
-    // I can't believe that running the tests through GitHub Actions against
-    // Rust version 1.74 finally showed why the IDE was complaining about
-    // `pub const ACE: & str = "ace";`. It needed the `'static` lifeline, which
-    // for some reason still worked for the earlier and later versions of Rust.
-    //
-    // Here's the error from the logs:
-    // error: `&` without an explicit lifetime name cannot be used here
-    //   --> src/types/rank.rs:39:23
-    //    |
-    // 39 |     pub const LITTLE: &str = "little";
-    //    |                       ^
-    //    |
-    //    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
-    //    = note: for more information, see issue #115010 <https://github.com/rust-lang/rust/issues/115010>
-    // help: use the `'static` lifetime
-    //    |
-    // 39 |     pub const LITTLE: &'static str = "little";
-    //    |                        +++++++
-    pub const ACE: &'static str = "ace";
-    pub const KING: &'static str = "king";
-    pub const QUEEN: &'static str = "queen";
-    pub const JACK: &'static str = "jack";
-    pub const TEN: &'static str = "ten";
-    pub const NINE: &'static str = "nine";
-    pub const EIGHT: &'static str = "eight";
-    pub const SEVEN: &'static str = "seven";
-    pub const SIX: &'static str = "six";
-    pub const FIVE: &'static str = "five";
-    pub const FOUR: &'static str = "four";
-    pub const THREE: &'static str = "three";
-    pub const TWO: &'static str = "two";
-
-    // Jokers
-    pub const BIG: &'static str = "big";
-    pub const LITTLE: &'static str = "little";
-
     #[must_use]
     pub fn new(name_str: &str) -> Rank<RankType> {
         let name = FluentName::new(name_str);
@@ -152,21 +117,21 @@ impl<RankType: Ranked> From<char> for Rank<RankType> {
             };
         }
         match c {
-            '2' => Rank::new(Rank::<RankType>::TWO),
-            '3' => Rank::new(Rank::<RankType>::THREE),
-            '4' => Rank::new(Rank::<RankType>::FOUR),
-            '5' => Rank::new(Rank::<RankType>::FIVE),
-            '6' => Rank::new(Rank::<RankType>::SIX),
-            '7' => Rank::new(Rank::<RankType>::SEVEN),
-            '8' => Rank::new(Rank::<RankType>::EIGHT),
-            '9' => Rank::new(Rank::<RankType>::NINE),
-            'T' | 't' | '0' => Rank::new(Rank::<RankType>::TEN),
-            'J' | 'j' => Rank::new(Rank::<RankType>::JACK),
-            'Q' | 'q' => Rank::new(Rank::<RankType>::QUEEN),
-            'K' | 'k' => Rank::new(Rank::<RankType>::KING),
-            'A' | 'a' => Rank::new(Rank::<RankType>::ACE),
-            'B' | 'b' => Rank::new(Rank::<RankType>::BIG),
-            'L' | 'l' => Rank::new(Rank::<RankType>::LITTLE),
+            '2' => Rank::new(Standard52::TWO),
+            '3' => Rank::new(Standard52::THREE),
+            '4' => Rank::new(Standard52::FOUR),
+            '5' => Rank::new(Standard52::FIVE),
+            '6' => Rank::new(Standard52::SIX),
+            '7' => Rank::new(Standard52::SEVEN),
+            '8' => Rank::new(Standard52::EIGHT),
+            '9' => Rank::new(Standard52::NINE),
+            'T' | 't' | '0' => Rank::new(Standard52::TEN),
+            'J' | 'j' => Rank::new(Standard52::JACK),
+            'Q' | 'q' => Rank::new(Standard52::QUEEN),
+            'K' | 'k' => Rank::new(Standard52::KING),
+            'A' | 'a' => Rank::new(Standard52::ACE),
+            'B' | 'b' => Rank::new(Modern::BIG),
+            'L' | 'l' => Rank::new(Modern::LITTLE),
             _ => Rank::new(FluentName::BLANK),
         }
     }

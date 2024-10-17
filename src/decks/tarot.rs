@@ -1,3 +1,4 @@
+use crate::decks::standard52::Standard52;
 use crate::types::card::Card;
 use crate::types::pile::Pile;
 use crate::types::rank::Rank;
@@ -149,20 +150,20 @@ impl Ranked for Tarot {
 
     fn rank_names() -> Vec<&'static str> {
         vec![
-            Rank::<Tarot>::KING,
-            Rank::<Tarot>::QUEEN,
+            Standard52::KING,
+            Standard52::QUEEN,
             Tarot::KNIGHT,
             Tarot::PAGE,
-            Rank::<Tarot>::TEN,
-            Rank::<Tarot>::NINE,
-            Rank::<Tarot>::EIGHT,
-            Rank::<Tarot>::SEVEN,
-            Rank::<Tarot>::SIX,
-            Rank::<Tarot>::FIVE,
-            Rank::<Tarot>::FOUR,
-            Rank::<Tarot>::THREE,
-            Rank::<Tarot>::TWO,
-            Rank::<Tarot>::ACE,
+            Standard52::TEN,
+            Standard52::NINE,
+            Standard52::EIGHT,
+            Standard52::SEVEN,
+            Standard52::SIX,
+            Standard52::FIVE,
+            Standard52::FOUR,
+            Standard52::THREE,
+            Standard52::TWO,
+            Standard52::ACE,
         ]
     }
 }

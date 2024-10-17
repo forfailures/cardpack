@@ -1,9 +1,48 @@
-use crate::types::rank::Rank;
-use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked, Suited};
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Standard52 {}
+
+impl Standard52 {
+    // https://github.com/forfailures/cardpack/actions/runs/11375156606/job/31645291021
+    // I can't believe that running the tests through GitHub Actions against
+    // Rust version 1.74 finally showed why the IDE was complaining about
+    // `pub const ACE: & str = "ace";`. It needed the `'static` lifeline, which
+    // for some reason still worked for the earlier and later versions of Rust.
+    //
+    // Here's the error from the logs:
+    // error: `&` without an explicit lifetime name cannot be used here
+    //   --> src/types/rank.rs:39:23
+    //    |
+    // 39 |     pub const LITTLE: &str = "little";
+    //    |                       ^
+    //    |
+    //    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    //    = note: for more information, see issue #115010 <https://github.com/rust-lang/rust/issues/115010>
+    // help: use the `'static` lifetime
+    //    |
+    // 39 |     pub const LITTLE: &'static str = "little";
+    //    |                        +++++++
+    pub const ACE: &'static str = "ace";
+    pub const KING: &'static str = "king";
+    pub const QUEEN: &'static str = "queen";
+    pub const JACK: &'static str = "jack";
+    pub const TEN: &'static str = "ten";
+    pub const NINE: &'static str = "nine";
+    pub const EIGHT: &'static str = "eight";
+    pub const SEVEN: &'static str = "seven";
+    pub const SIX: &'static str = "six";
+    pub const FIVE: &'static str = "five";
+    pub const FOUR: &'static str = "four";
+    pub const THREE: &'static str = "three";
+    pub const TWO: &'static str = "two";
+
+    // Standard Suits
+    pub const SPADES: &'static str = "spades";
+    pub const HEARTS: &'static str = "hearts";
+    pub const DIAMONDS: &'static str = "diamonds";
+    pub const CLUBS: &'static str = "clubs";
+}
 
 impl Decked<Standard52, Standard52> for Standard52 {}
 
@@ -17,19 +56,19 @@ impl Ranked for Standard52 {
 
     fn rank_names() -> Vec<&'static str> {
         vec![
-            Rank::<Standard52>::ACE,
-            Rank::<Standard52>::KING,
-            Rank::<Standard52>::QUEEN,
-            Rank::<Standard52>::JACK,
-            Rank::<Standard52>::TEN,
-            Rank::<Standard52>::NINE,
-            Rank::<Standard52>::EIGHT,
-            Rank::<Standard52>::SEVEN,
-            Rank::<Standard52>::SIX,
-            Rank::<Standard52>::FIVE,
-            Rank::<Standard52>::FOUR,
-            Rank::<Standard52>::THREE,
-            Rank::<Standard52>::TWO,
+            Standard52::ACE,
+            Standard52::KING,
+            Standard52::QUEEN,
+            Standard52::JACK,
+            Standard52::TEN,
+            Standard52::NINE,
+            Standard52::EIGHT,
+            Standard52::SEVEN,
+            Standard52::SIX,
+            Standard52::FIVE,
+            Standard52::FOUR,
+            Standard52::THREE,
+            Standard52::TWO,
         ]
     }
 }
@@ -43,10 +82,10 @@ impl Suited for Standard52 {
 
     fn suit_names() -> Vec<&'static str> {
         vec![
-            Suit::<Standard52>::SPADES,
-            Suit::<Standard52>::HEARTS,
-            Suit::<Standard52>::DIAMONDS,
-            Suit::<Standard52>::CLUBS,
+            Standard52::SPADES,
+            Standard52::HEARTS,
+            Standard52::DIAMONDS,
+            Standard52::CLUBS,
         ]
     }
 }
@@ -57,33 +96,35 @@ mod decks__standard52__tests {
     use super::*;
     use crate::localization::{FluentName, Named};
     use crate::types::card_error::CardError;
+    use crate::types::rank::Rank;
+    use crate::types::suit::Suit;
     use rstest::rstest;
     use std::str::FromStr;
 
     #[test]
     fn new() {
-        let rank = Rank::<Standard52>::new(Rank::<Standard52>::ACE);
+        let rank = Rank::<Standard52>::new(Standard52::ACE);
 
-        assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
+        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
     }
 
     #[test]
     fn new_with_weight() {
-        let rank = Rank::<Standard52>::new_with_weight(Rank::<Standard52>::ACE, 13);
+        let rank = Rank::<Standard52>::new_with_weight(Standard52::ACE, 13);
 
-        assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
+        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
         assert_eq!(rank.weight, 13);
         assert_eq!(rank.prime, 41);
     }
 
     #[test]
     fn update_weight() {
-        let rank = Rank::<Standard52>::new(Rank::<Standard52>::ACE);
+        let rank = Rank::<Standard52>::new(Standard52::ACE);
         let updated_rank = rank.update_weight(14);
 
-        assert_eq!(updated_rank.name, FluentName::new(Rank::<Standard52>::ACE));
+        assert_eq!(updated_rank.name, FluentName::new(Standard52::ACE));
         assert_eq!(updated_rank.weight, 14);
         assert_eq!(updated_rank.prime, 41);
     }
@@ -114,7 +155,7 @@ mod decks__standard52__tests {
 
     #[test]
     fn rank__display() {
-        let rank = Rank::<Standard52>::new(Rank::<Standard52>::ACE);
+        let rank = Rank::<Standard52>::new(Standard52::ACE);
 
         assert_eq!("A", format!("{rank}"));
     }
@@ -187,7 +228,7 @@ mod decks__standard52__tests {
 
     #[test]
     fn suit__symbol() {
-        let suit = Suit::<Standard52>::new(Suit::<Standard52>::SPADES);
+        let suit = Suit::<Standard52>::new(Standard52::SPADES);
 
         assert_eq!(suit.symbol(), "♠");
         assert_eq!(suit.to_string(), suit.symbol())
@@ -205,7 +246,7 @@ mod decks__standard52__tests {
     fn from_char() {
         let rank = Rank::<Standard52>::from('A');
 
-        assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
+        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
     }
@@ -214,7 +255,7 @@ mod decks__standard52__tests {
     fn from_str() {
         let rank = Rank::<Standard52>::from_str("A'").unwrap();
 
-        assert_eq!(rank.name, FluentName::new(Rank::<Standard52>::ACE));
+        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
     }
@@ -234,24 +275,21 @@ mod decks__standard52__tests {
 
     #[test]
     fn ranked__named__fluent_name() {
-        let rank = Rank::<Standard52>::new(Rank::<Standard52>::KING);
+        let rank = Rank::<Standard52>::new(Standard52::KING);
 
-        assert_eq!(
-            rank.fluent_name(),
-            &FluentName::new(Rank::<Standard52>::KING)
-        );
+        assert_eq!(rank.fluent_name(), &FluentName::new(Standard52::KING));
     }
 
     #[test]
     fn ranked__named__fluent_name_string() {
-        let rank = Rank::<Standard52>::new(Rank::<Standard52>::QUEEN);
+        let rank = Rank::<Standard52>::new(Standard52::QUEEN);
 
-        assert_eq!(rank.fluent_name_string(), Rank::<Standard52>::QUEEN);
+        assert_eq!(rank.fluent_name_string(), Standard52::QUEEN);
     }
 
     #[test]
     fn ranked__named__is_blank() {
-        let rank = Rank::<Standard52>::new(Rank::<Standard52>::ACE);
+        let rank = Rank::<Standard52>::new(Standard52::ACE);
 
         assert!(!rank.is_blank());
     }
@@ -261,19 +299,19 @@ mod decks__standard52__tests {
         let names = Rank::<Standard52>::rank_names();
 
         assert_eq!(names.len(), 13);
-        assert_eq!(names[0], Rank::<Standard52>::ACE);
-        assert_eq!(names[1], Rank::<Standard52>::KING);
-        assert_eq!(names[2], Rank::<Standard52>::QUEEN);
-        assert_eq!(names[3], Rank::<Standard52>::JACK);
-        assert_eq!(names[4], Rank::<Standard52>::TEN);
-        assert_eq!(names[5], Rank::<Standard52>::NINE);
-        assert_eq!(names[6], Rank::<Standard52>::EIGHT);
-        assert_eq!(names[7], Rank::<Standard52>::SEVEN);
-        assert_eq!(names[8], Rank::<Standard52>::SIX);
-        assert_eq!(names[9], Rank::<Standard52>::FIVE);
-        assert_eq!(names[10], Rank::<Standard52>::FOUR);
-        assert_eq!(names[11], Rank::<Standard52>::THREE);
-        assert_eq!(names[12], Rank::<Standard52>::TWO);
+        assert_eq!(names[0], Standard52::ACE);
+        assert_eq!(names[1], Standard52::KING);
+        assert_eq!(names[2], Standard52::QUEEN);
+        assert_eq!(names[3], Standard52::JACK);
+        assert_eq!(names[4], Standard52::TEN);
+        assert_eq!(names[5], Standard52::NINE);
+        assert_eq!(names[6], Standard52::EIGHT);
+        assert_eq!(names[7], Standard52::SEVEN);
+        assert_eq!(names[8], Standard52::SIX);
+        assert_eq!(names[9], Standard52::FIVE);
+        assert_eq!(names[10], Standard52::FOUR);
+        assert_eq!(names[11], Standard52::THREE);
+        assert_eq!(names[12], Standard52::TWO);
     }
 
     #[test]
@@ -296,10 +334,10 @@ mod decks__standard52__tests {
     #[test]
     fn suited__suit_names() {
         let expected = vec![
-            Suit::<Standard52>::SPADES,
-            Suit::<Standard52>::HEARTS,
-            Suit::<Standard52>::DIAMONDS,
-            Suit::<Standard52>::CLUBS,
+            Standard52::SPADES,
+            Standard52::HEARTS,
+            Standard52::DIAMONDS,
+            Standard52::CLUBS,
         ];
 
         let names = Suit::<Standard52>::suit_names();
@@ -308,22 +346,22 @@ mod decks__standard52__tests {
     }
 
     #[rstest]
-    #[case('♠', Suit::<Standard52>::SPADES)]
-    #[case('♤', Suit::<Standard52>::SPADES)]
-    #[case('S', Suit::<Standard52>::SPADES)]
-    #[case('s', Suit::<Standard52>::SPADES)]
-    #[case('♥', Suit::<Standard52>::HEARTS)]
-    #[case('♡', Suit::<Standard52>::HEARTS)]
-    #[case('H', Suit::<Standard52>::HEARTS)]
-    #[case('h', Suit::<Standard52>::HEARTS)]
-    #[case('♦', Suit::<Standard52>::DIAMONDS)]
-    #[case('♢', Suit::<Standard52>::DIAMONDS)]
-    #[case('D', Suit::<Standard52>::DIAMONDS)]
-    #[case('d', Suit::<Standard52>::DIAMONDS)]
-    #[case('♣', Suit::<Standard52>::CLUBS)]
-    #[case('♧', Suit::<Standard52>::CLUBS)]
-    #[case('C', Suit::<Standard52>::CLUBS)]
-    #[case('c', Suit::<Standard52>::CLUBS)]
+    #[case('♠', Standard52::SPADES)]
+    #[case('♤', Standard52::SPADES)]
+    #[case('S', Standard52::SPADES)]
+    #[case('s', Standard52::SPADES)]
+    #[case('♥', Standard52::HEARTS)]
+    #[case('♡', Standard52::HEARTS)]
+    #[case('H', Standard52::HEARTS)]
+    #[case('h', Standard52::HEARTS)]
+    #[case('♦', Standard52::DIAMONDS)]
+    #[case('♢', Standard52::DIAMONDS)]
+    #[case('D', Standard52::DIAMONDS)]
+    #[case('d', Standard52::DIAMONDS)]
+    #[case('♣', Standard52::CLUBS)]
+    #[case('♧', Standard52::CLUBS)]
+    #[case('C', Standard52::CLUBS)]
+    #[case('c', Standard52::CLUBS)]
     #[case('🃟', FluentName::BLANK)]
     #[case('T', FluentName::BLANK)]
     #[case('t', FluentName::BLANK)]

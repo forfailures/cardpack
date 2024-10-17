@@ -1,3 +1,4 @@
+use cardpack::decks::euchre24::Euchre24;
 use cardpack::decks::manila::Manila;
 use cardpack::decks::standard52::Standard52;
 use cardpack::decks::tarot::Tarot;
@@ -7,12 +8,15 @@ use clap::Parser;
 
 /// Run all of the decks with 1 for each:
 ///
-/// `cargo run --example cli -- -tsm -d 1`
+/// `cargo run --example cli -- -etsm -d 1`
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
     #[clap(short = 'd', long, default_value = "1")]
     decks: usize,
+
+    #[clap(short = 'e', long)]
+    euchre: bool,
 
     #[clap(short = 'm', long)]
     manila: bool,
@@ -33,6 +37,12 @@ fn main() -> Result<(), CardError> {
         let tarot_deck = Tarot::decks(decks);
         println!();
         println!("Tarot Deck: {tarot_deck}");
+    }
+
+    if args.euchre {
+        let euchre_deck = Euchre24::decks(decks);
+        println!();
+        println!("Euchre Deck: {euchre_deck}");
     }
 
     if args.manila {

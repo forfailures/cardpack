@@ -1,3 +1,5 @@
+use crate::decks::modern::Modern;
+use crate::decks::standard52::Standard52;
 use crate::localization::{FluentName, Named};
 use crate::types::traits::Suited;
 use std::fmt::Display;
@@ -19,19 +21,6 @@ impl<SuitType> Suit<SuitType>
 where
     SuitType: Suited,
 {
-    pub const SPADES: &'static str = "spades";
-    pub const HEARTS: &'static str = "hearts";
-    pub const DIAMONDS: &'static str = "diamonds";
-    pub const CLUBS: &'static str = "clubs";
-    pub const TRUMP: &'static str = "trump";
-
-    // Tarot Suites
-    pub const MAJOR_ARCANA: &'static str = "major-arcana";
-    pub const WANDS: &'static str = "wands";
-    pub const CUPS: &'static str = "cups";
-    pub const SWORDS: &'static str = "swords";
-    pub const PENTACLES: &'static str = "pentacles";
-
     #[must_use]
     pub fn new(name_str: &str) -> Suit<SuitType> {
         let name = FluentName::new(name_str);
@@ -144,11 +133,11 @@ impl<SuitType: Suited> From<char> for Suit<SuitType> {
             };
         }
         match c {
-            'S' | 's' | '♤' | '♠' => Suit::<SuitType>::new(Suit::<SuitType>::SPADES),
-            'H' | 'h' | '♡' | '♥' => Suit::<SuitType>::new(Suit::<SuitType>::HEARTS),
-            'D' | 'd' | '♢' | '♦' => Suit::<SuitType>::new(Suit::<SuitType>::DIAMONDS),
-            'C' | 'c' | '♧' | '♣' => Suit::<SuitType>::new(Suit::<SuitType>::CLUBS),
-            '🃟' | 'T' | 't' => Suit::new(Suit::<SuitType>::TRUMP),
+            'S' | 's' | '♤' | '♠' => Suit::<SuitType>::new(Standard52::SPADES),
+            'H' | 'h' | '♡' | '♥' => Suit::<SuitType>::new(Standard52::HEARTS),
+            'D' | 'd' | '♢' | '♦' => Suit::<SuitType>::new(Standard52::DIAMONDS),
+            'C' | 'c' | '♧' | '♣' => Suit::<SuitType>::new(Standard52::CLUBS),
+            '🃟' | 'T' | 't' => Suit::new(Modern::TRUMP),
             _ => Suit::new(FluentName::BLANK),
         }
     }

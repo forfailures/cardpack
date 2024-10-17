@@ -1,9 +1,18 @@
-use crate::types::rank::Rank;
+use crate::decks::standard52::Standard52;
 use crate::types::traits::Ranked;
 
 /// `Standard52` with Jokers.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-struct Modern {}
+pub struct Modern {}
+
+impl Modern {
+    // Jokers Ranks
+    pub const BIG: &'static str = "big";
+    pub const LITTLE: &'static str = "little";
+
+    // Rank
+    pub const TRUMP: &'static str = "trump";
+}
 
 impl Ranked for Modern {
     fn rank_chars() -> Vec<char> {
@@ -15,21 +24,21 @@ impl Ranked for Modern {
 
     fn rank_names() -> Vec<&'static str> {
         vec![
-            Rank::<Modern>::BIG,
-            Rank::<Modern>::LITTLE,
-            Rank::<Modern>::ACE,
-            Rank::<Modern>::KING,
-            Rank::<Modern>::QUEEN,
-            Rank::<Modern>::JACK,
-            Rank::<Modern>::TEN,
-            Rank::<Modern>::NINE,
-            Rank::<Modern>::EIGHT,
-            Rank::<Modern>::SEVEN,
-            Rank::<Modern>::SIX,
-            Rank::<Modern>::FIVE,
-            Rank::<Modern>::FOUR,
-            Rank::<Modern>::THREE,
-            Rank::<Modern>::TWO,
+            Modern::BIG,
+            Modern::LITTLE,
+            Standard52::ACE,
+            Standard52::KING,
+            Standard52::QUEEN,
+            Standard52::JACK,
+            Standard52::TEN,
+            Standard52::NINE,
+            Standard52::EIGHT,
+            Standard52::SEVEN,
+            Standard52::SIX,
+            Standard52::FIVE,
+            Standard52::FOUR,
+            Standard52::THREE,
+            Standard52::TWO,
         ]
     }
 }
@@ -39,32 +48,33 @@ impl Ranked for Modern {
 mod decks__modern__tests {
     use super::*;
     use crate::localization::{FluentName, Named};
+    use crate::types::rank::Rank;
     use std::str::FromStr;
 
     #[test]
     fn new() {
-        let rank = Rank::<Modern>::new(Rank::<Modern>::LITTLE);
+        let rank = Rank::<Modern>::new(Modern::LITTLE);
 
-        assert_eq!(rank.name, FluentName::new(Rank::<Modern>::LITTLE));
+        assert_eq!(rank.name, FluentName::new(Modern::LITTLE));
         assert_eq!(rank.weight, 13);
         assert_eq!(rank.prime, 43);
     }
 
     #[test]
     fn new_with_weight() {
-        let rank = Rank::<Modern>::new_with_weight(Rank::<Modern>::BIG, 13);
+        let rank = Rank::<Modern>::new_with_weight(Modern::BIG, 13);
 
-        assert_eq!(rank.name, FluentName::new(Rank::<Modern>::BIG));
+        assert_eq!(rank.name, FluentName::new(Modern::BIG));
         assert_eq!(rank.weight, 13);
         assert_eq!(rank.prime, 47);
     }
 
     #[test]
     fn update_weight() {
-        let rank = Rank::<Modern>::new(Rank::<Modern>::ACE);
+        let rank = Rank::<Modern>::new(Standard52::ACE);
         let updated_rank = rank.update_weight(14);
 
-        assert_eq!(updated_rank.name, FluentName::new(Rank::<Modern>::ACE));
+        assert_eq!(updated_rank.name, FluentName::new(Standard52::ACE));
         assert_eq!(updated_rank.weight, 14);
         assert_eq!(updated_rank.prime, 41);
     }
@@ -79,7 +89,7 @@ mod decks__modern__tests {
     fn from_char() {
         let rank = Rank::<Modern>::from('A');
 
-        assert_eq!(rank.name, FluentName::new(Rank::<Modern>::ACE));
+        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
     }
@@ -88,28 +98,28 @@ mod decks__modern__tests {
     fn from_str() {
         let rank = Rank::<Modern>::from_str("A'").unwrap();
 
-        assert_eq!(rank.name, FluentName::new(Rank::<Modern>::ACE));
+        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
     }
 
     #[test]
     fn named__fluent_name() {
-        let rank = Rank::<Modern>::new(Rank::<Modern>::KING);
+        let rank = Rank::<Modern>::new(Standard52::KING);
 
-        assert_eq!(rank.fluent_name(), &FluentName::new(Rank::<Modern>::KING));
+        assert_eq!(rank.fluent_name(), &FluentName::new(Standard52::KING));
     }
 
     #[test]
     fn named__fluent_name_string() {
-        let rank = Rank::<Modern>::new(Rank::<Modern>::QUEEN);
+        let rank = Rank::<Modern>::new(Standard52::QUEEN);
 
-        assert_eq!(rank.fluent_name_string(), Rank::<Modern>::QUEEN);
+        assert_eq!(rank.fluent_name_string(), Standard52::QUEEN);
     }
 
     #[test]
     fn named__is_blank() {
-        let rank = Rank::<Modern>::new(Rank::<Modern>::ACE);
+        let rank = Rank::<Modern>::new(Standard52::ACE);
 
         assert!(!rank.is_blank());
     }
@@ -119,20 +129,20 @@ mod decks__modern__tests {
         let names = Rank::<Modern>::rank_names();
 
         assert_eq!(names.len(), 15);
-        assert_eq!(names[0], Rank::<Modern>::BIG);
-        assert_eq!(names[1], Rank::<Modern>::LITTLE);
-        assert_eq!(names[2], Rank::<Modern>::ACE);
-        assert_eq!(names[3], Rank::<Modern>::KING);
-        assert_eq!(names[4], Rank::<Modern>::QUEEN);
-        assert_eq!(names[5], Rank::<Modern>::JACK);
-        assert_eq!(names[6], Rank::<Modern>::TEN);
-        assert_eq!(names[7], Rank::<Modern>::NINE);
-        assert_eq!(names[8], Rank::<Modern>::EIGHT);
-        assert_eq!(names[9], Rank::<Modern>::SEVEN);
-        assert_eq!(names[10], Rank::<Modern>::SIX);
-        assert_eq!(names[11], Rank::<Modern>::FIVE);
-        assert_eq!(names[12], Rank::<Modern>::FOUR);
-        assert_eq!(names[13], Rank::<Modern>::THREE);
-        assert_eq!(names[14], Rank::<Modern>::TWO);
+        assert_eq!(names[0], Modern::BIG);
+        assert_eq!(names[1], Modern::LITTLE);
+        assert_eq!(names[2], Standard52::ACE);
+        assert_eq!(names[3], Standard52::KING);
+        assert_eq!(names[4], Standard52::QUEEN);
+        assert_eq!(names[5], Standard52::JACK);
+        assert_eq!(names[6], Standard52::TEN);
+        assert_eq!(names[7], Standard52::NINE);
+        assert_eq!(names[8], Standard52::EIGHT);
+        assert_eq!(names[9], Standard52::SEVEN);
+        assert_eq!(names[10], Standard52::SIX);
+        assert_eq!(names[11], Standard52::FIVE);
+        assert_eq!(names[12], Standard52::FOUR);
+        assert_eq!(names[13], Standard52::THREE);
+        assert_eq!(names[14], Standard52::TWO);
     }
 }
