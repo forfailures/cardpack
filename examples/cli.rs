@@ -1,10 +1,10 @@
+use cardpack::decks::euchre24::Euchre24;
 use cardpack::decks::manila::Manila;
 use cardpack::decks::standard52::Standard52;
 use cardpack::decks::tarot::Tarot;
 use cardpack::types::card_error::CardError;
 use cardpack::types::traits::Decked;
 use clap::Parser;
-use cardpack::decks::euchre24::Euchre24;
 
 /// Run all of the decks with 1 for each:
 ///
