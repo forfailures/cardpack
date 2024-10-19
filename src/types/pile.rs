@@ -2,6 +2,8 @@ use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::traits::Ranked;
 use crate::types::traits::Suited;
+use rand::seq::SliceRandom;
+use rand::thread_rng;
 use std::fmt::Display;
 use std::str::FromStr;
 
@@ -62,6 +64,31 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
         } else {
             self.0.push(card);
             true
+        }
+    }
+
+    pub fn shuffle<F>(&mut self, mut rng: F)
+    where
+        F: FnMut(usize) -> usize,
+    {
+        let mut cards = self.0.clone();
+        let mut shuffled = Vec::new();
+        while !cards.is_empty() {
+            let index = rng(cards.len());
+            shuffled.push(cards.remove(index));
+        }
+        self.0 = shuffled;
+    }
+
+    pub fn shuffle_in_place(&mut self) {
+        let mut rng = thread_rng();
+        self.0.shuffle(&mut rng);
+    }
+
+    fn default_shuffler() -> fn(&mut Vec<Card<RankType, SuitType>>) {
+        |cards: &mut Vec<Card<RankType, SuitType>>| {
+            let mut rng = thread_rng();
+            cards.shuffle(&mut rng);
         }
     }
 
