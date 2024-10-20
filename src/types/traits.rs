@@ -3,6 +3,14 @@ use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 
+pub trait Shufflable<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> {
+    fn shuffle<F>(&mut self, shuffle_fn: F)
+    where
+        F: FnMut(&mut Vec<Card<RankType, SuitType>>),
+    {
+    }
+}
+
 pub trait Decked<SuitType: Suited + Clone + Ord, RankType: Ranked + Clone + Ord> {
     /// This trait makes me very happy. It feels like it has an elegance that I really love.
     ///

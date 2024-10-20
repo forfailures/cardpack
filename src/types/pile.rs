@@ -22,6 +22,13 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
         Self(cards)
     }
 
+    /// A mutable reference to the vector of cards so that they can be shuffled. I am
+    /// torn about
+    #[must_use]
+    pub fn cards(&self) -> Vec<Card<RankType, SuitType>> {
+        self.0.clone()
+    }
+
     pub fn extend(&mut self, other: &Self) {
         self.0.extend(other.0.clone());
     }
