@@ -34,27 +34,35 @@ fn main() -> Result<(), CardError> {
     let decks = args.decks;
 
     if args.tarot {
-        let tarot_deck = Tarot::decks(decks);
+        let deck = Tarot::decks(decks);
+        let shuffled = deck.shuffle_default();
         println!();
-        println!("Tarot Deck: {tarot_deck}");
+        println!("Tarot Deck: {deck}");
+        println!("Tarot Deck Shuffled: {shuffled}");
     }
 
     if args.euchre {
-        let euchre_deck = Euchre24::decks(decks);
+        let deck = Euchre24::decks(decks);
+        let shuffled = deck.shuffle_default();
         println!();
-        println!("Euchre Deck: {euchre_deck}");
+        println!("Euchre Deck: {deck}");
+        println!("Euchre Deck Shuffled: {shuffled}");
     }
 
     if args.manila {
-        let manila_deck = Manila::decks(decks);
+        let deck = Manila::decks(decks);
+        let shuffled = deck.shuffle_default();
         println!();
-        println!("Manila Deck: {manila_deck}");
+        println!("Manila Deck: {deck}");
+        println!("Manila Deck Shuffled: {shuffled}");
     }
 
     if args.standard {
-        let standard_deck = Standard52::decks(decks);
+        let deck = Standard52::decks(decks);
+        let shuffled = deck.shuffle_default();
         println!();
-        println!("Standard Deck: {standard_deck}");
+        println!("Standard Deck: {deck}");
+        println!("Standard Deck Shuffled: {shuffled}");
     }
 
     Ok(())

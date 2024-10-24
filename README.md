@@ -29,6 +29,8 @@ decks of various sizes and suites. Possibilities include:
 ## Dependencies
 
 * [Clap](https://crates.io/crates/clap)
+* [rand](https://crates.io/crates/rand)
+  * [The Rust Rand Book](https://rust-random.github.io/book/)
 * [thiserror](https://github.com/dtolnay/thiserror)
 
 ## Refactoring Goals

@@ -2,6 +2,8 @@ use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::traits::Ranked;
 use crate::types::traits::Suited;
+use rand::seq::SliceRandom;
+use rand::thread_rng;
 use std::fmt::Display;
 use std::str::FromStr;
 
@@ -18,6 +20,13 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
     #[must_use]
     pub fn new(cards: Vec<Card<RankType, SuitType>>) -> Self {
         Self(cards)
+    }
+
+    /// A mutable reference to the vector of cards so that they can be shuffled. I am
+    /// torn about
+    #[must_use]
+    pub fn cards(&self) -> Vec<Card<RankType, SuitType>> {
+        self.0.clone()
     }
 
     pub fn extend(&mut self, other: &Self) {
@@ -63,6 +72,31 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
             self.0.push(card);
             true
         }
+    }
+
+    #[must_use]
+    pub fn shuffle_default(&self) -> Self {
+        let mut pile = self.clone();
+        pile.shuffle_in_place_default();
+        pile
+    }
+
+    pub fn shuffle_in_place<F>(&mut self, mut rng: F)
+    where
+        F: FnMut(usize) -> usize,
+    {
+        let mut cards = self.0.clone();
+        let mut shuffled = Vec::new();
+        while !cards.is_empty() {
+            let index = rng(cards.len());
+            shuffled.push(cards.remove(index));
+        }
+        self.0 = shuffled;
+    }
+
+    pub fn shuffle_in_place_default(&mut self) {
+        let mut rng = thread_rng();
+        self.0.shuffle(&mut rng);
     }
 
     #[must_use]

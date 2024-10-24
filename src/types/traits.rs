@@ -67,3 +67,12 @@ pub trait Suited {
 
     fn suit_names() -> Vec<&'static str>;
 }
+
+pub trait Shufflable<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> {
+    fn shuffle<F>(&mut self, _shuffle_fn: F)
+    where
+        F: FnMut(&mut Vec<Card<RankType, SuitType>>),
+    {
+        todo!()
+    }
+}
