@@ -74,7 +74,14 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
         }
     }
 
-    pub fn shuffle<F>(&mut self, mut rng: F)
+    #[must_use]
+    pub fn shuffle_default(&self) -> Self {
+        let mut pile = self.clone();
+        pile.shuffle_in_place_default();
+        pile
+    }
+
+    pub fn shuffle_in_place<F>(&mut self, mut rng: F)
     where
         F: FnMut(usize) -> usize,
     {
@@ -87,16 +94,9 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
         self.0 = shuffled;
     }
 
-    pub fn shuffle_in_place(&mut self) {
+    pub fn shuffle_in_place_default(&mut self) {
         let mut rng = thread_rng();
         self.0.shuffle(&mut rng);
-    }
-
-    fn default_shuffler() -> fn(&mut Vec<Card<RankType, SuitType>>) {
-        |cards: &mut Vec<Card<RankType, SuitType>>| {
-            let mut rng = thread_rng();
-            cards.shuffle(&mut rng);
-        }
     }
 
     #[must_use]
