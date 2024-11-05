@@ -1,6 +1,14 @@
 use crate::decks::standard52::Standard52;
 use crate::types::traits::{Decked, Ranked};
 
+/// This deck represents the most common 24 card form of
+/// [Euchre](https://en.wikipedia.org/wiki/Euchre) with
+/// `A K Q J T 9` ranks.
+///
+/// This means that they are made up of the [Standard52]
+/// implementation of the [Suited] trait that's declared in the
+/// [Standard52] deck and the [Euchre24] implementation of the
+/// [Ranked] trait.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Euchre24 {}
 

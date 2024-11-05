@@ -1,5 +1,10 @@
 use crate::types::traits::{Decked, Ranked, Suited};
 
+/// The [Standard52](https://en.wikipedia.org/wiki/Standard_52-card_deck)
+/// deck with French suited playing cards is
+/// the one used for Bridge, Blackjack, and most variations of
+/// Poker. Many other decks will use its implementation of the
+/// [Suited] trait while creating their own variation of [Ranked].
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Standard52 {}
 

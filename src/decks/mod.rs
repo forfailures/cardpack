@@ -1,3 +1,4 @@
+mod canasta;
 pub mod euchre24;
 pub mod manila;
 pub mod modern;
