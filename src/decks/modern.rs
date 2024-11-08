@@ -1,7 +1,12 @@
 use crate::decks::standard52::Standard52;
-use crate::types::traits::Ranked;
+use crate::types::card::Card;
+use crate::types::rank::Rank;
+use crate::types::suit::Suit;
+use crate::types::traits::{Decked, Ranked, Suited};
 
 /// `Standard52` with Jokers.
+///
+/// < https://www.pagat.com/rummy/canasta.html#classic-threes/>
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Modern {}
 
@@ -12,7 +17,13 @@ impl Modern {
 
     // Rank
     pub const TRUMP: &'static str = "trump";
+
+    pub fn big_joker() -> Card<Modern, Modern> {
+        Card::new(Rank::new(Self::BIG), Suit::new(Self::TRUMP))
+    }
 }
+
+impl Decked<Modern, Modern> for Modern {}
 
 impl Ranked for Modern {
     fn rank_chars() -> Vec<char> {
@@ -39,6 +50,24 @@ impl Ranked for Modern {
             Standard52::FOUR,
             Standard52::THREE,
             Standard52::TWO,
+        ]
+    }
+}
+
+impl Suited for Modern {
+    fn suit_chars() -> Vec<char> {
+        vec![
+            '♤', '♠', 'S', 's', '♡', '♥', 'H', 'h', '♢', '♦', 'D', 'd', '♧', '♣', 'C', 'c' ,'🃟', 'T', 't',
+        ]
+    }
+
+    fn suit_names() -> Vec<&'static str> {
+        vec![
+            Modern::TRUMP,
+            Standard52::SPADES,
+            Standard52::HEARTS,
+            Standard52::DIAMONDS,
+            Standard52::CLUBS,
         ]
     }
 }
@@ -77,6 +106,15 @@ mod decks__modern__tests {
         assert_eq!(updated_rank.name, FluentName::new(Standard52::ACE));
         assert_eq!(updated_rank.weight, 14);
         assert_eq!(updated_rank.prime, 41);
+    }
+
+    #[test]
+    fn big_joker() {
+        let card = Modern::big_joker();
+
+        assert_eq!("", card.index);
+        assert_eq!(card.rank.name, FluentName::new(Modern::BIG));
+        assert_eq!(card.suit.name, FluentName::new(Modern::TRUMP));
     }
 
     #[test]
