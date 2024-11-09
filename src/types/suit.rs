@@ -142,3 +142,16 @@ impl<SuitType: Suited> From<char> for Suit<SuitType> {
         }
     }
 }
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod types__suit__tests {
+    use super::*;
+
+    #[test]
+    fn from_str__symbol() {
+        let suit = Suit::<Standard52>::from('♠');
+
+        assert_eq!(suit.symbol(), "♠");
+    }
+}

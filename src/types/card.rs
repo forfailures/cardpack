@@ -86,9 +86,21 @@ impl<RankType: Ranked + Clone, SuitType: Suited + Clone> Display for Card<RankTy
 impl<RankType: Ranked + Clone, SuitType: Suited + Clone> FromStr for Card<RankType, SuitType> {
     type Err = CardError;
 
+    /// Just got hit with this nasty bug:
+    /// [Calculating String length and width – Fun with Unicode](https://tomdebruijn.com/posts/rust-string-length-width-calculations/)
+    ///
+    /// Unicode string length is bite sized not char count
+    ///
+    /// Man, I look at how I handled this with cardpacjk.rs and Fudd, and it is the hackiest hacky hack I have
+    /// ever seen. It's an abomination of pain.
+    ///
+    /// TODO: One thing I would highly recommend is that you draw out a sequence diagram
+    /// of your code flows to see just how a bill becomes a low. (I am a bill, and I am only a bill...)
+    /// See just how conveluted your code is.
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let s = s.trim();
-        if s.len() != 2 {
+        // original was `if s.len() != 2 {`
+        if s.chars().count() != 2 {
             return Err(CardError::InvalidIndex(s.to_string()));
         }
         if let Some(c) = s.chars().next() {
@@ -108,6 +120,7 @@ impl<RankType: Ranked + Clone, SuitType: Suited + Clone> FromStr for Card<RankTy
 mod types__card__tests {
     use super::*;
     use crate::decks::standard52::Standard52;
+    use crate::localization::FluentName;
 
     #[test]
     fn new() {
@@ -174,5 +187,14 @@ mod types__card__tests {
         let card = Card::<Standard52, Standard52>::from_str(" BW ").unwrap();
 
         assert!(card.is_blank());
+    }
+
+    #[test]
+    fn from_str__symbol() {
+        let card = Card::<Standard52, Standard52>::from_str("A♠").unwrap();
+
+        assert_eq!(card.index, "AS");
+        assert_eq!(card.rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(card.suit.name, FluentName::new(Standard52::SPADES));
     }
 }
