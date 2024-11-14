@@ -143,7 +143,7 @@ mod decks__modern__tests {
     fn big_joker() {
         let card = Modern::big_joker();
 
-        assert_eq!("JT", card.index);
+        assert_eq!("BT", card.index);
         assert_eq!(card.rank.name, FluentName::new(Modern::BIG));
         assert_eq!(card.suit.name, FluentName::new(Modern::TRUMP));
     }
@@ -152,7 +152,7 @@ mod decks__modern__tests {
     fn little_joker() {
         let card = Modern::little_joker();
 
-        assert_eq!("jT", card.index);
+        assert_eq!("LT", card.index);
         assert_eq!(card.rank.name, FluentName::new(Modern::LITTLE));
         assert_eq!(card.suit.name, FluentName::new(Modern::TRUMP));
     }
@@ -173,7 +173,7 @@ mod decks__modern__tests {
         shuffled.sort_in_place();
 
         assert_eq!(54, deck.len());
-        assert_eq!("J🃟 j🃟 A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠ 5♠ 4♠ 3♠ 2♠ A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥ 5♥ 4♥ 3♥ 2♥ A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦ 5♦ 4♦ 3♦ 2♦ A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣ 5♣ 4♣ 3♣ 2♣", deck.to_string());
+        assert_eq!("B🃟 L🃟 A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠ 5♠ 4♠ 3♠ 2♠ A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥ 5♥ 4♥ 3♥ 2♥ A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦ 5♦ 4♦ 3♦ 2♦ A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣ 5♣ 4♣ 3♣ 2♣", deck.to_string());
         assert_eq!(deck.to_string(), shuffled.to_string());
     }
 

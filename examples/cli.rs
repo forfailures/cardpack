@@ -1,5 +1,6 @@
 use cardpack::decks::euchre24::Euchre24;
 use cardpack::decks::manila::Manila;
+use cardpack::decks::modern::Modern;
 use cardpack::decks::standard52::Standard52;
 use cardpack::decks::tarot::Tarot;
 use cardpack::types::card_error::CardError;
@@ -21,6 +22,9 @@ struct Args {
     #[clap(short = 'm', long)]
     manila: bool,
 
+    #[clap(short = 'j', long)]
+    modern: bool,
+
     #[clap(short = 's', long)]
     standard: bool,
 
@@ -37,7 +41,7 @@ fn main() -> Result<(), CardError> {
         let deck = Tarot::decks(decks);
         let shuffled = deck.shuffle_default();
         println!();
-        println!("Tarot Deck: {deck}");
+        println!("Tarot Deck:          {deck}");
         println!("Tarot Deck Shuffled: {shuffled}");
     }
 
@@ -45,7 +49,7 @@ fn main() -> Result<(), CardError> {
         let deck = Euchre24::decks(decks);
         let shuffled = deck.shuffle_default();
         println!();
-        println!("Euchre Deck: {deck}");
+        println!("Euchre Deck:          {deck}");
         println!("Euchre Deck Shuffled: {shuffled}");
     }
 
@@ -53,15 +57,23 @@ fn main() -> Result<(), CardError> {
         let deck = Manila::decks(decks);
         let shuffled = deck.shuffle_default();
         println!();
-        println!("Manila Deck: {deck}");
+        println!("Manila Deck:          {deck}");
         println!("Manila Deck Shuffled: {shuffled}");
+    }
+
+    if args.modern {
+        let deck = Modern::decks(decks);
+        let shuffled = deck.shuffle_default();
+        println!();
+        println!("Modern Deck:          {deck}");
+        println!("Modern Deck Shuffled: {shuffled}");
     }
 
     if args.standard {
         let deck = Standard52::decks(decks);
         let shuffled = deck.shuffle_default();
         println!();
-        println!("Standard Deck: {deck}");
+        println!("Standard Deck:          {deck}");
         println!("Standard Deck Shuffled: {shuffled}");
     }
 
