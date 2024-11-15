@@ -1,17 +1,58 @@
 use crate::decks::standard52::Standard52;
-use crate::types::traits::Ranked;
+use crate::types::card::Card;
+use crate::types::pile::Pile;
+use crate::types::rank::Rank;
+use crate::types::suit::Suit;
+use crate::types::traits::{Decked, Ranked, Suited};
+use std::str::FromStr;
 
 /// `Standard52` with Jokers.
+///
+/// <https://www.pagat.com/rummy/canasta.html#classic-threes>
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Modern {}
 
 impl Modern {
-    // Jokers Ranks
-    pub const BIG: &'static str = "big";
-    pub const LITTLE: &'static str = "little";
+    // Jokers Fluent Names
+    pub const BIG: &'static str = "big-joker";
+    pub const LITTLE: &'static str = "little-joker";
 
     // Rank
     pub const TRUMP: &'static str = "trump";
+
+    #[must_use]
+    pub fn big_joker() -> Card<Modern, Modern> {
+        Card::new(Rank::new(Self::BIG), Suit::new(Self::TRUMP))
+    }
+
+    #[must_use]
+    pub fn little_joker() -> Card<Modern, Modern> {
+        Card::new(Rank::new(Self::LITTLE), Suit::new(Self::TRUMP))
+    }
+
+    #[must_use]
+    pub fn jokers() -> Pile<Modern, Modern> {
+        let mut pile = Pile::<Modern, Modern>::new(Vec::new());
+
+        pile.push(Self::big_joker());
+        pile.push(Self::little_joker());
+
+        pile
+    }
+}
+
+impl Decked<Modern, Modern> for Modern {
+    fn deck() -> Pile<Modern, Modern> {
+        let mut deck = Modern::jokers();
+
+        // TODO: HACK
+        let raw52 = Standard52::deck().to_string();
+        let base52 = Pile::<Modern, Modern>::from_str(&raw52).unwrap();
+
+        deck.extend(&base52);
+
+        deck
+    }
 }
 
 impl Ranked for Modern {
@@ -39,6 +80,25 @@ impl Ranked for Modern {
             Standard52::FOUR,
             Standard52::THREE,
             Standard52::TWO,
+        ]
+    }
+}
+
+impl Suited for Modern {
+    fn suit_chars() -> Vec<char> {
+        vec![
+            '♤', '♠', 'S', 's', '♡', '♥', 'H', 'h', '♢', '♦', 'D', 'd', '♧', '♣', 'C', 'c', '🃟',
+            'T', 't',
+        ]
+    }
+
+    fn suit_names() -> Vec<&'static str> {
+        vec![
+            Modern::TRUMP,
+            Standard52::SPADES,
+            Standard52::HEARTS,
+            Standard52::DIAMONDS,
+            Standard52::CLUBS,
         ]
     }
 }
@@ -77,6 +137,44 @@ mod decks__modern__tests {
         assert_eq!(updated_rank.name, FluentName::new(Standard52::ACE));
         assert_eq!(updated_rank.weight, 14);
         assert_eq!(updated_rank.prime, 41);
+    }
+
+    #[test]
+    fn big_joker() {
+        let card = Modern::big_joker();
+
+        assert_eq!("BT", card.index);
+        assert_eq!(card.rank.name, FluentName::new(Modern::BIG));
+        assert_eq!(card.suit.name, FluentName::new(Modern::TRUMP));
+    }
+
+    #[test]
+    fn little_joker() {
+        let card = Modern::little_joker();
+
+        assert_eq!("LT", card.index);
+        assert_eq!(card.rank.name, FluentName::new(Modern::LITTLE));
+        assert_eq!(card.suit.name, FluentName::new(Modern::TRUMP));
+    }
+
+    #[test]
+    fn card__from_str() {
+        let card = Card::<Modern, Modern>::from_str("A♠").unwrap();
+
+        assert_eq!(card.index, "AS");
+        assert_eq!(card.rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(card.suit.name, FluentName::new(Standard52::SPADES));
+    }
+
+    #[test]
+    fn decked__deck() {
+        let deck = Modern::deck();
+        let mut shuffled = deck.shuffle_default();
+        shuffled.sort_in_place();
+
+        assert_eq!(54, deck.len());
+        assert_eq!("B🃟 L🃟 A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠ 5♠ 4♠ 3♠ 2♠ A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥ 5♥ 4♥ 3♥ 2♥ A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦ 5♦ 4♦ 3♦ 2♦ A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣ 5♣ 4♣ 3♣ 2♣", deck.to_string());
+        assert_eq!(deck.to_string(), shuffled.to_string());
     }
 
     #[test]
