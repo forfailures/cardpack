@@ -1,10 +1,33 @@
 use crate::decks::standard52::Standard52;
+use crate::types::card::Card;
+use crate::types::pile::Pile;
+use crate::types::rank::Rank;
+use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked};
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Pinochle {}
 
-impl Decked<Standard52, Pinochle> for Pinochle {}
+impl Decked<Standard52, Pinochle> for Pinochle {
+    #[must_use]
+    fn deck() -> Pile<Pinochle, Standard52> {
+        let ranks = Rank::<Pinochle>::ranks();
+        let suits = Suit::<Standard52>::suits();
+
+        let mut pile = Pile::<Pinochle, Standard52>::new(Vec::new());
+
+        for suit in &suits {
+            for rank in &ranks {
+                pile.push(Card::<Pinochle, Standard52>::new(
+                    rank.clone(),
+                    suit.clone(),
+                ));
+            }
+        }
+
+        pile
+    }
+}
 
 impl Ranked for Pinochle {
     fn rank_chars() -> Vec<char> {
@@ -26,17 +49,28 @@ impl Ranked for Pinochle {
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod decks__pinochle__tests {
+    use super::*;
     use crate::localization::Named;
     use crate::types::rank::Rank;
-    use super::*;
 
     #[test]
     fn rank__new_with_weight() {
-        let rank = Rank::<Pinochle>::new_with_weight("Ace", 20);
+        let rank = Rank::<Pinochle>::new_with_weight("ace", 20);
 
         assert_eq!(rank.weight, 20);
-        assert_eq!(rank.prime, 0);
-        assert_eq!(rank.fluent_name().prime(), 1);
-        assert_eq!(rank.fluent_name_string(), "Ace");
+        assert_eq!(rank.prime, 41);
+        assert_eq!(rank.fluent_name().prime(), 41);
+        assert_eq!(rank.fluent_name_string(), "ace");
+    }
+
+    #[test]
+    fn rank__ranks_from_array() {
+        let ranks = Rank::<Pinochle>::ranks_from_array(&*Pinochle::rank_names());
+
+        assert_eq!(ranks.len(), 6);
+        assert_eq!(ranks[0].fluent_name_string(), "ace");
+        assert_eq!(ranks[0].weight, 5);
+        assert_eq!(ranks[1].fluent_name_string(), "ten");
+        assert_eq!(ranks[1].weight, 4);
     }
 }

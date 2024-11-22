@@ -34,6 +34,7 @@ where
         }
     }
 
+    #[must_use]
     pub fn new_with_weight(name_str: &str, weight: u32) -> Rank<RankType> {
         let name = FluentName::new(name_str);
 
@@ -51,6 +52,18 @@ where
             .iter()
             .map(|name| Self::new(name))
             .collect()
+    }
+
+    #[must_use]
+    pub fn ranks_from_array(names: &[&'static str]) -> Vec<Self> {
+        let mut v: Vec<Self> = Vec::new();
+
+        #[allow(clippy::cast_possible_truncation)]
+        for (i, &elem) in names.iter().enumerate() {
+            let weight = (names.len() - 1) - i;
+            v.push(Rank::new_with_weight(elem, weight as u32));
+        }
+        v
     }
 
     /// Hackie utility function to create a quick way to validate the returned ranks.
