@@ -56,6 +56,11 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
         Self(cards)
     }
 
+    #[must_use]
+    pub fn position(&self, card: &Card<RankType, SuitType>) -> Option<usize> {
+        self.0.iter().position(|c| c == card)
+    }
+
     // Takes a reference to the prepended entity, clones it, appends the original to the passed in
     // entity, and replaces the original with the new one.
     pub fn prepend(&mut self, other: &Pile<RankType, SuitType>) {
@@ -72,6 +77,14 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
             self.0.push(card);
             true
         }
+    }
+
+    pub fn remove_card(
+        &mut self,
+        card: &Card<RankType, SuitType>,
+    ) -> Option<Card<RankType, SuitType>> {
+        let index = self.position(card)?;
+        Some(self.0.remove(index))
     }
 
     #[must_use]
@@ -167,6 +180,7 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> FromStr
 mod types__pile__tests {
     use super::*;
     use crate::decks::standard52::Standard52;
+    use crate::types::traits::Decked;
     use std::str::FromStr;
 
     fn test_pile() -> Pile<Standard52, Standard52> {
@@ -229,6 +243,16 @@ mod types__pile__tests {
     }
 
     #[test]
+    fn position() {
+        let deck = Standard52::deck();
+        let pile = test_pile();
+        let card = Card::from_str("AH").unwrap();
+
+        assert_eq!(deck.position(&card), Some(13));
+        assert_eq!(pile.position(&card), Some(2));
+    }
+
+    #[test]
     fn prepend() {
         let mut pile = test_pile();
         let pile2 = Pile::<Standard52, Standard52>::from_str("3S 9D").unwrap();
@@ -246,6 +270,21 @@ mod types__pile__tests {
         pile.push(Card::from_str("AS").unwrap());
 
         assert_eq!(pile, test_pile());
+    }
+
+    #[test]
+    fn remove_card() {
+        let mut deck = Standard52::deck();
+        let mut pile = test_pile();
+        let card = Card::from_str("AH").unwrap();
+
+        let removed_from_pile = pile.remove_card(&card);
+        let removed_from_deck = deck.remove_card(&card);
+
+        assert_eq!(pile.len(), 3);
+        assert_eq!(removed_from_pile.unwrap().index, "AH");
+        assert_eq!(deck.len(), 51);
+        assert_eq!(removed_from_deck.unwrap().index, "AH");
     }
 
     #[test]

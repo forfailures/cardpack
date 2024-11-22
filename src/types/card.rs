@@ -2,7 +2,10 @@ use crate::localization::Named;
 use crate::types::card_error::CardError;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
+use crate::types::traits::{Ranked, Suited};
 use std::fmt::Display;
+
+use std::str::FromStr;
 
 #[derive(Debug, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub struct Card<RankType, SuitType>
@@ -17,9 +20,6 @@ where
     pub suit: Suit<SuitType>,
     pub rank: Rank<RankType>,
 }
-use crate::types::traits::{Ranked, Suited};
-
-use std::str::FromStr;
 
 impl<RankType, SuitType> Card<RankType, SuitType>
 where
@@ -96,7 +96,7 @@ impl<RankType: Ranked + Clone, SuitType: Suited + Clone> FromStr for Card<RankTy
     ///
     /// TODO: One thing I would highly recommend is that you draw out a sequence diagram
     /// of your code flows to see just how a bill becomes a low. (I am a bill, and I am only a bill...)
-    /// See just how conveluted your code is.
+    /// See just how convoluted your code is.
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let s = s.trim();
         // original was `if s.len() != 2 {`

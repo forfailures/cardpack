@@ -1,7 +1,10 @@
 use cardpack::decks::euchre24::Euchre24;
+use cardpack::decks::hand_and_foot::HandAndFoot;
 use cardpack::decks::manila::Manila;
 use cardpack::decks::modern::Modern;
+use cardpack::decks::pinochle::Pinochle;
 use cardpack::decks::skat::Skat;
+use cardpack::decks::spades::Spades;
 use cardpack::decks::standard52::Standard52;
 use cardpack::decks::tarot::Tarot;
 use cardpack::types::card_error::CardError;
@@ -10,7 +13,7 @@ use clap::Parser;
 
 /// Run all of the decks with 1 for each:
 ///
-/// `cargo run --example cli -- -etsm -d 1`
+/// `cargo run --example cli -- -emjkpsa -d 1`
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
@@ -20,14 +23,23 @@ struct Args {
     #[clap(short = 'e', long)]
     euchre: bool,
 
+    #[clap(short = 'f', long)]
+    hand_and_foot: bool,
+
     #[clap(short = 'm', long)]
     manila: bool,
 
     #[clap(short = 'j', long)]
     modern: bool,
 
+    #[clap(short = 'p', long)]
+    pinochle: bool,
+
     #[clap(short = 'k', long)]
     skat: bool,
+
+    #[clap(short = 'a', long)]
+    spades: bool,
 
     #[clap(short = 's', long)]
     standard: bool,
@@ -73,6 +85,22 @@ fn main() -> Result<(), CardError> {
         println!("Modern Deck Shuffled: {shuffled}");
     }
 
+    if args.spades {
+        let deck = Spades::decks(decks);
+        let shuffled = deck.shuffle_default();
+        println!();
+        println!("Spades Deck:          {deck}");
+        println!("Spades Deck Shuffled: {shuffled}");
+    }
+
+    if args.pinochle {
+        let deck = Pinochle::decks(decks);
+        let shuffled = deck.shuffle_default();
+        println!();
+        println!("Pinochle Deck:          {deck}");
+        println!("Pinochle Deck Shuffled: {shuffled}");
+    }
+
     if args.skat {
         let deck = Skat::decks(decks);
         let shuffled = deck.shuffle_default();
@@ -87,6 +115,14 @@ fn main() -> Result<(), CardError> {
         println!();
         println!("Standard Deck:          {deck}");
         println!("Standard Deck Shuffled: {shuffled}");
+    }
+
+    if args.hand_and_foot {
+        let deck = HandAndFoot::decks(decks);
+        let shuffled = deck.shuffle_default();
+        println!();
+        println!("Hand and Foot Deck:          {deck}");
+        println!("Hand and Foot Deck Shuffled: {shuffled}");
     }
 
     Ok(())
