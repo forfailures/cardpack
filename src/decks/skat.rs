@@ -1,0 +1,52 @@
+use crate::decks::standard52::Standard52;
+use crate::types::traits::{Decked, Ranked, Suited};
+
+/// Skat is a German, trick based card game for three players.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct Skat {}
+
+impl Skat {
+    // Skat Deck Ranks:
+    pub const DAUS: &'static str = "daus";
+    pub const OBER: &'static str = "ober";
+    pub const UNTER: &'static str = "unter";
+
+    // Skat Suit Fluent Identifiers
+    pub const EICHEL: &'static str = "eichel"; // Acorns
+    pub const LAUB: &'static str = "laub"; // Leaves
+    pub const HERZ: &'static str = "herz"; // Hearts
+    pub const SHELLEN: &'static str = "schellen"; // Bells
+}
+
+impl Decked<Skat, Skat> for Skat {}
+
+impl Ranked for Skat {
+    fn rank_chars() -> Vec<char> {
+        vec![
+            '7', '8', '9', 'T', 't', '0', 'U', 'u', 'O', 'o', 'K', 'k', 'D', 'd',
+        ]
+    }
+
+    fn rank_names() -> Vec<&'static str> {
+        vec![
+            Skat::DAUS,
+            Standard52::KING,
+            Skat::OBER,
+            Skat::UNTER,
+            Standard52::TEN,
+            Standard52::NINE,
+            Standard52::EIGHT,
+            Standard52::SEVEN,
+        ]
+    }
+}
+
+impl Suited for Skat {
+    fn suit_chars() -> Vec<char> {
+        todo!()
+    }
+
+    fn suit_names() -> Vec<&'static str> {
+        vec![Skat::EICHEL, Skat::LAUB, Skat::HERZ, Skat::SHELLEN]
+    }
+}

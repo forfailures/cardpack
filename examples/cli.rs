@@ -1,6 +1,7 @@
 use cardpack::decks::euchre24::Euchre24;
 use cardpack::decks::manila::Manila;
 use cardpack::decks::modern::Modern;
+use cardpack::decks::skat::Skat;
 use cardpack::decks::standard52::Standard52;
 use cardpack::decks::tarot::Tarot;
 use cardpack::types::card_error::CardError;
@@ -24,6 +25,9 @@ struct Args {
 
     #[clap(short = 'j', long)]
     modern: bool,
+
+    #[clap(short = 'k', long)]
+    skat: bool,
 
     #[clap(short = 's', long)]
     standard: bool,
@@ -67,6 +71,14 @@ fn main() -> Result<(), CardError> {
         println!();
         println!("Modern Deck:          {deck}");
         println!("Modern Deck Shuffled: {shuffled}");
+    }
+
+    if args.skat {
+        let deck = Skat::decks(decks);
+        let shuffled = deck.shuffle_default();
+        println!();
+        println!("Skat Deck:          {deck}");
+        println!("Skat Deck Shuffled: {shuffled}");
     }
 
     if args.standard {
