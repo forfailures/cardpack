@@ -12,7 +12,7 @@ use crate::types::traits::{Decked, Ranked};
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Manila {}
 
-impl Decked<Standard52, Manila> for Manila {}
+impl Decked<Manila, Standard52> for Manila {}
 
 impl Ranked for Manila {
     fn rank_chars() -> Vec<char> {

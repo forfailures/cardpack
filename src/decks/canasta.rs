@@ -7,7 +7,7 @@ use crate::types::traits::{Decked, Ranked};
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Canasta {}
 
-impl Decked<Standard52, Canasta> for Canasta {}
+impl Decked<Canasta, Standard52> for Canasta {}
 
 impl Ranked for Canasta {
     fn rank_chars() -> Vec<char> {

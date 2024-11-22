@@ -1,6 +1,7 @@
 use cardpack::decks::euchre24::Euchre24;
 use cardpack::decks::manila::Manila;
 use cardpack::decks::modern::Modern;
+use cardpack::decks::pinochle::Pinochle;
 use cardpack::decks::skat::Skat;
 use cardpack::decks::standard52::Standard52;
 use cardpack::decks::tarot::Tarot;
@@ -10,7 +11,7 @@ use clap::Parser;
 
 /// Run all of the decks with 1 for each:
 ///
-/// `cargo run --example cli -- -etsm -d 1`
+/// `cargo run --example cli -- -emjkps -d 1`
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
@@ -25,6 +26,9 @@ struct Args {
 
     #[clap(short = 'j', long)]
     modern: bool,
+
+    #[clap(short = 'p', long)]
+    pinochle: bool,
 
     #[clap(short = 'k', long)]
     skat: bool,
@@ -71,6 +75,14 @@ fn main() -> Result<(), CardError> {
         println!();
         println!("Modern Deck:          {deck}");
         println!("Modern Deck Shuffled: {shuffled}");
+    }
+
+    if args.pinochle {
+        let deck = Pinochle::decks(decks);
+        let shuffled = deck.shuffle_default();
+        println!();
+        println!("Pinochle Deck:          {deck}");
+        println!("Pinochle Deck Shuffled: {shuffled}");
     }
 
     if args.skat {

@@ -8,10 +8,10 @@ use crate::types::traits::{Decked, Ranked};
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Pinochle {}
 
-impl Decked<Standard52, Pinochle> for Pinochle {
+impl Decked<Pinochle, Standard52> for Pinochle {
     #[must_use]
     fn deck() -> Pile<Pinochle, Standard52> {
-        let ranks = Rank::<Pinochle>::ranks();
+        let ranks = Rank::<Pinochle>::ranks_from_array(&Pinochle::rank_names());
         let suits = Suit::<Standard52>::suits();
 
         let mut pile = Pile::<Pinochle, Standard52>::new(Vec::new());
@@ -72,5 +72,17 @@ mod decks__pinochle__tests {
         assert_eq!(ranks[0].weight, 5);
         assert_eq!(ranks[1].fluent_name_string(), "ten");
         assert_eq!(ranks[1].weight, 4);
+    }
+
+    #[test]
+    fn decked__sort() {
+        let deck = Pinochle::deck();
+        let mut shuffled = deck.shuffle_default();
+        shuffled.sort_in_place();
+
+        let expected = "A♠ T♠ K♠ Q♠ J♠ 9♠ A♥ T♥ K♥ Q♥ J♥ 9♥ A♦ T♦ K♦ Q♦ J♦ 9♦ A♣ T♣ K♣ Q♣ J♣ 9♣";
+
+        assert_eq!(deck.to_string(), expected);
+        assert_eq!(shuffled.to_string(), expected);
     }
 }
