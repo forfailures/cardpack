@@ -34,6 +34,17 @@ where
         }
     }
 
+    pub fn new_with_weight(name_str: &str, weight: u32) -> Rank<RankType> {
+        let name = FluentName::new(name_str);
+
+        Rank::<RankType> {
+            weight,
+            prime: name.prime(),
+            name,
+            phantom_data: PhantomData,
+        }
+    }
+
     #[must_use]
     pub fn ranks() -> Vec<Self> {
         RankType::rank_names()
