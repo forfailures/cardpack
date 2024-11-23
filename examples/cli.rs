@@ -1,3 +1,4 @@
+use cardpack::decks::canasta::Canasta;
 use cardpack::decks::euchre24::Euchre24;
 use cardpack::decks::hand_and_foot::HandAndFoot;
 use cardpack::decks::manila::Manila;
@@ -10,7 +11,6 @@ use cardpack::decks::tarot::Tarot;
 use cardpack::types::card_error::CardError;
 use cardpack::types::traits::Decked;
 use clap::Parser;
-use cardpack::decks::canasta::Canasta;
 
 /// Run all of the decks with 1 for each:
 ///
