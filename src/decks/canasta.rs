@@ -1,4 +1,9 @@
+use crate::decks::modern::Modern;
 use crate::decks::standard52::Standard52;
+use crate::types::card::Card;
+use crate::types::pile::Pile;
+use crate::types::rank::Rank;
+use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked};
 
 /// [Canasta](https://en.wikipedia.org/wiki/Canasta)deck
@@ -7,44 +12,48 @@ use crate::types::traits::{Decked, Ranked};
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Canasta {}
 
-impl Decked<Canasta, Standard52> for Canasta {}
+impl Canasta {
+    fn red_threes() -> Pile<Modern, Modern> {
+        let mut pile = Pile::<Modern, Modern>::new(Vec::new());
 
-impl Ranked for Canasta {
-    fn rank_chars() -> Vec<char> {
-        Standard52::rank_chars()
-    }
+        let three_hearts = Card::new_weighted(
+            Rank::<Modern>::new(Standard52::THREE),
+            Suit::<Modern>::new(Standard52::HEARTS),
+            100_001
+        );
+        let three_diamonds = Card::new_weighted(
+            Rank::<Modern>::new(Standard52::THREE),
+            Suit::<Modern>::new(Standard52::DIAMONDS),
+            100_000
+        );
 
-    fn rank_names() -> Vec<&'static str> {
-        vec![
-            Standard52::ACE,
-            Standard52::KING,
-            Standard52::QUEEN,
-            Standard52::JACK,
-            Standard52::TEN,
-            Standard52::NINE,
-            Standard52::EIGHT,
-            Standard52::SEVEN,
-            Standard52::SIX,
-            Standard52::FIVE,
-            Standard52::FOUR,
-            Standard52::THREE,
-            Standard52::TWO,
-            Standard52::ACE,
-            Standard52::KING,
-            Standard52::QUEEN,
-            Standard52::JACK,
-            Standard52::TEN,
-            Standard52::NINE,
-            Standard52::EIGHT,
-            Standard52::SEVEN,
-            Standard52::SIX,
-            Standard52::FIVE,
-            Standard52::FOUR,
-            Standard52::THREE,
-            Standard52::TWO,
-        ]
+        pile.push(three_hearts.clone());
+        pile.push(three_hearts);
+        pile.push(three_diamonds.clone());
+        pile.push(three_diamonds);
+
+        pile
     }
 }
+
+impl Decked<Modern, Modern> for Canasta {
+    fn deck() -> Pile<Modern, Modern> {
+        let mut deck = Modern::decks(2);
+
+        let red_threes = Canasta::red_threes();
+
+        deck.remove_cards(&red_threes);
+
+        deck.prepend(&red_threes);
+
+
+        deck.sort_in_place();
+        deck
+    }
+
+}
+
+
 
 #[cfg(test)]
 #[allow(non_snake_case)]

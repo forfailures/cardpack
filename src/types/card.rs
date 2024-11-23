@@ -36,6 +36,16 @@ where
         }
     }
 
+    #[must_use]
+    pub fn new_weighted(rank: Rank<RankType>, suit: Suit<SuitType>, weight: u32) -> Self {
+        Self {
+            weight,
+            index: Card::determine_default_index(&suit, &rank),
+            suit,
+            rank,
+        }
+    }
+
     // Private methods
 
     /// The index is the most boring way to represent a `Card` as a `String` using
