@@ -1,3 +1,4 @@
+use cardpack::decks::canasta::Canasta;
 use cardpack::decks::euchre24::Euchre24;
 use cardpack::decks::hand_and_foot::HandAndFoot;
 use cardpack::decks::manila::Manila;
@@ -13,12 +14,15 @@ use clap::Parser;
 
 /// Run all of the decks with 1 for each:
 ///
-/// `cargo run --example cli -- -emjkpsa -d 1`
+/// `cargo run --example cli -- -emjkpsac -d 1`
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
     #[clap(short = 'd', long, default_value = "1")]
     decks: usize,
+
+    #[clap(short = 'c', long)]
+    canasta: bool,
 
     #[clap(short = 'e', long)]
     euchre: bool,
@@ -59,6 +63,14 @@ fn main() -> Result<(), CardError> {
         println!();
         println!("Tarot Deck:          {deck}");
         println!("Tarot Deck Shuffled: {shuffled}");
+    }
+
+    if args.canasta {
+        let deck = Canasta::decks(decks);
+        let shuffled = deck.shuffle_default();
+        println!();
+        println!("Canasta Deck:          {deck}");
+        println!("Canasta Deck Shuffled: {shuffled}");
     }
 
     if args.euchre {

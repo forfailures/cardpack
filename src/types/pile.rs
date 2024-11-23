@@ -58,7 +58,7 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
 
     #[must_use]
     pub fn position(&self, card: &Card<RankType, SuitType>) -> Option<usize> {
-        self.0.iter().position(|c| c == card)
+        self.0.iter().position(|c| c.index == card.index)
     }
 
     // Takes a reference to the prepended entity, clones it, appends the original to the passed in
@@ -85,6 +85,12 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
     ) -> Option<Card<RankType, SuitType>> {
         let index = self.position(card)?;
         Some(self.0.remove(index))
+    }
+
+    pub fn remove_cards(&mut self, cards: &Pile<RankType, SuitType>) {
+        for card in &cards.0 {
+            self.remove_card(card);
+        }
     }
 
     #[must_use]
