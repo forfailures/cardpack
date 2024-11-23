@@ -7,7 +7,7 @@ pub struct HandAndFoot {}
 
 impl Decked<Modern, Modern> for HandAndFoot {
     fn deck() -> Pile<Modern, Modern> {
-        Modern::decks(5)
+        Modern::decks(5).sort()
     }
 }
 
@@ -21,5 +21,16 @@ mod decks__hand_and_foot__tests {
         let deck = HandAndFoot::deck();
 
         assert_eq!(deck.len(), 270);
+    }
+
+    #[test]
+    fn pile__sort() {
+        let deck = HandAndFoot::deck();
+        let mut shuffled = deck.shuffle_default();
+
+        shuffled.shuffle_in_place_default();
+        shuffled.sort_in_place();
+
+        assert_eq!(deck.to_string(), shuffled.to_string());
     }
 }

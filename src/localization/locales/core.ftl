@@ -22,6 +22,11 @@ hearts-weight = 3
 diamonds-weight = 2
 clubs-weight = 1
 
+eichel-weight = 4
+laub-weight = 3
+herz-weight = 2
+schellen-weight = 1
+
 big-joker-weight = 14
 little-joker-weight = 13
 ace-weight = 12

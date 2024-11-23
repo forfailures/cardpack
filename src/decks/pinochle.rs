@@ -85,4 +85,15 @@ mod decks__pinochle__tests {
         assert_eq!(deck.to_string(), expected);
         assert_eq!(shuffled.to_string(), expected);
     }
+
+    #[test]
+    fn pile__sort() {
+        let deck = Pinochle::deck();
+        let mut shuffled = deck.shuffle_default();
+
+        shuffled.shuffle_in_place_default();
+        shuffled.sort_in_place();
+
+        assert_eq!(deck.to_string(), shuffled.to_string());
+    }
 }

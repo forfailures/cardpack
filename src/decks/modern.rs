@@ -243,4 +243,15 @@ mod decks__modern__tests {
         assert_eq!(names[13], Standard52::THREE);
         assert_eq!(names[14], Standard52::TWO);
     }
+
+    #[test]
+    fn pile__sort() {
+        let deck = Modern::deck();
+        let mut shuffled = deck.shuffle_default();
+
+        shuffled.shuffle_in_place_default();
+        shuffled.sort_in_place();
+
+        assert_eq!(deck.to_string(), shuffled.to_string());
+    }
 }

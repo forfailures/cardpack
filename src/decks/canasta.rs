@@ -103,4 +103,15 @@ mod decks__canasta__tests {
         assert_eq!(deck.len(), 108);
         assert_eq!(deck.to_string(), expected);
     }
+
+    #[test]
+    fn pile__sort() {
+        let deck = Canasta::deck();
+        let mut shuffled = deck.shuffle_default();
+
+        shuffled.shuffle_in_place_default();
+        shuffled.sort_in_place();
+
+        assert_eq!(deck.to_string(), shuffled.to_string());
+    }
 }

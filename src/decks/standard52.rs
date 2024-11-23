@@ -378,4 +378,15 @@ mod decks__standard52__tests {
             Suit::<Standard52>::from(input)
         );
     }
+
+    #[test]
+    fn pile__sort() {
+        let deck = Standard52::deck();
+        let mut shuffled = deck.shuffle_default();
+
+        shuffled.shuffle_in_place_default();
+        shuffled.sort_in_place();
+
+        assert_eq!(deck.to_string(), shuffled.to_string());
+    }
 }

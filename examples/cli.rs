@@ -14,12 +14,15 @@ use clap::Parser;
 
 /// Run all of the decks with 1 for each:
 ///
-/// `cargo run --example cli -- -emjkpsac -d 1`
+/// `cargo run --example cli -- -emjkpsac -z 1`
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
-    #[clap(short = 'd', long, default_value = "1")]
+    #[clap(short = 'z', long, default_value = "1")]
     decks: usize,
+
+    #[clap(short = 'd', long)]
+    demo: bool,
 
     #[clap(short = 'c', long)]
     canasta: bool,
@@ -121,20 +124,24 @@ fn main() -> Result<(), CardError> {
         println!("Skat Deck Shuffled: {shuffled}");
     }
 
-    if args.standard {
-        let deck = Standard52::decks(decks);
-        let shuffled = deck.shuffle_default();
-        println!();
-        println!("Standard Deck:          {deck}");
-        println!("Standard Deck Shuffled: {shuffled}");
-    }
-
     if args.hand_and_foot {
         let deck = HandAndFoot::decks(decks);
         let shuffled = deck.shuffle_default();
         println!();
         println!("Hand and Foot Deck:          {deck}");
         println!("Hand and Foot Deck Shuffled: {shuffled}");
+    }
+
+    if args.standard {
+        let deck = Standard52::decks(decks);
+        let shuffled = deck.shuffle_default();
+        println!();
+        println!("Standard Deck:          {deck}");
+        println!("Standard Deck Shuffled: {shuffled}");
+
+        if args.demo {
+            Standard52::demo();
+        }
     }
 
     Ok(())

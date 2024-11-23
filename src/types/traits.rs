@@ -44,6 +44,11 @@ pub trait Decked<RankType: Ranked + Clone + Ord, SuitType: Suited + Clone + Ord>
         }
         pile
     }
+
+    fn demo() {
+        let deck = Self::deck();
+        println!("{}", deck);
+    }
 }
 
 pub trait Ranked {
