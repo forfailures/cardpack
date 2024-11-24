@@ -145,6 +145,11 @@ mod decks__standard52__tests {
     }
 
     #[test]
+    fn decked__name() {
+        assert_eq!(Standard52::name(), "Standard52");
+    }
+
+    #[test]
     fn rank__weighted_vector() {
         let mut v = Rank::<Standard52>::rank_names();
         v.reverse();

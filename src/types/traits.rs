@@ -1,7 +1,9 @@
+use crate::localization::FluentName;
 use crate::types::card::Card;
 use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
+use crate::localization::Named;
 
 pub trait Decked<RankType: Ranked + Clone + Ord, SuitType: Suited + Clone + Ord> {
     /// This trait makes me very happy. It feels like it has an elegance that I really love.
@@ -32,6 +34,28 @@ pub trait Decked<RankType: Ranked + Clone + Ord, SuitType: Suited + Clone + Ord>
             }
         }
 
+        println!("   Long in English and German:");
+
+        for card in pile.cards() {
+            let anzugname = card.suit.name.long(&FluentName::DEUTSCH);
+            let suitname = card.suit.name.long(&FluentName::US_ENGLISH);
+            let rangname = card.rank.name.long(&FluentName::DEUTSCH);
+            let rankname = card.rank.name.long(&FluentName::US_ENGLISH);
+            println!("      {rankname} of {suitname} ");
+            println!("      {rangname} von {anzugname} ");
+        }
+
+        //         println!("   Long in English and German:");
+        //         for card in self.values() {
+        //             let anzugname = card.suit.name.long(&GERMAN);
+        //             let suitname = card.suit.name.long(&US_ENGLISH);
+        //             let rangname = card.rank.name.long(&GERMAN);
+        //             let rankname = card.rank.name.long(&US_ENGLISH);
+        //             println!("      {rankname} of {suitname} ");
+        //             println!("      {rangname} von {anzugname} ");
+        //         }
+        //         self.demo_short();
+
         pile
     }
 
@@ -47,7 +71,19 @@ pub trait Decked<RankType: Ranked + Clone + Ord, SuitType: Suited + Clone + Ord>
 
     fn demo() {
         let deck = Self::deck();
-        println!("{}", deck);
+        let shuffled = deck.shuffle_default();
+        let name = Self::name();
+
+        println!();
+        println!("{name} Deck:          {deck}");
+        println!("{name} Deck Index:    {}", deck.index());
+        println!("{name} Deck Shuffled: {shuffled}");
+    }
+
+    #[must_use]
+    fn name() -> String {
+        let full_name = std::any::type_name::<Self>();
+        full_name.split("::").last().unwrap().to_string()
     }
 }
 

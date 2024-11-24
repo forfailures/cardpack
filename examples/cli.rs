@@ -14,16 +14,10 @@ use clap::Parser;
 
 /// Run all of the decks with 1 for each:
 ///
-/// `cargo run --example cli -- -emjkpsac -z 1`
+/// `cargo run --example cli -- -emjkpsac`
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
-    #[clap(short = 'z', long, default_value = "1")]
-    decks: usize,
-
-    #[clap(short = 'd', long)]
-    demo: bool,
-
     #[clap(short = 'c', long)]
     canasta: bool,
 
@@ -58,90 +52,44 @@ struct Args {
 fn main() -> Result<(), CardError> {
     let args = Args::parse();
 
-    let decks = args.decks;
-
     if args.tarot {
-        let deck = Tarot::decks(decks);
-        let shuffled = deck.shuffle_default();
-        println!();
-        println!("Tarot Deck:          {deck}");
-        println!("Tarot Deck Shuffled: {shuffled}");
+        Tarot::demo();
     }
 
     if args.canasta {
-        let deck = Canasta::decks(decks);
-        let shuffled = deck.shuffle_default();
-        println!();
-        println!("Canasta Deck:          {deck}");
-        println!("Canasta Deck Shuffled: {shuffled}");
+        Canasta::demo();
     }
 
     if args.euchre {
-        let deck = Euchre24::decks(decks);
-        let shuffled = deck.shuffle_default();
-        println!();
-        println!("Euchre Deck:          {deck}");
-        println!("Euchre Deck Shuffled: {shuffled}");
+        Euchre24::demo();
     }
 
     if args.manila {
-        let deck = Manila::decks(decks);
-        let shuffled = deck.shuffle_default();
-        println!();
-        println!("Manila Deck:          {deck}");
-        println!("Manila Deck Shuffled: {shuffled}");
+        Manila::demo();
     }
 
     if args.modern {
-        let deck = Modern::decks(decks);
-        let shuffled = deck.shuffle_default();
-        println!();
-        println!("Modern Deck:          {deck}");
-        println!("Modern Deck Shuffled: {shuffled}");
+        Modern::demo();
     }
 
     if args.spades {
-        let deck = Spades::decks(decks);
-        let shuffled = deck.shuffle_default();
-        println!();
-        println!("Spades Deck:          {deck}");
-        println!("Spades Deck Shuffled: {shuffled}");
+        Spades::demo();
     }
 
     if args.pinochle {
-        let deck = Pinochle::decks(decks);
-        let shuffled = deck.shuffle_default();
-        println!();
-        println!("Pinochle Deck:          {deck}");
-        println!("Pinochle Deck Shuffled: {shuffled}");
+        Pinochle::demo();
     }
 
     if args.skat {
-        let deck = Skat::decks(decks);
-        let shuffled = deck.shuffle_default();
-        println!();
-        println!("Skat Deck:          {deck}");
-        println!("Skat Deck Shuffled: {shuffled}");
+        Skat::demo();
     }
 
     if args.hand_and_foot {
-        let deck = HandAndFoot::decks(decks);
-        let shuffled = deck.shuffle_default();
-        println!();
-        println!("Hand and Foot Deck:          {deck}");
-        println!("Hand and Foot Deck Shuffled: {shuffled}");
+        HandAndFoot::demo();
     }
 
     if args.standard {
-        let deck = Standard52::decks(decks);
-        let shuffled = deck.shuffle_default();
-        println!();
-        println!("Standard Deck:          {deck}");
-        println!("Standard Deck Shuffled: {shuffled}");
-
-        if args.demo {
-            Standard52::demo();
-        }
+        Standard52::demo();
     }
 
     Ok(())
