@@ -1,9 +1,9 @@
 use crate::localization::FluentName;
+use crate::localization::Named;
 use crate::types::card::Card;
 use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
-use crate::localization::Named;
 
 pub trait Decked<RankType: Ranked + Clone + Ord, SuitType: Suited + Clone + Ord> {
     /// This trait makes me very happy. It feels like it has an elegance that I really love.
@@ -34,28 +34,6 @@ pub trait Decked<RankType: Ranked + Clone + Ord, SuitType: Suited + Clone + Ord>
             }
         }
 
-        println!("   Long in English and German:");
-
-        for card in pile.cards() {
-            let anzugname = card.suit.name.long(&FluentName::DEUTSCH);
-            let suitname = card.suit.name.long(&FluentName::US_ENGLISH);
-            let rangname = card.rank.name.long(&FluentName::DEUTSCH);
-            let rankname = card.rank.name.long(&FluentName::US_ENGLISH);
-            println!("      {rankname} of {suitname} ");
-            println!("      {rangname} von {anzugname} ");
-        }
-
-        //         println!("   Long in English and German:");
-        //         for card in self.values() {
-        //             let anzugname = card.suit.name.long(&GERMAN);
-        //             let suitname = card.suit.name.long(&US_ENGLISH);
-        //             let rangname = card.rank.name.long(&GERMAN);
-        //             let rankname = card.rank.name.long(&US_ENGLISH);
-        //             println!("      {rankname} of {suitname} ");
-        //             println!("      {rangname} von {anzugname} ");
-        //         }
-        //         self.demo_short();
-
         pile
     }
 
@@ -69,7 +47,7 @@ pub trait Decked<RankType: Ranked + Clone + Ord, SuitType: Suited + Clone + Ord>
         pile
     }
 
-    fn demo() {
+    fn demo(verbose: bool) {
         let deck = Self::deck();
         let shuffled = deck.shuffle_default();
         let name = Self::name();
@@ -78,6 +56,20 @@ pub trait Decked<RankType: Ranked + Clone + Ord, SuitType: Suited + Clone + Ord>
         println!("{name} Deck:          {deck}");
         println!("{name} Deck Index:    {}", deck.index());
         println!("{name} Deck Shuffled: {shuffled}");
+
+        if verbose {
+            println!();
+            println!("Long in English and German:");
+
+            for card in deck.cards() {
+                let anzugname = card.suit.name.long(&FluentName::DEUTSCH);
+                let suitname = card.suit.name.long(&FluentName::US_ENGLISH);
+                let rangname = card.rank.name.long(&FluentName::DEUTSCH);
+                let rankname = card.rank.name.long(&FluentName::US_ENGLISH);
+                println!("  {rankname} of {suitname} ");
+                println!("  {rangname} von {anzugname} ");
+            }
+        }
     }
 
     #[must_use]

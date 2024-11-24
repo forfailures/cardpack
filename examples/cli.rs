@@ -14,10 +14,13 @@ use clap::Parser;
 
 /// Run all of the decks with 1 for each:
 ///
-/// `cargo run --example cli -- -emjkpsac`
+/// `cargo run --example cli -- -temjkpsac -v`
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
+    #[clap(short = 'v', long)]
+    verbose: bool,
+
     #[clap(short = 'c', long)]
     canasta: bool,
 
@@ -53,43 +56,43 @@ fn main() -> Result<(), CardError> {
     let args = Args::parse();
 
     if args.tarot {
-        Tarot::demo();
+        Tarot::demo(args.verbose);
     }
 
     if args.canasta {
-        Canasta::demo();
+        Canasta::demo(args.verbose);
     }
 
     if args.euchre {
-        Euchre24::demo();
+        Euchre24::demo(args.verbose);
     }
 
     if args.manila {
-        Manila::demo();
+        Manila::demo(args.verbose);
     }
 
     if args.modern {
-        Modern::demo();
+        Modern::demo(args.verbose);
     }
 
     if args.spades {
-        Spades::demo();
+        Spades::demo(args.verbose);
     }
 
     if args.pinochle {
-        Pinochle::demo();
+        Pinochle::demo(args.verbose);
     }
 
     if args.skat {
-        Skat::demo();
+        Skat::demo(args.verbose);
     }
 
     if args.hand_and_foot {
-        HandAndFoot::demo();
+        HandAndFoot::demo(args.verbose);
     }
 
     if args.standard {
-        Standard52::demo();
+        Standard52::demo(args.verbose);
     }
 
     Ok(())

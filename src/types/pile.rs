@@ -136,6 +136,7 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
         self.0.contains(card)
     }
 
+    #[must_use]
     pub fn index(&self) -> String {
         let mut s = String::new();
         for card in &self.0 {
