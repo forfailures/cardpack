@@ -135,6 +135,16 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
     pub fn contains(&self, card: &Card<RankType, SuitType>) -> bool {
         self.0.contains(card)
     }
+
+    #[must_use]
+    pub fn index(&self) -> String {
+        let mut s = String::new();
+        for card in &self.0 {
+            s.push_str(&card.index);
+            s.push(' ');
+        }
+        s.trim().to_string()
+    }
 }
 
 impl<SuitType: Suited + Ord + Clone, RankType: Ranked + Ord + Clone> Default

@@ -124,4 +124,15 @@ mod decks__euchre__tests {
         assert_eq!(names[4], Standard52::TEN);
         assert_eq!(names[5], Standard52::NINE);
     }
+
+    #[test]
+    fn pile__sort() {
+        let deck = Euchre24::deck();
+        let mut shuffled = deck.shuffle_default();
+
+        shuffled.shuffle_in_place_default();
+        shuffled.sort_in_place();
+
+        assert_eq!(deck.to_string(), shuffled.to_string());
+    }
 }

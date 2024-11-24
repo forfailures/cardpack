@@ -145,6 +145,11 @@ mod decks__standard52__tests {
     }
 
     #[test]
+    fn decked__name() {
+        assert_eq!(Standard52::name(), "Standard52");
+    }
+
+    #[test]
     fn rank__weighted_vector() {
         let mut v = Rank::<Standard52>::rank_names();
         v.reverse();
@@ -377,5 +382,16 @@ mod decks__standard52__tests {
             Suit::<Standard52>::new(expected),
             Suit::<Standard52>::from(input)
         );
+    }
+
+    #[test]
+    fn pile__sort() {
+        let deck = Standard52::deck();
+        let mut shuffled = deck.shuffle_default();
+
+        shuffled.shuffle_in_place_default();
+        shuffled.sort_in_place();
+
+        assert_eq!(deck.to_string(), shuffled.to_string());
     }
 }

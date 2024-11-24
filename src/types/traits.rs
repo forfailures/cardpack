@@ -1,3 +1,5 @@
+use crate::localization::FluentName;
+use crate::localization::Named;
 use crate::types::card::Card;
 use crate::types::pile::Pile;
 use crate::types::rank::Rank;
@@ -43,6 +45,37 @@ pub trait Decked<RankType: Ranked + Clone + Ord, SuitType: Suited + Clone + Ord>
             pile.extend(&Self::deck());
         }
         pile
+    }
+
+    fn demo(verbose: bool) {
+        let deck = Self::deck();
+        let shuffled = deck.shuffle_default();
+        let name = Self::name();
+
+        println!();
+        println!("{name} Deck:          {deck}");
+        println!("{name} Deck Index:    {}", deck.index());
+        println!("{name} Deck Shuffled: {shuffled}");
+
+        if verbose {
+            println!();
+            println!("Long in English and German:");
+
+            for card in deck.cards() {
+                let anzugname = card.suit.name.long(&FluentName::DEUTSCH);
+                let suitname = card.suit.name.long(&FluentName::US_ENGLISH);
+                let rangname = card.rank.name.long(&FluentName::DEUTSCH);
+                let rankname = card.rank.name.long(&FluentName::US_ENGLISH);
+                println!("  {rankname} of {suitname} ");
+                println!("  {rangname} von {anzugname} ");
+            }
+        }
+    }
+
+    #[must_use]
+    fn name() -> String {
+        let full_name = std::any::type_name::<Self>();
+        full_name.split("::").last().unwrap().to_string()
     }
 }
 

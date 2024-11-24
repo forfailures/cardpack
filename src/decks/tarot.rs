@@ -79,28 +79,9 @@ impl Tarot {
     fn major_arcana() -> Pile<Tarot, Tarot> {
         let mut pile = Pile::<Tarot, Tarot>::new(Vec::new());
 
-        pile.push(Tarot::major_arcana_card_factory(Tarot::FOOL));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::MAGICIAN));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::PRIESTESS));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::EMPRESS));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::EMPEROR));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::HIEROPHANT));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::LOVERS));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::CHARIOT));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::STRENGTH));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::HERMIT));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::FORTUNE));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::JUSTICE));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::HANGED));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::DEATH));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::TEMPERANCE));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::DEVIL));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::TOWER));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::STAR));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::MOON));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::SUN));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::JUDGEMENT));
-        pile.push(Tarot::major_arcana_card_factory(Tarot::WORLD));
+        for rank in Tarot::major_arcana_rank_names() {
+            pile.push(Tarot::major_arcana_card_factory(rank));
+        }
 
         pile
     }
@@ -112,8 +93,35 @@ impl Tarot {
         )
     }
 
+    fn major_arcana_rank_names() -> Vec<&'static str> {
+        vec![
+            Tarot::FOOL,
+            Tarot::MAGICIAN,
+            Tarot::PRIESTESS,
+            Tarot::EMPRESS,
+            Tarot::EMPEROR,
+            Tarot::HIEROPHANT,
+            Tarot::LOVERS,
+            Tarot::CHARIOT,
+            Tarot::STRENGTH,
+            Tarot::HERMIT,
+            Tarot::FORTUNE,
+            Tarot::JUSTICE,
+            Tarot::HANGED,
+            Tarot::DEATH,
+            Tarot::TEMPERANCE,
+            Tarot::DEVIL,
+            Tarot::TOWER,
+            Tarot::STAR,
+            Tarot::MOON,
+            Tarot::SUN,
+            Tarot::JUDGEMENT,
+            Tarot::WORLD,
+        ]
+    }
+
     fn minor_arcana() -> Pile<Tarot, Tarot> {
-        let ranks = Rank::<Tarot>::ranks();
+        let ranks = Rank::<Tarot>::ranks_from_array(&Tarot::rank_names());
         let suits = Suit::<Tarot>::suits();
 
         let mut pile = Pile::<Tarot, Tarot>::new(Vec::new());
@@ -210,5 +218,16 @@ mod decks__tarot__tests {
         let deck = Tarot::deck();
 
         assert_eq!(deck.to_string(), "🤡M 🧙M 😇M 👑M 🤴M 🧎M 💏M 🏎\u{fe0f}M 💪M 🧑\u{200d}🌾M 🍀M ⚖M 🙃M 💀M 🚭M 😈M 🏢M ⭐M 🌙M 🌞M 🔔M 🌍M K🪄 Q🪄 J🪄 P🪄 T🪄 9🪄 8🪄 7🪄 6🪄 5🪄 4🪄 3🪄 2🪄 A🪄 K🏆 Q🏆 J🏆 P🏆 T🏆 9🏆 8🏆 7🏆 6🏆 5🏆 4🏆 3🏆 2🏆 A🏆 K⚔ Q⚔ J⚔ P⚔ T⚔ 9⚔ 8⚔ 7⚔ 6⚔ 5⚔ 4⚔ 3⚔ 2⚔ A⚔ K☆ Q☆ J☆ P☆ T☆ 9☆ 8☆ 7☆ 6☆ 5☆ 4☆ 3☆ 2☆ A☆");
+    }
+
+    #[test]
+    fn pile__sort() {
+        let deck = Tarot::deck();
+        let mut shuffled = deck.shuffle_default();
+
+        shuffled.shuffle_in_place_default();
+        shuffled.sort_in_place();
+
+        assert_eq!(deck.to_string(), shuffled.to_string());
     }
 }

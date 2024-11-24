@@ -56,4 +56,15 @@ mod decks__manila__tests {
             vec!['6', '7', '8', '9', 'T', 't', 'J', 'j', 'Q', 'q', 'K', 'k', 'A', 'a']
         );
     }
+
+    #[test]
+    fn pile__sort() {
+        let deck = Manila::deck();
+        let mut shuffled = deck.shuffle_default();
+
+        shuffled.shuffle_in_place_default();
+        shuffled.sort_in_place();
+
+        assert_eq!(deck.to_string(), shuffled.to_string());
+    }
 }
