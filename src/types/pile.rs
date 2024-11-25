@@ -7,7 +7,7 @@ use rand::thread_rng;
 use std::fmt::Display;
 use std::str::FromStr;
 
-#[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
+#[derive(Clone, Hash, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub struct Pile<
     RankType: Ranked + PartialOrd + Ord + Clone,
     SuitType: Suited + PartialOrd + Ord + Clone,
@@ -165,6 +165,14 @@ impl<SuitType: Suited + Ord + Clone, RankType: Ranked + Ord + Clone> Display
             s.push(' ');
         }
         write!(f, "{}", s.trim())
+    }
+}
+
+impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone>
+    From<Vec<Card<RankType, SuitType>>> for Pile<RankType, SuitType>
+{
+    fn from(cards: Vec<Card<RankType, SuitType>>) -> Self {
+        Pile::new(cards)
     }
 }
 
