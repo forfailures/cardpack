@@ -22,6 +22,40 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
         Self(cards)
     }
 
+    /// Here's the original code:
+    ///
+    /// ```txt
+    /// #[must_use]
+    /// pub fn card_by_index(&self, index: &str) -> Option<&Card> {
+    ///   self.0.iter().find(|c| c.index_default() == index)
+    /// }
+    /// ```
+    #[must_use]
+    pub fn card_by_index(&self, index: &str) -> Option<&Card<RankType, SuitType>> {
+        todo!()
+    }
+
+    /// Here's the original code:
+    ///
+    /// ```txt
+    ///     #[must_use]
+    ///     pub fn pile_by_index(&self, indexes: &[&str]) -> Option<Pile> {
+    ///         let mut pile = Pile::default();
+    ///         for index in indexes {
+    ///             let card = self.card_by_index(index);
+    ///             match card {
+    ///                 Some(c) => pile.push(c.clone()),
+    ///                 _ => return None,
+    ///             }
+    ///         }
+    ///         Some(pile)
+    ///     }
+    /// ```
+    #[must_use]
+    pub fn pile_by_index(&self, indexes: &[&str]) -> Option<Self> {
+        todo!()
+    }
+
     /// A mutable reference to the vector of cards so that they can be shuffled. I am
     /// torn about
     #[must_use]
