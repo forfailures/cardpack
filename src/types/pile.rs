@@ -1,22 +1,22 @@
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
-use crate::types::traits::Ranked;
+use crate::types::traits::{Decked, Ranked};
 use crate::types::traits::Suited;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 use std::fmt::Display;
 use std::str::FromStr;
 
-#[derive(Clone, Hash, Ord, PartialOrd, Eq, PartialEq, Debug)]
+#[derive(Clone, Debug, Default, Hash, Ord, PartialOrd, Eq, PartialEq)]
 pub struct Pile<
-    RankType: Ranked + PartialOrd + Ord + Clone,
-    SuitType: Suited + PartialOrd + Ord + Clone,
+    RankType: Ranked + PartialOrd + Ord + Clone + Default,
+    SuitType: Suited + PartialOrd + Ord + Clone + Default,
 >(Vec<Card<RankType, SuitType>>)
 where
     RankType: Ranked,
     SuitType: Suited;
 
-impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankType, SuitType> {
+impl<RankType: Ranked + Ord + Clone + Default, SuitType: Suited + Ord + Clone + Default> Pile<RankType, SuitType> {
     #[must_use]
     pub fn new(cards: Vec<Card<RankType, SuitType>>) -> Self {
         Self(cards)
@@ -82,13 +82,6 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
     #[must_use]
     pub fn get(&self, index: usize) -> Option<&Card<RankType, SuitType>> {
         self.0.get(index)
-    }
-
-    #[must_use]
-    pub fn is_complete(&self) -> bool {
-        let mut pile = Self::deck();;
-        pile.sort_in_place();
-        pile == self.clone()
     }
 
     #[must_use]
@@ -200,15 +193,7 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
     }
 }
 
-impl<SuitType: Suited + Ord + Clone, RankType: Ranked + Ord + Clone> Default
-    for Pile<RankType, SuitType>
-{
-    fn default() -> Self {
-        Self(Vec::new())
-    }
-}
-
-impl<SuitType: Suited + Ord + Clone, RankType: Ranked + Ord + Clone> Display
+impl<SuitType: Suited + Ord + Clone + Default, RankType: Ranked + Ord + Clone + Default> Display
     for Pile<RankType, SuitType>
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -221,7 +206,7 @@ impl<SuitType: Suited + Ord + Clone, RankType: Ranked + Ord + Clone> Display
     }
 }
 
-impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone>
+impl<RankType: Ranked + Ord + Clone + Default, SuitType: Suited + Ord + Clone + Default>
     From<Vec<Card<RankType, SuitType>>> for Pile<RankType, SuitType>
 {
     fn from(cards: Vec<Card<RankType, SuitType>>) -> Self {
@@ -231,7 +216,7 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone>
 
 /// This is probably my biggest embarrassment when coding this library the first time. I had no
 /// idea that this trait existed, and bent over backwards trying to duplicate its functionality.
-impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> FromStr
+impl<RankType: Ranked + Ord + Clone + Default, SuitType: Suited + Ord + Clone + Default> FromStr
     for Pile<RankType, SuitType>
 {
     type Err = CardError;
@@ -320,7 +305,7 @@ mod types__pile__tests {
         let deck = Standard52::deck();
         let coparator = deck.shuffle_default();
 
-        assert!(deck.is_complete(&coparator));
+        assert!(deck.is_complete());
     }
 
     #[test]

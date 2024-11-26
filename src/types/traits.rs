@@ -5,7 +5,7 @@ use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 
-pub trait Decked<RankType: Ranked + Clone + Ord, SuitType: Suited + Clone + Ord> {
+pub trait Decked<RankType: Ranked + Clone + Ord + Default, SuitType: Suited + Clone + Ord + Default> {
     /// This trait makes me very happy. It feels like it has an elegance that I really love.
     ///
     /// NOTE: We are going to need to override it for decks that have two tiers of suits, such
@@ -72,11 +72,17 @@ pub trait Decked<RankType: Ranked + Clone + Ord, SuitType: Suited + Clone + Ord>
         }
     }
 
+    fn is_complete(&self) -> bool {
+        self == Self::deck()
+    }
+
     #[must_use]
     fn name() -> String {
         let full_name = std::any::type_name::<Self>();
         full_name.split("::").last().unwrap().to_string()
     }
+
+    fn pack(&self) -> Pile<RankType, SuitType>;
 }
 
 pub trait Ranked {

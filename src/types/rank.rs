@@ -7,7 +7,7 @@ use std::fmt::Display;
 use std::marker::PhantomData;
 use std::str::FromStr;
 
-#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Rank<RankType>
 where
     RankType: Ranked,
