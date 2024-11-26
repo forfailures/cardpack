@@ -30,9 +30,21 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
     ///   self.0.iter().find(|c| c.index_default() == index)
     /// }
     /// ```
+    ///
+    /// Why TF not just use Card::from_str()? I guess the big difference is that
+    /// the card is actually in the Pile in question. Do I need this?
     #[must_use]
-    pub fn card_by_index(&self, index: &str) -> Option<&Card<RankType, SuitType>> {
-        todo!()
+    pub fn card_by_index(&self, index: &str) -> Option<Card<RankType, SuitType>> {
+        match Card::<RankType, SuitType>::from_str(index) {
+            Ok(c) => {
+                if self.contains(&c) {
+                    Some(c)
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        }
     }
 
     /// Here's the original code:
@@ -70,6 +82,13 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
     #[must_use]
     pub fn get(&self, index: usize) -> Option<&Card<RankType, SuitType>> {
         self.0.get(index)
+    }
+
+    #[must_use]
+    pub fn is_complete(&self) -> bool {
+        let mut pile = Self::deck();;
+        pile.sort_in_place();
+        pile == self.clone()
     }
 
     #[must_use]
@@ -251,6 +270,17 @@ mod types__pile__tests {
     }
 
     #[test]
+    fn card_by_index() {
+        let pile = test_pile();
+
+        assert_eq!(pile.card_by_index("2S").unwrap().index, "2S");
+        assert_eq!(pile.card_by_index("TD").unwrap().index, "TD");
+        assert_eq!(pile.card_by_index("AH").unwrap().index, "AH");
+        assert_eq!(pile.card_by_index("AS").unwrap().index, "AS");
+        assert!(pile.card_by_index("AD").is_none());
+    }
+
+    #[test]
     fn clone() {
         let pile = test_pile();
 
@@ -283,6 +313,14 @@ mod types__pile__tests {
         assert_eq!(pile.get(2).unwrap().index, "AH");
         assert_eq!(pile.get(3).unwrap().index, "AS");
         assert!(pile.get(4).is_none());
+    }
+
+    #[test]
+    fn is_complete() {
+        let deck = Standard52::deck();
+        let coparator = deck.shuffle_default();
+
+        assert!(deck.is_complete(&coparator));
     }
 
     #[test]
