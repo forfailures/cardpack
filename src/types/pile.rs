@@ -1,22 +1,30 @@
+use crate::decks::standard52::Standard52;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
-use crate::types::traits::{Decked, Ranked};
+use crate::types::suit::Suit;
+use crate::types::traits::Ranked;
 use crate::types::traits::Suited;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
+use std::collections::HashMap;
 use std::fmt::Display;
+use std::hash::Hash;
 use std::str::FromStr;
 
 #[derive(Clone, Debug, Default, Hash, Ord, PartialOrd, Eq, PartialEq)]
 pub struct Pile<
-    RankType: Ranked + PartialOrd + Ord + Clone + Default,
-    SuitType: Suited + PartialOrd + Ord + Clone + Default,
+    RankType: Ranked + PartialOrd + Ord + Clone + Default + Hash,
+    SuitType: Suited + PartialOrd + Ord + Clone + Default + Hash,
 >(Vec<Card<RankType, SuitType>>)
 where
     RankType: Ranked,
     SuitType: Suited;
 
-impl<RankType: Ranked + Ord + Clone + Default, SuitType: Suited + Ord + Clone + Default> Pile<RankType, SuitType> {
+impl<
+        RankType: Ranked + Ord + Clone + Default + Hash,
+        SuitType: Suited + Ord + Clone + Default + Hash,
+    > Pile<RankType, SuitType>
+{
     #[must_use]
     pub fn new(cards: Vec<Card<RankType, SuitType>>) -> Self {
         Self(cards)
@@ -47,25 +55,14 @@ impl<RankType: Ranked + Ord + Clone + Default, SuitType: Suited + Ord + Clone + 
         }
     }
 
-    /// Here's the original code:
-    ///
-    /// ```txt
-    ///     #[must_use]
-    ///     pub fn pile_by_index(&self, indexes: &[&str]) -> Option<Pile> {
-    ///         let mut pile = Pile::default();
-    ///         for index in indexes {
-    ///             let card = self.card_by_index(index);
-    ///             match card {
-    ///                 Some(c) => pile.push(c.clone()),
-    ///                 _ => return None,
-    ///             }
-    ///         }
-    ///         Some(pile)
-    ///     }
-    /// ```
-    #[must_use]
-    pub fn pile_by_index(&self, indexes: &[&str]) -> Option<Self> {
-        todo!()
+    pub fn draw(&mut self, n: usize) -> Self {
+        let mut pile = Pile::<RankType, SuitType>::default();
+        for _ in 0..n {
+            if let Some(card) = self.0.pop() {
+                pile.push(card);
+            }
+        }
+        pile
     }
 
     /// A mutable reference to the vector of cards so that they can be shuffled. I am
@@ -92,6 +89,18 @@ impl<RankType: Ranked + Ord + Clone + Default, SuitType: Suited + Ord + Clone + 
     #[must_use]
     pub fn len(&self) -> usize {
         self.0.len()
+    }
+
+    pub fn map_by_suit(&self) -> HashMap<Suit<SuitType>, Pile<RankType, SuitType>> {
+        let mut map = HashMap::new();
+        for card in &self.0 {
+            let suit = card.suit.clone();
+            if !map.contains_key(&suit) {
+                map.insert(suit.clone(), Pile::default());
+            }
+            map.get_mut(&suit).unwrap().push(card.clone());
+        }
+        map
     }
 
     pub fn pile_up(n: usize, f: fn() -> Vec<Card<RankType, SuitType>>) -> Self {
@@ -193,8 +202,10 @@ impl<RankType: Ranked + Ord + Clone + Default, SuitType: Suited + Ord + Clone + 
     }
 }
 
-impl<SuitType: Suited + Ord + Clone + Default, RankType: Ranked + Ord + Clone + Default> Display
-    for Pile<RankType, SuitType>
+impl<
+        SuitType: Suited + Ord + Clone + Default + Hash,
+        RankType: Ranked + Ord + Clone + Default + Hash,
+    > Display for Pile<RankType, SuitType>
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut s = String::new();
@@ -206,8 +217,10 @@ impl<SuitType: Suited + Ord + Clone + Default, RankType: Ranked + Ord + Clone + 
     }
 }
 
-impl<RankType: Ranked + Ord + Clone + Default, SuitType: Suited + Ord + Clone + Default>
-    From<Vec<Card<RankType, SuitType>>> for Pile<RankType, SuitType>
+impl<
+        RankType: Ranked + Ord + Clone + Default + Hash,
+        SuitType: Suited + Ord + Clone + Default + Hash,
+    > From<Vec<Card<RankType, SuitType>>> for Pile<RankType, SuitType>
 {
     fn from(cards: Vec<Card<RankType, SuitType>>) -> Self {
         Pile::new(cards)
@@ -216,8 +229,10 @@ impl<RankType: Ranked + Ord + Clone + Default, SuitType: Suited + Ord + Clone + 
 
 /// This is probably my biggest embarrassment when coding this library the first time. I had no
 /// idea that this trait existed, and bent over backwards trying to duplicate its functionality.
-impl<RankType: Ranked + Ord + Clone + Default, SuitType: Suited + Ord + Clone + Default> FromStr
-    for Pile<RankType, SuitType>
+impl<
+        RankType: Ranked + Ord + Clone + Default + Hash,
+        SuitType: Suited + Ord + Clone + Default + Hash,
+    > FromStr for Pile<RankType, SuitType>
 {
     type Err = CardError;
 
@@ -301,20 +316,33 @@ mod types__pile__tests {
     }
 
     #[test]
-    fn is_complete() {
-        let deck = Standard52::deck();
-        let coparator = deck.shuffle_default();
-
-        assert!(deck.is_complete());
-    }
-
-    #[test]
     fn is_empty() {
         let mut pile = Pile::<Standard52, Standard52>::default();
         assert!(pile.is_empty());
 
         pile.push(Card::from_str("2S").unwrap());
         assert!(!pile.is_empty());
+    }
+
+    #[test]
+    fn map_by_suit() {
+        let pile = Pile::<Standard52, Standard52>::from_str("QS 9S QC QH QD").unwrap();
+
+        let qs = pile.get(0).unwrap();
+        let qc = pile.get(2).unwrap();
+        let spades = Suit::new(Standard52::SPADES);
+        let clubs = Suit::new(Standard52::CLUBS);
+
+        let mappie = pile.map_by_suit();
+
+        assert_eq!(
+            qs.index,
+            mappie.get(&spades).unwrap().0.first().unwrap().index
+        );
+        assert_eq!(
+            qc.index,
+            mappie.get(&clubs).unwrap().0.first().unwrap().index
+        );
     }
 
     #[test]

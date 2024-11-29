@@ -1,7 +1,11 @@
 use cardpack::decks::standard52::Standard52;
 use cardpack::types::card::Card;
+use cardpack::types::card_error::CardError;
 use cardpack::types::pile::Pile;
+use cardpack::types::suit::Suit;
 use cardpack::types::traits::Decked;
+use std::collections::HashMap;
+use std::str::FromStr;
 
 #[derive(Clone, Copy, Debug, Ord, PartialOrd, Eq, PartialEq)]
 #[allow(clippy::module_name_repetitions)]
@@ -49,6 +53,18 @@ pub struct BridgeBoard {
 }
 
 impl BridgeBoard {
+    pub fn deal() -> BridgeBoard {
+        let mut cards = Standard52::deck().shuffle_default();
+
+        BridgeBoard {
+            pack: cards.clone(),
+            south: cards.draw(13).sort(),
+            west: cards.draw(13).sort(),
+            north: cards.draw(13).sort(),
+            east: cards.draw(13).sort(),
+        }
+    }
+
     /// Parses a Portable Bridge Notation deal string and converts it into a
     /// `BridgeBoard` struct.
     ///
@@ -76,8 +92,39 @@ impl BridgeBoard {
         board
     }
 
-    pub(crate) fn to_pbn_deal(&self) -> String {
-        todo!()
+    pub fn hand_to_pbn_deal_segment(hand: &Pile<Standard52, Standard52>) -> String {
+        let mappie = hand.map_by_suit();
+        let spades = BridgeBoard::get_suit_string(&Suit::new(Standard52::SPADES), &mappie);
+        let hearts = BridgeBoard::get_suit_string(&Suit::new(Standard52::HEARTS), &mappie);
+        let diamonds = BridgeBoard::get_suit_string(&Suit::new(Standard52::DIAMONDS), &mappie);
+        let clubs = BridgeBoard::get_suit_string(&Suit::new(Standard52::CLUBS), &mappie);
+
+        format!("{spades}.{hearts}.{diamonds}.{clubs}")
+    }
+
+    fn get_suit_string(
+        suit: &Suit<Standard52>,
+        mappie: &HashMap<Suit<Standard52>, Pile<Standard52, Standard52>>,
+    ) -> String {
+        let indexes = mappie.get(suit);
+        match indexes {
+            Some(hand) => hand.rank_indexes(),
+            None => String::new(),
+        }
+    }
+
+    /// NOTE: index string is a really horrible name for something used in code. Index has too
+    /// many implications.
+    pub fn pile_by_index(index: &str) -> Result<Pile<Standard52, Standard52>, CardError> {
+        Pile::<Standard52, Standard52>::from_str(index)
+    }
+
+    pub fn to_pbn_deal(&self) -> String {
+        let south = BridgeBoard::hand_to_pbn_deal_segment(&self.south);
+        let west = BridgeBoard::hand_to_pbn_deal_segment(&self.west);
+        let north = BridgeBoard::hand_to_pbn_deal_segment(&self.north);
+        let east = BridgeBoard::hand_to_pbn_deal_segment(&self.east);
+        format!("S:{south} {west} {north} {east}")
     }
 
     fn fold_in(&mut self, direction: &BridgeDirection, hand: Pile<Standard52, Standard52>) {
@@ -88,6 +135,10 @@ impl BridgeBoard {
             BridgeDirection::E => self.east = hand.sort(),
             BridgeDirection::Unknown => self.east = hand,
         }
+    }
+
+    pub fn is_valid(&self) -> bool {
+        todo!()
     }
 
     fn splice_suit_in(s: &str, suit: char) -> Vec<String> {
@@ -161,18 +212,10 @@ mod bridge_tests {
     #[test]
     fn from_pbn_deal() {
         let deck = Standard52::deck();
-        let south = deck.pile_by_index(&[
-            "QS", "4S", "2S", "QH", "5H", "2H", "AD", "QD", "TD", "9D", "4D", "3D", "QC",
-        ]);
-        let west = deck.pile_by_index(&[
-            "9S", "7S", "AH", "TH", "9H", "3H", "6D", "5D", "2D", "TC", "7C", "4C", "3C",
-        ]);
-        let north = deck.pile_by_index(&[
-            "AS", "JS", "TS", "8S", "5S", "JH", "7H", "6H", "KD", "JD", "AC", "6C", "5C",
-        ]);
-        let east = deck.pile_by_index(&[
-            "KS", "6S", "3S", "KH", "8H", "4H", "8D", "7D", "KC", "JC", "9C", "8C", "2C",
-        ]);
+        let south = BridgeBoard::pile_by_index("QS 4S 2S QH 5H 2H AD QD TD 9D 4D 3D QC");
+        let west = BridgeBoard::pile_by_index("9S 7S AH TH 9H 3H 6D 5D 2D TC 7C 4C 3C");
+        let north = BridgeBoard::pile_by_index("AS JS TS 8S 5S JH 7H 6H KD JD AC 6C 5C");
+        let east = BridgeBoard::pile_by_index("KS 6S 3S KH 8H 4H 8D 7D KC JC 9C 8C 2C");
 
         let deal = BridgeBoard::from_pbn_deal(PBN_TEST_STRING);
 
@@ -196,9 +239,7 @@ mod bridge_tests {
     fn from_pbn_deal__west() {
         let deck = Standard52::deck();
         let pbn = "W:A94.K2.T876.QT53 Q75.AQJT976.9.42 KT62.3.AK2.AK986 J83.854.QJ543.J7";
-        let west = deck.pile_by_index(&[
-            "AS", "9S", "4S", "KH", "2H", "TD", "8D", "7D", "6D", "QC", "TC", "5C", "3C",
-        ]);
+        let west = crate::BridgeBoard::pile_by_index("AS 9S 4S KH 2H TD 8D 7D 6D QC TC 5C 3C");
 
         let deal = BridgeBoard::from_pbn_deal(pbn);
 
@@ -225,12 +266,9 @@ mod bridge_tests {
 
     #[test]
     fn is_valid_ne() {
-        let mut deck = BridgeBoard::default();
-        let mut cards = deck.pack.shuffle_default();
-        deck.south = cards.draw(13).unwrap();
-        deck.west = cards.draw(13).unwrap();
-        deck.north = cards.draw(13).unwrap();
-        deck.east = cards.draw(12).unwrap();
+        let mut deck = BridgeBoard::deal();
+
+        deck.south = deck.south.draw(1);
 
         assert!(!deck.is_valid())
     }
@@ -266,23 +304,16 @@ mod bridge_tests {
     #[test]
     fn hand_to_pbn_deal_segment() {
         let deal = BridgeBoard::from_pbn_deal(PBN_TEST_STRING);
-        let hand = deal
-            .pack
-            .cards()
-            .pile_by_index(&[
-                "QS", "4S", "2S", "QH", "5H", "2H", "AD", "QD", "TD", "9D", "4D", "3D", "QC",
-            ])
-            .unwrap();
         let expected = "Q42.Q52.AQT943.Q";
 
-        let actual = BridgeBoard::hand_to_pbn_deal_segment(&hand);
+        let actual = BridgeBoard::hand_to_pbn_deal_segment(&deal.south);
 
         assert_eq!(expected, actual);
     }
 
     #[test]
     fn hand_to_pbn_deal_segment__unbalanced() {
-        let all_spades = Pile::french_deck().draw(13).unwrap();
+        let all_spades = Standard52::deck().draw(13);
         let expected = "AKQJT98765432...";
 
         let actual = BridgeBoard::hand_to_pbn_deal_segment(&all_spades);

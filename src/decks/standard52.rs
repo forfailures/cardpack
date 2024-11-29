@@ -1,4 +1,7 @@
+use crate::types::card::Card;
 use crate::types::pile::Pile;
+use crate::types::rank::Rank;
+use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked, Suited};
 
 /// The [Standard52](https://en.wikipedia.org/wiki/Standard_52-card_deck)
