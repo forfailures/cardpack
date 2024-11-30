@@ -78,8 +78,15 @@ impl BridgeBoard {
         let mut dir_iter = pbn.split_whitespace();
 
         let mut board = BridgeBoard::default();
-        board.fold_in(&direction, board.to_pile(dir_iter.next().unwrap()));
-        board.fold_in(&direction.next(), board.to_pile(dir_iter.next().unwrap()));
+
+        let south = dir_iter.next().unwrap();
+        println!("SOUTH: {south}");
+        board.fold_in(&direction, board.to_pile(south));
+
+        let west = dir_iter.next().unwrap();
+        println!("WEST: {west}");
+        board.fold_in(&direction.next(), board.to_pile(west));
+
         board.fold_in(
             &direction.next().next(),
             board.to_pile(dir_iter.next().unwrap()),
@@ -108,7 +115,7 @@ impl BridgeBoard {
     ) -> String {
         let indexes = mappie.get(suit);
         match indexes {
-            Some(hand) => hand.rank_indexes(),
+            Some(hand) => hand.rank_index(),
             None => String::new(),
         }
     }
@@ -138,7 +145,13 @@ impl BridgeBoard {
     }
 
     pub fn is_valid(&self) -> bool {
-        todo!()
+        let mut pile = Pile::<Standard52, Standard52>::default();
+        pile.prepend(&self.south);
+        pile.prepend(&self.west);
+        pile.prepend(&self.north);
+        pile.prepend(&self.east);
+
+        pile == self.pack
     }
 
     fn splice_suit_in(s: &str, suit: char) -> Vec<String> {
@@ -199,7 +212,9 @@ impl Default for BridgeBoard {
     }
 }
 
-fn main() {}
+fn main() {
+    env_logger::init();
+}
 
 #[cfg(test)]
 #[allow(non_snake_case)]
@@ -239,7 +254,7 @@ mod bridge_tests {
     fn from_pbn_deal__west() {
         let deck = Standard52::deck();
         let pbn = "W:A94.K2.T876.QT53 Q75.AQJT976.9.42 KT62.3.AK2.AK986 J83.854.QJ543.J7";
-        let west = crate::BridgeBoard::pile_by_index("AS 9S 4S KH 2H TD 8D 7D 6D QC TC 5C 3C");
+        let west = BridgeBoard::pile_by_index("AS 9S 4S KH 2H TD 8D 7D 6D QC TC 5C 3C");
 
         let deal = BridgeBoard::from_pbn_deal(pbn);
 

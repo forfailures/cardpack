@@ -1,4 +1,3 @@
-use crate::decks::standard52::Standard52;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::suit::Suit;
@@ -6,10 +5,11 @@ use crate::types::traits::Ranked;
 use crate::types::traits::Suited;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
 use std::hash::Hash;
 use std::str::FromStr;
+use crate::types::rank::Rank;
 
 #[derive(Clone, Debug, Default, Hash, Ord, PartialOrd, Eq, PartialEq)]
 pub struct Pile<
@@ -132,6 +132,30 @@ impl<
             self.0.push(card);
             true
         }
+    }
+
+    #[must_use]
+    pub fn ranks(&self) -> Vec<Rank<RankType>> {
+        let hashset: HashSet<Rank<RankType>> = self.0.iter().map(|c| c.rank.clone()).collect();
+        let mut ranks: Vec<Rank<RankType>> = Vec::from_iter(hashset);
+        ranks.sort();
+        ranks.reverse();
+        ranks
+    }
+
+    pub fn rank_index(&self) -> String {
+
+        self.ranks()
+            .iter()
+            .map(ToString::to_string)
+            .collect::<String>()
+
+        // let mut s = String::new();
+        // for card in &self.0 {
+        //     s.push_str(&card.rank.to_string().as_str());
+        //     s.push(' ');
+        // }
+        // s.trim().to_string()
     }
 
     pub fn remove_card(
