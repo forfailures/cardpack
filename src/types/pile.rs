@@ -30,6 +30,15 @@ impl<
         Self(cards)
     }
 
+    #[must_use]
+    pub fn as_hashset(&self) -> HashSet<Card<RankType, SuitType>> {
+        let mut hashset = HashSet::new();
+        for card in &self.0 {
+            hashset.insert(card.clone());
+        }
+        hashset
+    }
+
     /// Here's the original code:
     ///
     /// ```txt
@@ -291,6 +300,12 @@ mod types__pile__tests {
             Card::from_str("AH").unwrap(),
             Card::from_str("AS").unwrap(),
         ])
+    }
+
+    #[test]
+    fn as_hashset() {
+        assert_eq!(4, test_pile().as_hashset().len());
+        assert_eq!(52, Standard52::deck().as_hashset().len());
     }
 
     #[test]
