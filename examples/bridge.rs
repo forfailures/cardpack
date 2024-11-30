@@ -6,6 +6,7 @@ use cardpack::types::suit::Suit;
 use cardpack::types::traits::Decked;
 use std::collections::HashMap;
 use std::str::FromStr;
+use log::error;
 
 #[derive(Clone, Copy, Debug, Hash, Ord, PartialOrd, Eq, PartialEq)]
 #[allow(clippy::module_name_repetitions)]
@@ -68,23 +69,49 @@ pub struct BridgeBoard {
 impl BridgeBoard {
     pub fn deal() -> BridgeBoard {
         let mut cards = Standard52::deck().shuffle_default();
+        let pack = cards.clone();
 
+        let dealer = BridgeDirection::random();
         let south = cards.draw(13).sort();
         let west = cards.draw(13).sort();
         let north = cards.draw(13).sort();
         let east = cards.draw(13).sort();
 
+        let pbn = Self::calculate_pdb(dealer, &south, &west, &north, &east);
+
         BridgeBoard {
-            pbn: "".to_string(),
-            dealer: BridgeDirection::random(),
-            pack: cards.clone(),
-            south: cards.draw(13).sort(),
-            west: cards.draw(13).sort(),
-            north: cards.draw(13).sort(),
-            east: cards.draw(13).sort(),
+            pbn,
+            dealer,
+            pack,
+            south,
+            west,
+            north,
+            east,
 
             nw_vulnerable: false,
             ew_vulnerable: false,
+        }
+    }
+
+    fn calculate_pdb(
+        dealer: BridgeDirection,
+        n: &Pile<Standard52, Standard52>,
+        e: &Pile<Standard52, Standard52>,
+        s: &Pile<Standard52, Standard52>,
+        w: &Pile<Standard52, Standard52>) -> String {
+        match dealer {
+            BridgeDirection::N => {
+                format!("N:{north} {east} {south} {west}")
+            }
+            BridgeDirection::E => {
+                format!("E:{east} {south} {west} {north}")
+            }
+            BridgeDirection::S => {
+                format!("S:{south} {west} {north} {east}")
+            }
+            _ => {
+                format!("W:{west} {north} {east} {south}")
+            }
         }
     }
 
