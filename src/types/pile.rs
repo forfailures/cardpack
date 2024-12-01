@@ -1,5 +1,6 @@
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
+use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::traits::Ranked;
 use crate::types::traits::Suited;
@@ -9,7 +10,6 @@ use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
 use std::hash::Hash;
 use std::str::FromStr;
-use crate::types::rank::Rank;
 
 #[derive(Clone, Debug, Default, Hash, Ord, PartialOrd, Eq, PartialEq)]
 pub struct Pile<
@@ -48,7 +48,7 @@ impl<
     /// }
     /// ```
     ///
-    /// Why TF not just use Card::from_str()? I guess the big difference is that
+    /// Why TF not just use `Card::from_str()?` I guess the big difference is that
     /// the card is actually in the Pile in question. Do I need this?
     #[must_use]
     pub fn card_by_index(&self, index: &str) -> Option<Card<RankType, SuitType>> {
@@ -64,14 +64,30 @@ impl<
         }
     }
 
+    #[must_use]
     pub fn draw(&mut self, n: usize) -> Self {
         let mut pile = Pile::<RankType, SuitType>::default();
         for _ in 0..n {
-            if let Some(card) = self.0.pop() {
+            if let Some(card) = self.draw_first() {
                 pile.push(card);
             }
         }
         pile
+    }
+
+    pub fn draw_first(&mut self) -> Option<Card<RankType, SuitType>> {
+        match self.len() {
+            0 => None,
+            _ => Some(self.remove(0)),
+        }
+    }
+
+    pub fn draw_last(&mut self) -> Option<Card<RankType, SuitType>> {
+        self.0.pop()
+    }
+
+    pub fn remove(&mut self, index: usize) -> Card<RankType, SuitType> {
+        self.0.remove(index)
     }
 
     /// A mutable reference to the vector of cards so that they can be shuffled. I am
@@ -100,6 +116,10 @@ impl<
         self.0.len()
     }
 
+    /// # Panics
+    ///
+    /// No idea how it could. Too lazy to find a cleaner way.
+    #[must_use]
     pub fn map_by_suit(&self) -> HashMap<Suit<SuitType>, Pile<RankType, SuitType>> {
         let mut map = HashMap::new();
         for card in &self.0 {
@@ -153,18 +173,10 @@ impl<
     }
 
     pub fn rank_index(&self) -> String {
-
         self.ranks()
             .iter()
             .map(ToString::to_string)
             .collect::<String>()
-
-        // let mut s = String::new();
-        // for card in &self.0 {
-        //     s.push_str(&card.rank.to_string().as_str());
-        //     s.push(' ');
-        // }
-        // s.trim().to_string()
     }
 
     pub fn remove_card(

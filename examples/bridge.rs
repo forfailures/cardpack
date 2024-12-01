@@ -5,8 +5,9 @@ use cardpack::types::pile::Pile;
 use cardpack::types::suit::Suit;
 use cardpack::types::traits::Decked;
 use std::collections::HashMap;
+use std::fmt;
+use std::fmt::Display;
 use std::str::FromStr;
-use log::error;
 
 #[derive(Clone, Copy, Debug, Hash, Ord, PartialOrd, Eq, PartialEq)]
 #[allow(clippy::module_name_repetitions)]
@@ -45,8 +46,22 @@ impl BridgeDirection {
             0 => BridgeDirection::S,
             1 => BridgeDirection::W,
             2 => BridgeDirection::N,
-            _ => BridgeDirection::E
+            _ => BridgeDirection::E,
         }
+    }
+}
+
+impl Display for BridgeDirection {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let dir = match self {
+            BridgeDirection::S => "South",
+            BridgeDirection::W => "West",
+            BridgeDirection::N => "North",
+            BridgeDirection::E => "East",
+            BridgeDirection::Unknown => "Unknown",
+        };
+
+        write!(f, "{}", dir)
     }
 }
 
@@ -55,7 +70,6 @@ impl BridgeDirection {
 #[derive(Clone, Debug, Hash, Ord, PartialOrd, Eq, PartialEq)]
 #[allow(clippy::module_name_repetitions)]
 pub struct BridgeBoard {
-    pub pbn: String,
     pub dealer: BridgeDirection,
     pub pack: Pile<Standard52, Standard52>,
     pub south: Pile<Standard52, Standard52>,
@@ -77,10 +91,7 @@ impl BridgeBoard {
         let north = cards.draw(13).sort();
         let east = cards.draw(13).sort();
 
-        let pbn = Self::calculate_pdb(dealer, &south, &west, &north, &east);
-
         BridgeBoard {
-            pbn,
             dealer,
             pack,
             south,
@@ -93,24 +104,49 @@ impl BridgeBoard {
         }
     }
 
-    fn calculate_pdb(
+    fn calculate_pbn(
         dealer: BridgeDirection,
-        n: &Pile<Standard52, Standard52>,
-        e: &Pile<Standard52, Standard52>,
-        s: &Pile<Standard52, Standard52>,
-        w: &Pile<Standard52, Standard52>) -> String {
+        south: &Pile<Standard52, Standard52>,
+        west: &Pile<Standard52, Standard52>,
+        north: &Pile<Standard52, Standard52>,
+        east: &Pile<Standard52, Standard52>,
+    ) -> String {
         match dealer {
             BridgeDirection::N => {
-                format!("N:{north} {east} {south} {west}")
+                format!(
+                    "N:{} {} {} {}",
+                    Self::hand_to_pbn_deal_segment(north),
+                    Self::hand_to_pbn_deal_segment(east),
+                    Self::hand_to_pbn_deal_segment(south),
+                    Self::hand_to_pbn_deal_segment(west)
+                )
             }
             BridgeDirection::E => {
-                format!("E:{east} {south} {west} {north}")
+                format!(
+                    "E:{} {} {} {}",
+                    Self::hand_to_pbn_deal_segment(east),
+                    Self::hand_to_pbn_deal_segment(south),
+                    Self::hand_to_pbn_deal_segment(west),
+                    Self::hand_to_pbn_deal_segment(north)
+                )
             }
             BridgeDirection::S => {
-                format!("S:{south} {west} {north} {east}")
+                format!(
+                    "S:{} {} {} {}",
+                    Self::hand_to_pbn_deal_segment(south),
+                    Self::hand_to_pbn_deal_segment(west),
+                    Self::hand_to_pbn_deal_segment(north),
+                    Self::hand_to_pbn_deal_segment(east)
+                )
             }
             _ => {
-                format!("W:{west} {north} {east} {south}")
+                format!(
+                    "W:{} {} {} {}",
+                    Self::hand_to_pbn_deal_segment(west),
+                    Self::hand_to_pbn_deal_segment(north),
+                    Self::hand_to_pbn_deal_segment(east),
+                    Self::hand_to_pbn_deal_segment(south)
+                )
             }
         }
     }
@@ -123,27 +159,16 @@ impl BridgeBoard {
     /// Will panic if an invalid PBN deal string is passed in.
     #[must_use]
     pub fn from_pbn_deal(deal: &str) -> Self {
-        let (direction, pbn) = BridgeBoard::split_on_direction(deal);
-
-        let mut dir_iter = pbn.split_whitespace();
+        let (mut direction, pbn) = BridgeBoard::split_on_direction(deal);
 
         let mut board = BridgeBoard::default();
+        board.dealer = direction;
 
-        let south = dir_iter.next().unwrap();
-        println!("SOUTH: {south}");
-        board.fold_in(&direction, board.to_pile(south));
-
-        let west = dir_iter.next().unwrap();
-        println!("WEST: {west}");
-        board.fold_in(&direction.next(), board.to_pile(west));
-
-        let north = dir_iter.next().unwrap();
-        println!("NORTH: {north}");
-        board.fold_in(&direction.next().next(), board.to_pile(north));
-
-        let east = dir_iter.next().unwrap();
-        println!("EAST: {east}");
-        board.fold_in(&direction.next().next().next(), board.to_pile(east));
+        for s in pbn.split_whitespace() {
+            println!("{direction}: {s}");
+            board.fold_in(&direction, board.to_pile(s));
+            direction = direction.next();
+        }
 
         board
     }
@@ -154,6 +179,8 @@ impl BridgeBoard {
         let hearts = BridgeBoard::get_suit_string(&Suit::new(Standard52::HEARTS), &mappie);
         let diamonds = BridgeBoard::get_suit_string(&Suit::new(Standard52::DIAMONDS), &mappie);
         let clubs = BridgeBoard::get_suit_string(&Suit::new(Standard52::CLUBS), &mappie);
+
+        println!("{}", hand.index());
 
         format!("{spades}.{hearts}.{diamonds}.{clubs}")
     }
@@ -183,14 +210,6 @@ impl BridgeBoard {
         pile.prepend(&self.east);
 
         pile
-    }
-
-    pub fn to_pbn_deal(&self) -> String {
-        let south = BridgeBoard::hand_to_pbn_deal_segment(&self.south);
-        let west = BridgeBoard::hand_to_pbn_deal_segment(&self.west);
-        let north = BridgeBoard::hand_to_pbn_deal_segment(&self.north);
-        let east = BridgeBoard::hand_to_pbn_deal_segment(&self.east);
-        format!("S:{south} {west} {north} {east}")
     }
 
     fn fold_in(&mut self, direction: &BridgeDirection, hand: Pile<Standard52, Standard52>) {
@@ -256,8 +275,7 @@ impl BridgeBoard {
 impl Default for BridgeBoard {
     fn default() -> Self {
         BridgeBoard {
-            pbn: "".to_string(),
-            dealer: BridgeDirection::N,
+            dealer: BridgeDirection::S,
             pack: Standard52::deck(),
             south: Pile::default(),
             west: Pile::default(),
@@ -266,6 +284,19 @@ impl Default for BridgeBoard {
             nw_vulnerable: false,
             ew_vulnerable: false,
         }
+    }
+}
+
+impl fmt::Display for BridgeBoard {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let sig = Self::calculate_pbn(
+            self.dealer,
+            &self.south,
+            &self.west,
+            &self.north,
+            &self.east,
+        );
+        write!(f, "{sig}")
     }
 }
 
@@ -283,7 +314,7 @@ mod bridge_tests {
 
     #[test]
     fn from_pbn_deal() {
-        let deck = Standard52::deck();
+        // let deck = Standard52::deck();
         let south = BridgeBoard::pile_by_index("QS 4S 2S QH 5H 2H AD QD TD 9D 4D 3D QC");
         let west = BridgeBoard::pile_by_index("9S 7S AH TH 9H 3H 6D 5D 2D TC 7C 4C 3C");
         let north = BridgeBoard::pile_by_index("AS JS TS 8S 5S JH 7H 6H KD JD AC 6C 5C");
@@ -304,14 +335,14 @@ mod bridge_tests {
     fn from_pbn_deal__unsorted() {
         let unsorted = "S:4Q2.5Q2.Q94T3A.Q 79.AT93.562.T743 AJT85.J76.KJ.A65 K63.K84.87.KJ982";
 
-        let sorted = BridgeBoard::from_pbn_deal(unsorted).to_pbn_deal();
+        let sorted = BridgeBoard::from_pbn_deal(unsorted).to_string();
 
         assert_eq!(PBN_TEST_STRING, sorted.as_str());
     }
 
     #[test]
     fn from_pbn_deal__west() {
-        let deck = Standard52::deck();
+        // let deck = Standard52::deck();
         let pbn = "W:A94.K2.T876.QT53 Q75.AQJT976.9.42 KT62.3.AK2.AK986 J83.854.QJ543.J7";
         let west = BridgeBoard::pile_by_index("AS 9S 4S KH 2H TD 8D 7D 6D QC TC 5C 3C");
 
@@ -322,11 +353,50 @@ mod bridge_tests {
     }
 
     #[test]
+    fn from_pbn_deal__north() {
+        // let deck = Standard52::deck();
+        let pbn = "N:A94.K2.T876.QT53 Q75.AQJT976.9.42 KT62.3.AK2.AK986 J83.854.QJ543.J7";
+        let north = BridgeBoard::pile_by_index("AS 9S 4S KH 2H TD 8D 7D 6D QC TC 5C 3C");
+
+        let deal = BridgeBoard::from_pbn_deal(pbn);
+
+        assert_eq!(north.unwrap().index(), deal.north.index());
+        assert_eq!(pbn, deal.to_string());
+        assert!(deal.is_valid())
+    }
+
+    #[test]
+    fn from_pbn_deal__east() {
+        // let deck = Standard52::deck();
+        let pbn = "E:A94.K2.T876.QT53 Q75.AQJT976.9.42 KT62.3.AK2.AK986 J83.854.QJ543.J7";
+        let east = BridgeBoard::pile_by_index("AS 9S 4S KH 2H TD 8D 7D 6D QC TC 5C 3C");
+
+        let deal = BridgeBoard::from_pbn_deal(pbn);
+
+        assert_eq!(east.unwrap().index(), deal.east.index());
+        assert_eq!(pbn, deal.to_string());
+        assert!(deal.is_valid())
+    }
+
+    #[test]
+    fn from_pbn_deal__south() {
+        // let deck = Standard52::deck();
+        let pbn = "S:A94.K2.T876.QT53 Q75.AQJT976.9.42 KT62.3.AK2.AK986 J83.854.QJ543.J7";
+        let south = BridgeBoard::pile_by_index("AS 9S 4S KH 2H TD 8D 7D 6D QC TC 5C 3C");
+
+        let deal = BridgeBoard::from_pbn_deal(pbn);
+
+        assert_eq!(south.unwrap().index(), deal.south.index());
+        assert_eq!(pbn, deal.to_string());
+        assert!(deal.is_valid())
+    }
+
+    #[test]
     fn from_to_pbn_deal() {
         let bb = BridgeBoard::deal();
 
-        let pbn = bb.to_pbn_deal();
-        let from = BridgeBoard::from_pbn_deal(pbn.as_str()).to_pbn_deal();
+        let pbn = bb.to_string();
+        let from = BridgeBoard::from_pbn_deal(pbn.as_str()).to_string();
 
         assert_eq!(pbn, from)
     }
@@ -368,14 +438,6 @@ mod bridge_tests {
     }
 
     #[test]
-    fn to_pbn_deal() {
-        assert_eq!(
-            PBN_TEST_STRING.to_string(),
-            BridgeBoard::from_pbn_deal(PBN_TEST_STRING).to_pbn_deal()
-        )
-    }
-
-    #[test]
     fn hand_to_pbn_deal_segment() {
         let deal = BridgeBoard::from_pbn_deal(PBN_TEST_STRING);
         let expected = "Q42.Q52.AQT943.Q";
@@ -393,6 +455,13 @@ mod bridge_tests {
         let actual = BridgeBoard::hand_to_pbn_deal_segment(&all_spades);
 
         assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn display() {
+        let deck = BridgeBoard::from_pbn_deal(PBN_TEST_STRING);
+
+        assert_eq!(deck.to_string(), PBN_TEST_STRING);
     }
 
     #[test]
