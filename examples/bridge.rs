@@ -8,6 +8,9 @@ use std::collections::HashMap;
 use std::fmt;
 use std::fmt::Display;
 use std::str::FromStr;
+use term_table::row::Row;
+use term_table::table_cell::{Alignment, TableCell};
+use term_table::{Table, TableStyle};
 
 #[derive(Clone, Copy, Debug, Hash, Ord, PartialOrd, Eq, PartialEq)]
 #[allow(clippy::module_name_repetitions)]
@@ -297,6 +300,76 @@ impl fmt::Display for BridgeBoard {
             &self.east,
         );
         write!(f, "{sig}")
+    }
+}
+
+struct BridgeCompass;
+
+impl BridgeCompass {
+    pub fn new(board: BridgeBoard) -> String {
+        let north = BridgeCompass::cell_string(board.north);
+        let west = BridgeCompass::cell_string(board.west);
+        let east = BridgeCompass::cell_string(board.east);
+        let south = BridgeCompass::cell_string(board.south);
+
+        format!(
+            "{}",
+            BridgeCompass::compass(
+                BridgeCompass::compass_cell("NORTH", north.as_str()),
+                BridgeCompass::compass_cell("WEST", west.as_str()),
+                BridgeCompass::compass_cell("EAST", east.as_str()),
+                BridgeCompass::compass_cell("SOUTH", south.as_str()),
+            )
+        );
+    }
+
+    fn cell_string(cards: Pile<Standard52, Standard52>) -> String {
+        let mappie = cards.map_by_suit();
+
+        todo!()
+    }
+
+    fn compass_cell(direction: &str, index: &str) -> String {
+        let contents = "   ".to_owned() + direction + "\n" + index;
+
+        let mut table = Table::new();
+        table.has_top_boarder = false;
+        table.has_bottom_boarder = false;
+        table.separate_rows = false;
+        table.style = TableStyle::empty();
+        table.add_row(Row::new(vec![TableCell::builder(contents)
+            .col_span(2)
+            .alignment(Alignment::Left)
+            .build()]));
+        table.render()
+    }
+
+    fn compass(north: String, west: String, east: String, south: String) -> String {
+        let mut table = Table::new();
+        table.has_top_boarder = false;
+        table.has_bottom_boarder = false;
+        table.separate_rows = false;
+        table.style = TableStyle::empty();
+        table.add_row(Row::new(vec![TableCell::builder(north)
+            .col_span(2)
+            .alignment(Alignment::Center)
+            .build()]));
+
+        table.add_row(Row::new(vec![
+            TableCell::builder(west)
+                .col_span(1)
+                .alignment(Alignment::Left)
+                .build(),
+            TableCell::builder(east)
+                .col_span(1)
+                .alignment(Alignment::Left)
+                .build(),
+        ]));
+        table.add_row(Row::new(vec![TableCell::builder(south)
+            .col_span(2)
+            .alignment(Alignment::Center)
+            .build()]));
+        table.render()
     }
 }
 
