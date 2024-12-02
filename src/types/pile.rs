@@ -1,25 +1,98 @@
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
+use crate::types::rank::Rank;
+use crate::types::suit::Suit;
 use crate::types::traits::Ranked;
 use crate::types::traits::Suited;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
+use std::hash::Hash;
 use std::str::FromStr;
 
-#[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
+#[derive(Clone, Debug, Default, Hash, Ord, PartialOrd, Eq, PartialEq)]
 pub struct Pile<
-    RankType: Ranked + PartialOrd + Ord + Clone,
-    SuitType: Suited + PartialOrd + Ord + Clone,
+    RankType: Ranked + PartialOrd + Ord + Clone + Default + Hash,
+    SuitType: Suited + PartialOrd + Ord + Clone + Default + Hash,
 >(Vec<Card<RankType, SuitType>>)
 where
     RankType: Ranked,
     SuitType: Suited;
 
-impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankType, SuitType> {
+impl<
+        RankType: Ranked + Ord + Clone + Default + Hash,
+        SuitType: Suited + Ord + Clone + Default + Hash,
+    > Pile<RankType, SuitType>
+{
     #[must_use]
     pub fn new(cards: Vec<Card<RankType, SuitType>>) -> Self {
         Self(cards)
+    }
+
+    #[must_use]
+    pub fn as_hashset(&self) -> HashSet<Card<RankType, SuitType>> {
+        let mut hashset = HashSet::new();
+        for card in &self.0 {
+            hashset.insert(card.clone());
+        }
+        hashset
+    }
+
+    /// Here's the original code:
+    ///
+    /// ```txt
+    /// #[must_use]
+    /// pub fn card_by_index(&self, index: &str) -> Option<&Card> {
+    ///   self.0.iter().find(|c| c.index_default() == index)
+    /// }
+    /// ```
+    ///
+    /// Why TF not just use `Card::from_str()?` I guess the big difference is that
+    /// the card is actually in the Pile in question. Do I need this?
+    #[must_use]
+    pub fn card_by_index(&self, index: &str) -> Option<Card<RankType, SuitType>> {
+        match Card::<RankType, SuitType>::from_str(index) {
+            Ok(c) => {
+                if self.contains(&c) {
+                    Some(c)
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn contains(&self, card: &Card<RankType, SuitType>) -> bool {
+        self.0.contains(card)
+    }
+
+    #[must_use]
+    pub fn draw(&mut self, n: usize) -> Self {
+        let mut pile = Pile::<RankType, SuitType>::default();
+        for _ in 0..n {
+            if let Some(card) = self.draw_first() {
+                pile.push(card);
+            }
+        }
+        pile
+    }
+
+    pub fn draw_first(&mut self) -> Option<Card<RankType, SuitType>> {
+        match self.len() {
+            0 => None,
+            _ => Some(self.remove(0)),
+        }
+    }
+
+    pub fn draw_last(&mut self) -> Option<Card<RankType, SuitType>> {
+        self.0.pop()
+    }
+
+    pub fn remove(&mut self, index: usize) -> Card<RankType, SuitType> {
+        self.0.remove(index)
     }
 
     /// A mutable reference to the vector of cards so that they can be shuffled. I am
@@ -39,6 +112,16 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
     }
 
     #[must_use]
+    pub fn index(&self) -> String {
+        let mut s = String::new();
+        for card in &self.0 {
+            s.push_str(&card.index);
+            s.push(' ');
+        }
+        s.trim().to_string()
+    }
+
+    #[must_use]
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
@@ -46,6 +129,22 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
     #[must_use]
     pub fn len(&self) -> usize {
         self.0.len()
+    }
+
+    /// # Panics
+    ///
+    /// No idea how it could. Too lazy to find a cleaner way.
+    #[must_use]
+    pub fn map_by_suit(&self) -> HashMap<Suit<SuitType>, Pile<RankType, SuitType>> {
+        let mut map = HashMap::new();
+        for card in &self.0 {
+            let suit = card.suit.clone();
+            if !map.contains_key(&suit) {
+                map.insert(suit.clone(), Pile::default());
+            }
+            map.get_mut(&suit).unwrap().push(card.clone());
+        }
+        map
     }
 
     pub fn pile_up(n: usize, f: fn() -> Vec<Card<RankType, SuitType>>) -> Self {
@@ -76,6 +175,43 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
         } else {
             self.0.push(card);
             true
+        }
+    }
+
+    pub fn rank_index(&self) -> String {
+        self.ranks()
+            .iter()
+            .map(ToString::to_string)
+            .collect::<String>()
+    }
+
+    #[must_use]
+    pub fn rank_index_by_suit(&self, suit: &Suit<SuitType>, joiner: &str) -> Option<String> {
+        self.ranks_by_suit(suit)
+            .map(|ranks| Rank::<RankType>::ranks_index(&ranks, joiner))
+    }
+
+    #[must_use]
+    pub fn ranks(&self) -> Vec<Rank<RankType>> {
+        let hashset: HashSet<Rank<RankType>> = self.0.iter().map(|c| c.rank.clone()).collect();
+        let mut ranks: Vec<Rank<RankType>> = Vec::from_iter(hashset);
+        ranks.sort();
+        ranks.reverse();
+        ranks
+    }
+
+    #[must_use]
+    pub fn ranks_by_suit(&self, suit: &Suit<SuitType>) -> Option<Vec<Rank<RankType>>> {
+        let ranks: Vec<Rank<RankType>> = self
+            .v()
+            .iter()
+            .filter(|c| c.suit == *suit)
+            .map(|c| c.rank.clone())
+            .collect();
+
+        match ranks.len() {
+            0 => None,
+            _ => Some(ranks),
         }
     }
 
@@ -132,31 +268,15 @@ impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> Pile<RankTy
     }
 
     #[must_use]
-    pub fn contains(&self, card: &Card<RankType, SuitType>) -> bool {
-        self.0.contains(card)
-    }
-
-    #[must_use]
-    pub fn index(&self) -> String {
-        let mut s = String::new();
-        for card in &self.0 {
-            s.push_str(&card.index);
-            s.push(' ');
-        }
-        s.trim().to_string()
+    pub fn v(&self) -> &Vec<Card<RankType, SuitType>> {
+        &self.0
     }
 }
 
-impl<SuitType: Suited + Ord + Clone, RankType: Ranked + Ord + Clone> Default
-    for Pile<RankType, SuitType>
-{
-    fn default() -> Self {
-        Self(Vec::new())
-    }
-}
-
-impl<SuitType: Suited + Ord + Clone, RankType: Ranked + Ord + Clone> Display
-    for Pile<RankType, SuitType>
+impl<
+        SuitType: Suited + Ord + Clone + Default + Hash,
+        RankType: Ranked + Ord + Clone + Default + Hash,
+    > Display for Pile<RankType, SuitType>
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut s = String::new();
@@ -168,10 +288,22 @@ impl<SuitType: Suited + Ord + Clone, RankType: Ranked + Ord + Clone> Display
     }
 }
 
+impl<
+        RankType: Ranked + Ord + Clone + Default + Hash,
+        SuitType: Suited + Ord + Clone + Default + Hash,
+    > From<Vec<Card<RankType, SuitType>>> for Pile<RankType, SuitType>
+{
+    fn from(cards: Vec<Card<RankType, SuitType>>) -> Self {
+        Pile::new(cards)
+    }
+}
+
 /// This is probably my biggest embarrassment when coding this library the first time. I had no
 /// idea that this trait existed, and bent over backwards trying to duplicate its functionality.
-impl<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> FromStr
-    for Pile<RankType, SuitType>
+impl<
+        RankType: Ranked + Ord + Clone + Default + Hash,
+        SuitType: Suited + Ord + Clone + Default + Hash,
+    > FromStr for Pile<RankType, SuitType>
 {
     type Err = CardError;
 
@@ -206,6 +338,23 @@ mod types__pile__tests {
             Card::from_str("AH").unwrap(),
             Card::from_str("AS").unwrap(),
         ])
+    }
+
+    #[test]
+    fn as_hashset() {
+        assert_eq!(4, test_pile().as_hashset().len());
+        assert_eq!(52, Standard52::deck().as_hashset().len());
+    }
+
+    #[test]
+    fn card_by_index() {
+        let pile = test_pile();
+
+        assert_eq!(pile.card_by_index("2S").unwrap().index, "2S");
+        assert_eq!(pile.card_by_index("TD").unwrap().index, "TD");
+        assert_eq!(pile.card_by_index("AH").unwrap().index, "AH");
+        assert_eq!(pile.card_by_index("AS").unwrap().index, "AS");
+        assert!(pile.card_by_index("AD").is_none());
     }
 
     #[test]
@@ -250,6 +399,27 @@ mod types__pile__tests {
 
         pile.push(Card::from_str("2S").unwrap());
         assert!(!pile.is_empty());
+    }
+
+    #[test]
+    fn map_by_suit() {
+        let pile = Pile::<Standard52, Standard52>::from_str("QS 9S QC QH QD").unwrap();
+
+        let qs = pile.get(0).unwrap();
+        let qc = pile.get(2).unwrap();
+        let spades = Suit::new(Standard52::SPADES);
+        let clubs = Suit::new(Standard52::CLUBS);
+
+        let mappie = pile.map_by_suit();
+
+        assert_eq!(
+            qs.index,
+            mappie.get(&spades).unwrap().0.first().unwrap().index
+        );
+        assert_eq!(
+            qc.index,
+            mappie.get(&clubs).unwrap().0.first().unwrap().index
+        );
     }
 
     #[test]

@@ -6,7 +6,7 @@ use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked, Suited};
 
 /// The great thing about trying to get T
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Tarot {}
 
 impl Tarot {
@@ -144,6 +144,10 @@ impl Decked<Tarot, Tarot> for Tarot {
         major_arcana.extend(&minor_arcana);
 
         major_arcana
+    }
+
+    fn pack(&self) -> Pile<Tarot, Tarot> {
+        Tarot::deck()
     }
 }
 

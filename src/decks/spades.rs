@@ -6,7 +6,7 @@ use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::traits::Decked;
 
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Spades {}
 
 impl Decked<Modern, Modern> for Spades {
@@ -26,6 +26,10 @@ impl Decked<Modern, Modern> for Spades {
         deck.remove_card(&two_diamonds).unwrap();
 
         deck
+    }
+
+    fn pack(&self) -> Pile<Modern, Modern> {
+        Spades::deck()
     }
 }
 

@@ -9,7 +9,7 @@ use crate::types::traits::Decked;
 /// [Canasta](https://en.wikipedia.org/wiki/Canasta)deck
 ///
 /// TODO: WIP
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Canasta {}
 
 impl Canasta {
@@ -86,6 +86,10 @@ impl Decked<Modern, Modern> for Canasta {
 
         deck.sort_in_place();
         deck
+    }
+
+    fn pack(&self) -> Pile<Modern, Modern> {
+        Canasta::deck()
     }
 }
 

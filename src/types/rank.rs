@@ -7,7 +7,7 @@ use std::fmt::Display;
 use std::marker::PhantomData;
 use std::str::FromStr;
 
-#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Rank<RankType>
 where
     RankType: Ranked,
@@ -66,15 +66,18 @@ where
         v
     }
 
-    /// Hackie utility function to create a quick way to validate the returned ranks.
-    #[must_use]
-    pub fn ranks_index(joiner: &str) -> String {
-        let ranks = Rank::<RankType>::ranks();
+    pub fn ranks_index(ranks: &[Rank<RankType>], joiner: &str) -> String {
         ranks
             .iter()
             .map(std::string::ToString::to_string)
             .collect::<Vec<_>>()
             .join(joiner)
+    }
+
+    /// Hackie utility function to create a quick way to validate the returned ranks.
+    #[must_use]
+    pub fn ranks_index_all(joiner: &str) -> String {
+        Rank::<RankType>::ranks_index(&Rank::<RankType>::ranks(), joiner)
     }
 
     #[must_use]

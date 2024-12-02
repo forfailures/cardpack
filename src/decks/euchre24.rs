@@ -1,4 +1,5 @@
 use crate::decks::standard52::Standard52;
+use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked};
 
 /// This deck represents the most common 24 card form of
@@ -9,10 +10,14 @@ use crate::types::traits::{Decked, Ranked};
 /// implementation of the [Suited] trait that's declared in the
 /// [Standard52] deck and the [Euchre24] implementation of the
 /// [Ranked] trait.
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Euchre24 {}
 
-impl Decked<Euchre24, Standard52> for Euchre24 {}
+impl Decked<Euchre24, Standard52> for Euchre24 {
+    fn pack(&self) -> Pile<Euchre24, Standard52> {
+        Euchre24::deck()
+    }
+}
 
 impl Ranked for Euchre24 {
     fn rank_chars() -> Vec<char> {

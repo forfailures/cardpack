@@ -1,4 +1,5 @@
 use crate::decks::standard52::Standard52;
+use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked};
 
 /// [Manila, aka Six Plus aka Short-deck](https://en.wikipedia.org/wiki/Six-plus_hold_%27em)
@@ -9,10 +10,14 @@ use crate::types::traits::{Decked, Ranked};
 /// implementation of the [Suited] trait that's declared in the
 /// [Standard52] deck and the [Manila] implementation of the
 /// [Ranked] trait.
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Manila {}
 
-impl Decked<Manila, Standard52> for Manila {}
+impl Decked<Manila, Standard52> for Manila {
+    fn pack(&self) -> Pile<Manila, Standard52> {
+        Manila::deck()
+    }
+}
 
 impl Ranked for Manila {
     fn rank_chars() -> Vec<char> {

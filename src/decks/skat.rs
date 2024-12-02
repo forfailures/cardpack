@@ -6,7 +6,7 @@ use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked, Suited};
 
 /// Skat is a German, trick based card game for three players.
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Skat {}
 
 impl Skat {
@@ -37,6 +37,10 @@ impl Decked<Skat, Skat> for Skat {
         }
 
         pile
+    }
+
+    fn pack(&self) -> Pile<Skat, Skat> {
+        Skat::deck()
     }
 }
 

@@ -2,12 +2,16 @@ use crate::decks::modern::Modern;
 use crate::types::pile::Pile;
 use crate::types::traits::Decked;
 
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct HandAndFoot {}
 
 impl Decked<Modern, Modern> for HandAndFoot {
     fn deck() -> Pile<Modern, Modern> {
         Modern::decks(5).sort()
+    }
+
+    fn pack(&self) -> Pile<Modern, Modern> {
+        HandAndFoot::deck()
     }
 }
 

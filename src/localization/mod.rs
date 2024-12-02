@@ -260,7 +260,7 @@ impl FromStr for FluentName {
     }
 }
 
-impl<'a> Named<'a> for FluentName {
+impl Named<'_> for FluentName {
     fn new_with_weight(_name_str: &str, _weight: u32) -> Self {
         todo!()
     }

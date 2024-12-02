@@ -5,7 +5,7 @@ use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked};
 
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Pinochle {}
 
 impl Decked<Pinochle, Standard52> for Pinochle {
@@ -26,6 +26,10 @@ impl Decked<Pinochle, Standard52> for Pinochle {
         }
 
         pile
+    }
+
+    fn pack(&self) -> Pile<Pinochle, Standard52> {
+        Pinochle::deck()
     }
 }
 

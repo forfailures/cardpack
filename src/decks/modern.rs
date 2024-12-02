@@ -9,7 +9,7 @@ use std::str::FromStr;
 /// `Standard52` with Jokers.
 ///
 /// <https://www.pagat.com/rummy/canasta.html#classic-threes>
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Modern {}
 
 impl Modern {
@@ -52,6 +52,10 @@ impl Decked<Modern, Modern> for Modern {
         deck.extend(&base52);
 
         deck
+    }
+
+    fn pack(&self) -> Pile<Modern, Modern> {
+        Modern::deck()
     }
 }
 
