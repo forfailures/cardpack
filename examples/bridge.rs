@@ -37,7 +37,6 @@ fn main() {
     println!();
     let s = BridgeCompass::new(bridge_board);
     println!("{s}");
-
 }
 
 #[derive(Clone, Copy, Debug, Hash, Ord, PartialOrd, Eq, PartialEq)]
