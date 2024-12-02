@@ -12,6 +12,34 @@ use term_table::row::Row;
 use term_table::table_cell::{Alignment, TableCell};
 use term_table::{Table, TableStyle};
 
+fn main() {
+    env_logger::init();
+
+    println!("First, let's deal out a random bridge hand.");
+    println!();
+    let bridge_board = BridgeBoard::deal();
+    println!("Here it is in Portable Bridge Notation:\n    {bridge_board}");
+
+    println!();
+    println!("How does it look as a traditional compass?");
+    let s = BridgeCompass::new(bridge_board);
+    println!("{s}");
+
+    println!();
+    println!("Now, let's take a PBN Deal String and convert it into a bridge hand.");
+    let deal = "S:Q42.Q52.AQT943.Q 97.AT93.652.T743 AJT85.J76.KJ.A65 K63.K84.87.KJ982";
+    println!("Here's the original' Portable Bridge Notation:\n    {deal}");
+
+    let bridge_board = BridgeBoard::from_pbn_deal(deal);
+
+    println!();
+    println!("As a bridge compass:");
+    println!();
+    let s = BridgeCompass::new(bridge_board);
+    println!("{s}");
+
+}
+
 #[derive(Clone, Copy, Debug, Hash, Ord, PartialOrd, Eq, PartialEq)]
 #[allow(clippy::module_name_repetitions)]
 pub enum BridgeDirection {
@@ -168,7 +196,6 @@ impl BridgeBoard {
         board.dealer = direction;
 
         for s in pbn.split_whitespace() {
-            println!("{direction}: {s}");
             board.fold_in(&direction, board.to_pile(s));
             direction = direction.next();
         }
@@ -182,8 +209,6 @@ impl BridgeBoard {
         let hearts = BridgeBoard::get_suit_string(&Suit::new(Standard52::HEARTS), &mappie);
         let diamonds = BridgeBoard::get_suit_string(&Suit::new(Standard52::DIAMONDS), &mappie);
         let clubs = BridgeBoard::get_suit_string(&Suit::new(Standard52::CLUBS), &mappie);
-
-        println!("{}", hand.index());
 
         format!("{spades}.{hearts}.{diamonds}.{clubs}")
     }
@@ -290,7 +315,7 @@ impl Default for BridgeBoard {
     }
 }
 
-impl fmt::Display for BridgeBoard {
+impl Display for BridgeBoard {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let sig = Self::calculate_pbn(
             self.dealer,
@@ -320,13 +345,38 @@ impl BridgeCompass {
                 BridgeCompass::compass_cell("EAST", east.as_str()),
                 BridgeCompass::compass_cell("SOUTH", south.as_str()),
             )
-        );
+        )
     }
 
     fn cell_string(cards: Pile<Standard52, Standard52>) -> String {
-        let mappie = cards.map_by_suit();
+        let mut v = Vec::<String>::new();
 
-        todo!()
+        match cards.rank_index_by_suit(&Suit::<Standard52>::new(Standard52::SPADES), " ") {
+            Some(index) => {
+                v.push(format!("♠ {index}"));
+            }
+            None => {}
+        }
+        match cards.rank_index_by_suit(&Suit::<Standard52>::new(Standard52::HEARTS), " ") {
+            Some(index) => {
+                v.push(format!("♥ {index}"));
+            }
+            None => {}
+        }
+        match cards.rank_index_by_suit(&Suit::<Standard52>::new(Standard52::DIAMONDS), " ") {
+            Some(index) => {
+                v.push(format!("♦ {index}"));
+            }
+            None => {}
+        }
+        match cards.rank_index_by_suit(&Suit::<Standard52>::new(Standard52::CLUBS), " ") {
+            Some(index) => {
+                v.push(format!("♣ {index}"));
+            }
+            None => {}
+        }
+
+        v.join("\n")
     }
 
     fn compass_cell(direction: &str, index: &str) -> String {
@@ -371,10 +421,6 @@ impl BridgeCompass {
             .build()]));
         table.render()
     }
-}
-
-fn main() {
-    env_logger::init();
 }
 
 #[cfg(test)]

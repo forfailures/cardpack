@@ -186,7 +186,7 @@ mod decks__standard52__tests {
     fn rank__ranks() {
         assert_eq!(
             "A K Q J T 9 8 7 6 5 4 3 2",
-            Rank::<Standard52>::ranks_index(" ")
+            Rank::<Standard52>::ranks_index_all(" ")
         );
     }
 
@@ -398,5 +398,27 @@ mod decks__standard52__tests {
         shuffled.sort_in_place();
 
         assert_eq!(deck.to_string(), shuffled.to_string());
+    }
+
+    #[test]
+    fn pile__ranks_by_suit() {
+        let deck = Standard52::deck();
+
+        let ranks = deck
+            .ranks_by_suit(&Suit::<Standard52>::new(Standard52::SPADES))
+            .unwrap();
+        let index = Rank::<Standard52>::ranks_index(&ranks, " ");
+
+        assert_eq!(13, ranks.len());
+        assert_eq!("A K Q J T 9 8 7 6 5 4 3 2", index);
+    }
+
+    #[test]
+    fn pile__ranks_by_suit__none() {
+        let deck = Pile::<Standard52, Standard52>::default();
+
+        let ranks = deck.ranks_by_suit(&Suit::<Standard52>::new(Standard52::CLUBS));
+
+        assert!(ranks.is_none());
     }
 }

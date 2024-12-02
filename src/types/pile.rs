@@ -65,6 +65,11 @@ impl<
     }
 
     #[must_use]
+    pub fn contains(&self, card: &Card<RankType, SuitType>) -> bool {
+        self.0.contains(card)
+    }
+
+    #[must_use]
     pub fn draw(&mut self, n: usize) -> Self {
         let mut pile = Pile::<RankType, SuitType>::default();
         for _ in 0..n {
@@ -104,6 +109,16 @@ impl<
     #[must_use]
     pub fn get(&self, index: usize) -> Option<&Card<RankType, SuitType>> {
         self.0.get(index)
+    }
+
+    #[must_use]
+    pub fn index(&self) -> String {
+        let mut s = String::new();
+        for card in &self.0 {
+            s.push_str(&card.index);
+            s.push(' ');
+        }
+        s.trim().to_string()
     }
 
     #[must_use]
@@ -163,6 +178,19 @@ impl<
         }
     }
 
+    pub fn rank_index(&self) -> String {
+        self.ranks()
+            .iter()
+            .map(ToString::to_string)
+            .collect::<String>()
+    }
+
+    #[must_use]
+    pub fn rank_index_by_suit(&self, suit: &Suit<SuitType>, joiner: &str) -> Option<String> {
+        self.ranks_by_suit(suit)
+            .map(|ranks| Rank::<RankType>::ranks_index(&ranks, joiner))
+    }
+
     #[must_use]
     pub fn ranks(&self) -> Vec<Rank<RankType>> {
         let hashset: HashSet<Rank<RankType>> = self.0.iter().map(|c| c.rank.clone()).collect();
@@ -172,11 +200,19 @@ impl<
         ranks
     }
 
-    pub fn rank_index(&self) -> String {
-        self.ranks()
+    #[must_use]
+    pub fn ranks_by_suit(&self, suit: &Suit<SuitType>) -> Option<Vec<Rank<RankType>>> {
+        let ranks: Vec<Rank<RankType>> = self
+            .v()
             .iter()
-            .map(ToString::to_string)
-            .collect::<String>()
+            .filter(|c| c.suit == *suit)
+            .map(|c| c.rank.clone())
+            .collect();
+
+        match ranks.len() {
+            0 => None,
+            _ => Some(ranks),
+        }
     }
 
     pub fn remove_card(
@@ -232,18 +268,8 @@ impl<
     }
 
     #[must_use]
-    pub fn contains(&self, card: &Card<RankType, SuitType>) -> bool {
-        self.0.contains(card)
-    }
-
-    #[must_use]
-    pub fn index(&self) -> String {
-        let mut s = String::new();
-        for card in &self.0 {
-            s.push_str(&card.index);
-            s.push(' ');
-        }
-        s.trim().to_string()
+    pub fn v(&self) -> &Vec<Card<RankType, SuitType>> {
+        &self.0
     }
 }
 
