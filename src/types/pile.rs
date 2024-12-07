@@ -230,6 +230,14 @@ impl<
     }
 
     #[must_use]
+    pub fn same(&self, cards: &Pile<RankType, SuitType>) -> bool {
+        let left = self.sort();
+        let right = cards.sort();
+
+        left == right
+    }
+
+    #[must_use]
     pub fn shuffle_default(&self) -> Self {
         let mut pile = self.clone();
         pile.shuffle_in_place_default();
@@ -471,6 +479,27 @@ mod types__pile__tests {
         assert_eq!(removed_from_pile.unwrap().index, "AH");
         assert_eq!(deck.len(), 51);
         assert_eq!(removed_from_deck.unwrap().index, "AH");
+    }
+
+    #[test]
+    fn same() {
+        let deck = Standard52::deck();
+        let alt = deck.shuffle_default();
+
+        assert!(deck.same(&alt));
+        assert!(alt.same(&deck));
+        assert!(alt.same(&alt));
+        assert!(deck.same(&deck));
+    }
+
+    #[test]
+    fn same__false() {
+        let deck = Standard52::deck();
+        let mut alt = deck.shuffle_default();
+        alt.draw_last();
+
+        assert!(!deck.same(&alt));
+        assert!(!alt.same(&deck));
     }
 
     #[test]
