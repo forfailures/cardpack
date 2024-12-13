@@ -282,31 +282,6 @@ mod decks__standard52__tests {
     }
 
     #[test]
-    fn suit__suit_chars() {
-        let expected = vec![
-            '♤', '♠', 'S', 's', '♡', '♥', 'H', 'h', '♢', '♦', 'D', 'd', '♧', '♣', 'C', 'c',
-        ];
-
-        let chars = Suit::<Standard52>::suit_chars();
-
-        assert_eq!(chars, expected);
-    }
-
-    #[test]
-    fn suit__suit_names() {
-        let expected = vec![
-            Standard52::SPADES,
-            Standard52::HEARTS,
-            Standard52::DIAMONDS,
-            Standard52::CLUBS,
-        ];
-
-        let names = Suit::<Standard52>::suit_names();
-
-        assert_eq!(names, expected);
-    }
-
-    #[test]
     fn suit__symbol() {
         let suit = Suit::<Standard52>::new(Standard52::SPADES);
 
@@ -338,6 +313,51 @@ mod decks__standard52__tests {
         assert_eq!(suits[2].weight, 2);
         assert_eq!(suits[3].fluent_name_string(), "spades");
         assert_eq!(suits[3].weight, 3);
+    }
+
+    #[test]
+    fn suited__colors() {
+        let mut expected = HashMap::new();
+        expected.insert('H', Color::Red);
+        expected.insert('D', Color::Red);
+
+        let actual = Suit::<Standard52>::colors();
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn suited__is_valid_suit_char() {
+        assert!(Suit::<Standard52>::is_valid_suit_char(&'H'));
+        assert!(Suit::<Standard52>::is_valid_suit_char(&'h'));
+        assert!(Suit::<Standard52>::is_valid_suit_char(&'♥'));
+        assert!(!Suit::<Standard52>::is_valid_suit_char(&'_'));
+        assert!(!Suit::<Standard52>::is_valid_suit_char(&'W'));
+    }
+
+    #[test]
+    fn suited__suit_chars() {
+        let expected = vec![
+            '♤', '♠', 'S', 's', '♡', '♥', 'H', 'h', '♢', '♦', 'D', 'd', '♧', '♣', 'C', 'c',
+        ];
+
+        let chars = Suit::<Standard52>::suit_chars();
+
+        assert_eq!(chars, expected);
+    }
+
+    #[test]
+    fn suited__suit_names() {
+        let expected = vec![
+            Standard52::SPADES,
+            Standard52::HEARTS,
+            Standard52::DIAMONDS,
+            Standard52::CLUBS,
+        ];
+
+        let names = Suit::<Standard52>::suit_names();
+
+        assert_eq!(names, expected);
     }
 
     #[test]
