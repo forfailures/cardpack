@@ -125,7 +125,7 @@ impl<SuiteType: Suited> Suited for Suit<SuiteType> {
     }
 
     fn colors() -> HashMap<char, Color> {
-        todo!()
+        SuiteType::colors()
     }
 }
 
