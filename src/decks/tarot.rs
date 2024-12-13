@@ -4,6 +4,8 @@ use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked, Suited};
+use colored::Color;
+use std::collections::HashMap;
 
 /// The great thing about trying to get T
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -202,6 +204,10 @@ impl Suited for Tarot {
 
     fn suit_names() -> Vec<&'static str> {
         vec![Tarot::WANDS, Tarot::CUPS, Tarot::SWORDS, Tarot::PENTACLES]
+    }
+
+    fn colors() -> HashMap<char, Color> {
+        todo!()
     }
 }
 

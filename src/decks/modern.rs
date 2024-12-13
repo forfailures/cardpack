@@ -4,6 +4,8 @@ use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked, Suited};
+use colored::Color;
+use std::collections::HashMap;
 use std::str::FromStr;
 
 /// `Standard52` with Jokers.
@@ -104,6 +106,10 @@ impl Suited for Modern {
             Standard52::DIAMONDS,
             Standard52::CLUBS,
         ]
+    }
+
+    fn colors() -> HashMap<char, Color> {
+        todo!()
     }
 }
 

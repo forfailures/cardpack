@@ -4,6 +4,7 @@ use crate::types::card::Card;
 use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
+use std::collections::HashMap;
 use std::hash::Hash;
 
 pub trait Decked<
@@ -107,6 +108,8 @@ pub trait Suited {
     fn suit_chars() -> Vec<char>;
 
     fn suit_names() -> Vec<&'static str>;
+
+    fn colors() -> HashMap<char, colored::Color>;
 }
 
 pub trait Shufflable<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> {

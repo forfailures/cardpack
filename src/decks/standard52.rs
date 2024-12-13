@@ -1,5 +1,7 @@
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked, Suited};
+use colored::Color;
+use std::collections::HashMap;
 
 /// The [Standard52](https://en.wikipedia.org/wiki/Standard_52-card_deck)
 /// deck with French suited playing cards is
@@ -97,6 +99,10 @@ impl Suited for Standard52 {
             Standard52::DIAMONDS,
             Standard52::CLUBS,
         ]
+    }
+
+    fn colors() -> HashMap<char, Color> {
+        todo!()
     }
 }
 
