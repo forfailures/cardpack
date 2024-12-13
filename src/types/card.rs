@@ -78,6 +78,11 @@ where
     }
 
     #[must_use]
+    pub fn get_index_suit_char(&self) -> char {
+        self.index.chars().last().unwrap_or('_')
+    }
+
+    #[must_use]
     pub fn is_blank(&self) -> bool {
         self.rank.name.is_blank() || self.suit.name.is_blank()
     }
@@ -146,6 +151,12 @@ mod types__card__tests {
         let card: Card<Standard52, Standard52> = Card::new(ace, spades);
 
         assert_eq!(card, expected);
+    }
+
+    #[test]
+    fn get_index_suit_char() {
+        assert_eq!(Card::<Standard52, Standard52>::from_str("AS").unwrap().get_index_suit_char(), 'S');
+        assert_eq!(Card::<Standard52, Standard52>::from_str("__").unwrap().get_index_suit_char(), '_');
     }
 
     /// I want to make sure that the weight field in the `Card` struct correctly affects the sorting

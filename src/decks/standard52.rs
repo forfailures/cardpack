@@ -102,7 +102,12 @@ impl Suited for Standard52 {
     }
 
     fn colors() -> HashMap<char, Color> {
-        todo!()
+        let mut mappie = HashMap::new();
+
+        mappie.insert('H', Color::Red);
+        mappie.insert('D', Color::Red);
+
+        mappie
     }
 }
 
