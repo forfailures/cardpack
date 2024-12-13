@@ -276,6 +276,16 @@ impl<
     }
 
     #[must_use]
+    pub fn to_color_symbol_string(&self) -> String {
+        let mut s = String::new();
+        for card in &self.0 {
+            s.push_str(&card.to_color_symbol_string());
+            s.push(' ');
+        }
+        s
+    }
+
+    #[must_use]
     pub fn v(&self) -> &Vec<Card<RankType, SuitType>> {
         &self.0
     }
@@ -501,6 +511,18 @@ mod types__pile__tests {
         assert!(!deck.same(&alt));
         assert!(!alt.same(&deck));
     }
+
+    #[test]
+    fn to_color_symbol_string() {
+        let pile = test_pile();
+
+        let actual = pile.to_color_symbol_string();
+        println!("{actual}");
+
+        assert_eq!(actual, "2♠ T♦ A♥ A♠");
+    }
+
+
 
     #[test]
     fn from_str() {

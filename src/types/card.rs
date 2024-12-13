@@ -89,7 +89,7 @@ where
     }
 
     #[must_use]
-    pub fn color_symbol_string(&self) -> String {
+    pub fn to_color_symbol_string(&self) -> String {
         let suit_char = self.get_index_suit_char();
         if let Some(color) = Suit::<SuitType>::colors().get(&suit_char) {
             match color {
@@ -221,10 +221,17 @@ mod types__card__tests {
     }
 
     #[test]
-    fn color_symbol_string() {
+    fn to_color_symbol_string__default() {
         let card = Card::<Standard52, Standard52>::from_str("AS").unwrap();
 
-        assert_eq!("A♠".to_string(), card.color_symbol_string());
+        assert_eq!("A♠".to_string(), card.to_color_symbol_string());
+    }
+
+    #[test]
+    fn to_color_symbol_string() {
+        let card = Card::<Standard52, Standard52>::from_str("AH").unwrap();
+
+        assert_eq!("A♥", card.to_color_symbol_string());
     }
 
     #[test]
@@ -260,14 +267,5 @@ mod types__card__tests {
         assert_eq!(card.index, "AS");
         assert_eq!(card.rank.name, FluentName::new(Standard52::ACE));
         assert_eq!(card.suit.name, FluentName::new(Standard52::SPADES));
-    }
-
-    #[test]
-    fn suited__colors() {
-        let card = Card::<Standard52, Standard52>::from_str("AH").unwrap();
-
-        let actual = card.color_symbol_string();
-
-        assert_eq!("A♥", card.color_symbol_string());
     }
 }
