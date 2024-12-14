@@ -276,6 +276,15 @@ impl<
     }
 
     #[must_use]
+    pub fn to_color_symbol_string(&self) -> String {
+        self.0
+            .iter()
+            .map(Card::to_color_symbol_string)
+            .collect::<Vec<String>>()
+            .join(" ")
+    }
+
+    #[must_use]
     pub fn v(&self) -> &Vec<Card<RankType, SuitType>> {
         &self.0
     }
@@ -287,12 +296,13 @@ impl<
     > Display for Pile<RankType, SuitType>
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut s = String::new();
-        for card in &self.0 {
-            s.push_str(&card.to_string());
-            s.push(' ');
-        }
-        write!(f, "{}", s.trim())
+        let s = self
+            .0
+            .iter()
+            .map(Card::to_string)
+            .collect::<Vec<String>>()
+            .join(" ");
+        write!(f, "{s}")
     }
 }
 
@@ -500,6 +510,29 @@ mod types__pile__tests {
 
         assert!(!deck.same(&alt));
         assert!(!alt.same(&deck));
+    }
+
+    #[test]
+    fn to_color_symbol_string() {
+        let expected = vec![
+            Card::<Standard52, Standard52>::from_str("2S")
+                .unwrap()
+                .to_string(),
+            Card::<Standard52, Standard52>::from_str("TD")
+                .unwrap()
+                .to_color_symbol_string(),
+            Card::<Standard52, Standard52>::from_str("AH")
+                .unwrap()
+                .to_color_symbol_string(),
+            Card::<Standard52, Standard52>::from_str("AS")
+                .unwrap()
+                .to_string(),
+        ]
+        .join(" ");
+
+        let actual = test_pile().to_color_symbol_string();
+
+        assert_eq!(expected, actual);
     }
 
     #[test]

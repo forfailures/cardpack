@@ -4,6 +4,8 @@ use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked, Suited};
+use colored::Color;
+use std::collections::HashMap;
 
 /// The great thing about trying to get T
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -181,6 +183,16 @@ impl Ranked for Tarot {
 }
 
 impl Suited for Tarot {
+    fn colors() -> HashMap<char, Color> {
+        let mut mappie = HashMap::new();
+
+        mappie.insert('M', Color::Blue);
+        mappie.insert('H', Color::Red);
+        mappie.insert('D', Color::Red);
+
+        mappie
+    }
+
     fn suit_chars() -> Vec<char> {
         vec![
             Tarot::MAJOR_ARCANA_SYMBOL,

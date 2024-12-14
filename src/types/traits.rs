@@ -4,6 +4,7 @@ use crate::types::card::Card;
 use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
+use std::collections::HashMap;
 use std::hash::Hash;
 
 pub trait Decked<
@@ -58,9 +59,12 @@ pub trait Decked<
         let name = Self::name();
 
         println!();
-        println!("{name} Deck:          {deck}");
+        println!("{name} Deck:          {}", deck.to_color_symbol_string());
         println!("{name} Deck Index:    {}", deck.index());
-        println!("{name} Deck Shuffled: {shuffled}");
+        println!(
+            "{name} Deck Shuffled: {}",
+            shuffled.to_color_symbol_string()
+        );
 
         if verbose {
             println!();
@@ -88,17 +92,19 @@ pub trait Decked<
 }
 
 pub trait Ranked {
-    fn rank_chars() -> Vec<char>;
-
-    fn rank_names() -> Vec<&'static str>;
-
     #[must_use]
     fn is_valid_rank_char(c: &char) -> bool {
         Self::rank_chars().contains(c)
     }
+
+    fn rank_chars() -> Vec<char>;
+
+    fn rank_names() -> Vec<&'static str>;
 }
 
 pub trait Suited {
+    fn colors() -> HashMap<char, colored::Color>;
+
     #[must_use]
     fn is_valid_suit_char(c: &char) -> bool {
         Self::suit_chars().contains(c)

@@ -5,6 +5,7 @@ use crate::types::suit::Suit;
 use crate::types::traits::{Ranked, Suited};
 use std::fmt::Display;
 
+use colored::Colorize;
 use std::str::FromStr;
 
 #[derive(Debug, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
@@ -78,8 +79,38 @@ where
     }
 
     #[must_use]
+    pub fn get_index_suit_char(&self) -> char {
+        self.index.chars().last().unwrap_or('_')
+    }
+
+    #[must_use]
     pub fn is_blank(&self) -> bool {
         self.rank.name.is_blank() || self.suit.name.is_blank()
+    }
+
+    #[must_use]
+    pub fn to_color_symbol_string(&self) -> String {
+        let suit_char = self.get_index_suit_char();
+        if let Some(color) = Suit::<SuitType>::colors().get(&suit_char) {
+            match color {
+                colored::Color::Red => self.to_string().red().to_string(),
+                colored::Color::Blue => self.to_string().blue().to_string(),
+                colored::Color::Green => self.to_string().green().to_string(),
+                colored::Color::Yellow => self.to_string().yellow().to_string(),
+                colored::Color::Magenta => self.to_string().magenta().to_string(),
+                colored::Color::Cyan => self.to_string().cyan().to_string(),
+                colored::Color::BrightBlack => self.to_string().bright_black().to_string(),
+                colored::Color::BrightRed => self.to_string().bright_red().to_string(),
+                colored::Color::BrightGreen => self.to_string().bright_green().to_string(),
+                colored::Color::BrightYellow => self.to_string().bright_yellow().to_string(),
+                colored::Color::BrightBlue => self.to_string().bright_blue().to_string(),
+                colored::Color::BrightMagenta => self.to_string().bright_magenta().to_string(),
+                colored::Color::BrightCyan => self.to_string().bright_cyan().to_string(),
+                _ => self.to_string(),
+            }
+        } else {
+            self.to_string()
+        }
     }
 }
 
@@ -148,6 +179,22 @@ mod types__card__tests {
         assert_eq!(card, expected);
     }
 
+    #[test]
+    fn get_index_suit_char() {
+        assert_eq!(
+            Card::<Standard52, Standard52>::from_str("AS")
+                .unwrap()
+                .get_index_suit_char(),
+            'S'
+        );
+        assert_eq!(
+            Card::<Standard52, Standard52>::from_str("__")
+                .unwrap()
+                .get_index_suit_char(),
+            '_'
+        );
+    }
+
     /// I want to make sure that the weight field in the `Card` struct correctly affects the sorting
     /// of cards. For Decks of cards, the sort would be in reverse, with the higher weighted `Card`
     /// coming first.
@@ -171,6 +218,20 @@ mod types__card__tests {
         assert_eq!(cards[1], ace_of_diamonds);
         assert_eq!(cards[2], ace_of_hearts);
         assert_eq!(cards[3], ace_of_spades);
+    }
+
+    #[test]
+    fn to_color_symbol_string__default() {
+        let card = Card::<Standard52, Standard52>::from_str("AS").unwrap();
+
+        assert_eq!("A♠".to_string(), card.to_color_symbol_string());
+    }
+
+    #[test]
+    fn to_color_symbol_string() {
+        let card = Card::<Standard52, Standard52>::from_str("AH").unwrap();
+
+        assert_eq!("A♥".red().to_string(), card.to_color_symbol_string());
     }
 
     #[test]

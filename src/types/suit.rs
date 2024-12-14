@@ -2,6 +2,8 @@ use crate::decks::modern::Modern;
 use crate::decks::standard52::Standard52;
 use crate::localization::{FluentName, Named};
 use crate::types::traits::Suited;
+use colored::Color;
+use std::collections::HashMap;
 use std::fmt::Display;
 use std::marker::PhantomData;
 
@@ -120,6 +122,10 @@ impl<SuiteType: Suited> Suited for Suit<SuiteType> {
 
     fn suit_names() -> Vec<&'static str> {
         SuiteType::suit_names()
+    }
+
+    fn colors() -> HashMap<char, Color> {
+        SuiteType::colors()
     }
 }
 

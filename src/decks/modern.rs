@@ -4,6 +4,8 @@ use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked, Suited};
+use colored::Color;
+use std::collections::HashMap;
 use std::str::FromStr;
 
 /// `Standard52` with Jokers.
@@ -89,6 +91,16 @@ impl Ranked for Modern {
 }
 
 impl Suited for Modern {
+    fn colors() -> HashMap<char, Color> {
+        let mut mappie = HashMap::new();
+
+        mappie.insert('T', Color::Blue);
+        mappie.insert('H', Color::Red);
+        mappie.insert('D', Color::Red);
+
+        mappie
+    }
+
     fn suit_chars() -> Vec<char> {
         vec![
             '♤', '♠', 'S', 's', '♡', '♥', 'H', 'h', '♢', '♦', 'D', 'd', '♧', '♣', 'C', 'c', '🃟',

@@ -4,6 +4,8 @@ use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked, Suited};
+use colored::Color;
+use std::collections::HashMap;
 
 /// Skat is a German, trick based card game for three players.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -66,8 +68,20 @@ impl Ranked for Skat {
 }
 
 impl Suited for Skat {
+    fn colors() -> HashMap<char, Color> {
+        let mut mappie = HashMap::new();
+
+        mappie.insert('L', Color::Green);
+        mappie.insert('H', Color::Red);
+        mappie.insert('S', Color::BrightBlue);
+
+        mappie
+    }
+
     fn suit_chars() -> Vec<char> {
-        todo!()
+        vec![
+            '♧', '♣', 'E', 'e', '♤', '♠', 'L', 'l', '♡', '♥', 'H', 'h', '♢', '♦', 'S', 's',
+        ]
     }
 
     fn suit_names() -> Vec<&'static str> {

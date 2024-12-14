@@ -1,5 +1,7 @@
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked, Suited};
+use colored::Color;
+use std::collections::HashMap;
 
 /// The [Standard52](https://en.wikipedia.org/wiki/Standard_52-card_deck)
 /// deck with French suited playing cards is
@@ -84,6 +86,15 @@ impl Ranked for Standard52 {
 }
 
 impl Suited for Standard52 {
+    fn colors() -> HashMap<char, Color> {
+        let mut mappie = HashMap::new();
+
+        mappie.insert('H', Color::Red);
+        mappie.insert('D', Color::Red);
+
+        mappie
+    }
+
     fn suit_chars() -> Vec<char> {
         vec![
             '♤', '♠', 'S', 's', '♡', '♥', 'H', 'h', '♢', '♦', 'D', 'd', '♧', '♣', 'C', 'c',
@@ -112,34 +123,6 @@ mod decks__standard52__tests {
     use std::str::FromStr;
 
     #[test]
-    fn new() {
-        let rank = Rank::<Standard52>::new(Standard52::ACE);
-
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
-        assert_eq!(rank.weight, 12);
-        assert_eq!(rank.prime, 41);
-    }
-
-    #[test]
-    fn new_with_weight() {
-        let rank = Rank::<Standard52>::new_with_weight(Standard52::ACE, 13);
-
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
-        assert_eq!(rank.weight, 13);
-        assert_eq!(rank.prime, 41);
-    }
-
-    #[test]
-    fn update_weight() {
-        let rank = Rank::<Standard52>::new(Standard52::ACE);
-        let updated_rank = rank.update_weight(14);
-
-        assert_eq!(updated_rank.name, FluentName::new(Standard52::ACE));
-        assert_eq!(updated_rank.weight, 14);
-        assert_eq!(updated_rank.prime, 41);
-    }
-
-    #[test]
     fn decked__decks() {
         let pile = Standard52::decks(2);
 
@@ -152,6 +135,34 @@ mod decks__standard52__tests {
     #[test]
     fn decked__name() {
         assert_eq!(Standard52::name(), "Standard52");
+    }
+
+    #[test]
+    fn rank__new() {
+        let rank = Rank::<Standard52>::new(Standard52::ACE);
+
+        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.weight, 12);
+        assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn rank__new_with_weight() {
+        let rank = Rank::<Standard52>::new_with_weight(Standard52::ACE, 13);
+
+        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.weight, 13);
+        assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn rank__update_weight() {
+        let rank = Rank::<Standard52>::new(Standard52::ACE);
+        let updated_rank = rank.update_weight(14);
+
+        assert_eq!(updated_rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(updated_rank.weight, 14);
+        assert_eq!(updated_rank.prime, 41);
     }
 
     #[test]
@@ -188,104 +199,6 @@ mod decks__standard52__tests {
             "A K Q J T 9 8 7 6 5 4 3 2",
             Rank::<Standard52>::ranks_index_all(" ")
         );
-    }
-
-    #[test]
-    fn suit__binary_signature() {
-        assert_eq!(4096, Suit::<Standard52>::from('S').binary_signature());
-        assert_eq!(8192, Suit::<Standard52>::from('H').binary_signature());
-        assert_eq!(16384, Suit::<Standard52>::from('D').binary_signature());
-        assert_eq!(32768, Suit::<Standard52>::from('C').binary_signature());
-        assert_eq!(61440, Suit::<Standard52>::from('_').binary_signature());
-    }
-
-    #[test]
-    fn suit__binary_signature_revised() {
-        assert_eq!(
-            32768,
-            Suit::<Standard52>::from('S').binary_signature_revised()
-        );
-        assert_eq!(
-            16384,
-            Suit::<Standard52>::from('H').binary_signature_revised()
-        );
-        assert_eq!(
-            8192,
-            Suit::<Standard52>::from('D').binary_signature_revised()
-        );
-        assert_eq!(
-            4096,
-            Suit::<Standard52>::from('C').binary_signature_revised()
-        );
-        assert_eq!(
-            61440,
-            Suit::<Standard52>::from('_').binary_signature_revised()
-        );
-    }
-
-    #[test]
-    fn suit__weighted_vector() {
-        let mut v = Suit::<Standard52>::suit_names();
-        v.reverse();
-
-        let suits = Suit::<Standard52>::weighted_vector(&v);
-
-        assert_eq!(suits.len(), 4);
-        assert_eq!(suits[0].fluent_name_string(), "clubs");
-        assert_eq!(suits[0].weight, 0);
-        assert_eq!(suits[1].fluent_name_string(), "diamonds");
-        assert_eq!(suits[1].weight, 1);
-        assert_eq!(suits[2].fluent_name_string(), "hearts");
-        assert_eq!(suits[2].weight, 2);
-        assert_eq!(suits[3].fluent_name_string(), "spades");
-        assert_eq!(suits[3].weight, 3);
-    }
-
-    #[test]
-    fn suit__symbol() {
-        let suit = Suit::<Standard52>::new(Standard52::SPADES);
-
-        assert_eq!(suit.symbol(), "♠");
-        assert_eq!(suit.to_string(), suit.symbol())
-    }
-
-    #[test]
-    fn suit__symbol_blank() {
-        let suit = Suit::<Standard52>::from('_');
-
-        assert_eq!(suit.symbol(), "_");
-        assert_eq!(suit.to_string(), suit.symbol())
-    }
-
-    #[test]
-    fn from_char() {
-        let rank = Rank::<Standard52>::from('A');
-
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
-        assert_eq!(rank.weight, 12);
-        assert_eq!(rank.prime, 41);
-    }
-
-    #[test]
-    fn from_str() {
-        let rank = Rank::<Standard52>::from_str("A'").unwrap();
-
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
-        assert_eq!(rank.weight, 12);
-        assert_eq!(rank.prime, 41);
-    }
-
-    #[test]
-    fn from_str__invalid() {
-        let rank = Rank::<Standard52>::from_str("Z'");
-
-        assert!(rank.is_err());
-        if let Err(CardError::InvalidFluentRank(_)) = rank {
-            // The error is of type CardError::InvalidFluentRank
-            // There has got to be a better way to test this.
-        } else {
-            panic!("Expected CardError::InvalidFluentRank");
-        }
     }
 
     #[test]
@@ -336,6 +249,93 @@ mod decks__standard52__tests {
     }
 
     #[test]
+    fn suit__binary_signature() {
+        assert_eq!(4096, Suit::<Standard52>::from('S').binary_signature());
+        assert_eq!(8192, Suit::<Standard52>::from('H').binary_signature());
+        assert_eq!(16384, Suit::<Standard52>::from('D').binary_signature());
+        assert_eq!(32768, Suit::<Standard52>::from('C').binary_signature());
+        assert_eq!(61440, Suit::<Standard52>::from('_').binary_signature());
+    }
+
+    #[test]
+    fn suit__binary_signature_revised() {
+        assert_eq!(
+            32768,
+            Suit::<Standard52>::from('S').binary_signature_revised()
+        );
+        assert_eq!(
+            16384,
+            Suit::<Standard52>::from('H').binary_signature_revised()
+        );
+        assert_eq!(
+            8192,
+            Suit::<Standard52>::from('D').binary_signature_revised()
+        );
+        assert_eq!(
+            4096,
+            Suit::<Standard52>::from('C').binary_signature_revised()
+        );
+        assert_eq!(
+            61440,
+            Suit::<Standard52>::from('_').binary_signature_revised()
+        );
+    }
+
+    #[test]
+    fn suit__symbol() {
+        let suit = Suit::<Standard52>::new(Standard52::SPADES);
+
+        assert_eq!(suit.symbol(), "♠");
+        assert_eq!(suit.to_string(), suit.symbol())
+    }
+
+    #[test]
+    fn suit__symbol_blank() {
+        let suit = Suit::<Standard52>::from('_');
+
+        assert_eq!(suit.symbol(), "_");
+        assert_eq!(suit.to_string(), suit.symbol())
+    }
+
+    #[test]
+    fn suit__weighted_vector() {
+        let mut v = Suit::<Standard52>::suit_names();
+        v.reverse();
+
+        let suits = Suit::<Standard52>::weighted_vector(&v);
+
+        assert_eq!(suits.len(), 4);
+        assert_eq!(suits[0].fluent_name_string(), "clubs");
+        assert_eq!(suits[0].weight, 0);
+        assert_eq!(suits[1].fluent_name_string(), "diamonds");
+        assert_eq!(suits[1].weight, 1);
+        assert_eq!(suits[2].fluent_name_string(), "hearts");
+        assert_eq!(suits[2].weight, 2);
+        assert_eq!(suits[3].fluent_name_string(), "spades");
+        assert_eq!(suits[3].weight, 3);
+    }
+
+    #[test]
+    fn suited__colors() {
+        let mut expected = HashMap::new();
+        expected.insert('H', Color::Red);
+        expected.insert('D', Color::Red);
+
+        let actual = Suit::<Standard52>::colors();
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn suited__is_valid_suit_char() {
+        assert!(Suit::<Standard52>::is_valid_suit_char(&'H'));
+        assert!(Suit::<Standard52>::is_valid_suit_char(&'h'));
+        assert!(Suit::<Standard52>::is_valid_suit_char(&'♥'));
+        assert!(!Suit::<Standard52>::is_valid_suit_char(&'_'));
+        assert!(!Suit::<Standard52>::is_valid_suit_char(&'W'));
+    }
+
+    #[test]
     fn suited__suit_chars() {
         let expected = vec![
             '♤', '♠', 'S', 's', '♡', '♥', 'H', 'h', '♢', '♦', 'D', 'd', '♧', '♣', 'C', 'c',
@@ -358,6 +358,37 @@ mod decks__standard52__tests {
         let names = Suit::<Standard52>::suit_names();
 
         assert_eq!(names, expected);
+    }
+
+    #[test]
+    fn from_char() {
+        let rank = Rank::<Standard52>::from('A');
+
+        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.weight, 12);
+        assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn from_str() {
+        let rank = Rank::<Standard52>::from_str("A'").unwrap();
+
+        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.weight, 12);
+        assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn from_str__invalid() {
+        let rank = Rank::<Standard52>::from_str("Z'");
+
+        assert!(rank.is_err());
+        if let Err(CardError::InvalidFluentRank(_)) = rank {
+            // The error is of type CardError::InvalidFluentRank
+            // There has got to be a better way to test this.
+        } else {
+            panic!("Expected CardError::InvalidFluentRank");
+        }
     }
 
     #[rstest]
