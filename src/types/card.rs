@@ -231,7 +231,7 @@ mod types__card__tests {
     fn to_color_symbol_string() {
         let card = Card::<Standard52, Standard52>::from_str("AH").unwrap();
 
-        assert_eq!("A♥", card.to_color_symbol_string());
+        assert_eq!("A♥".red().to_string(), card.to_color_symbol_string());
     }
 
     #[test]

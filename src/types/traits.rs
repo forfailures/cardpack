@@ -59,9 +59,12 @@ pub trait Decked<
         let name = Self::name();
 
         println!();
-        println!("{name} Deck:          {deck}");
+        println!("{name} Deck:          {}", deck.to_color_symbol_string());
         println!("{name} Deck Index:    {}", deck.index());
-        println!("{name} Deck Shuffled: {shuffled}");
+        println!(
+            "{name} Deck Shuffled: {}",
+            shuffled.to_color_symbol_string()
+        );
 
         if verbose {
             println!();
