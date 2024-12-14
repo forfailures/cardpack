@@ -1,4 +1,5 @@
 use crate::decks::modern::Modern;
+use crate::decks::skat::Skat;
 use crate::decks::standard52::Standard52;
 use crate::localization::{FluentName, Named};
 use crate::types::traits::Suited;
@@ -116,6 +117,10 @@ where
 }
 
 impl<SuiteType: Suited> Suited for Suit<SuiteType> {
+    fn colors() -> HashMap<char, Color> {
+        SuiteType::colors()
+    }
+
     fn suit_chars() -> Vec<char> {
         SuiteType::suit_chars()
     }
@@ -124,8 +129,8 @@ impl<SuiteType: Suited> Suited for Suit<SuiteType> {
         SuiteType::suit_names()
     }
 
-    fn colors() -> HashMap<char, Color> {
-        SuiteType::colors()
+    fn type_name() -> &'static str {
+        SuiteType::type_name()
     }
 }
 
@@ -138,13 +143,22 @@ impl<SuitType: Suited> From<char> for Suit<SuitType> {
                 phantom_data: PhantomData,
             };
         }
-        match c {
-            'S' | 's' | '♤' | '♠' => Suit::<SuitType>::new(Standard52::SPADES),
-            'H' | 'h' | '♡' | '♥' => Suit::<SuitType>::new(Standard52::HEARTS),
-            'D' | 'd' | '♢' | '♦' => Suit::<SuitType>::new(Standard52::DIAMONDS),
-            'C' | 'c' | '♧' | '♣' => Suit::<SuitType>::new(Standard52::CLUBS),
-            '🃟' | 'T' | 't' => Suit::new(Modern::TRUMP),
-            _ => Suit::new(FluentName::BLANK),
+        match SuitType::type_name() {
+            Skat::DECK_NAME => match c {
+                '♧' | '♣' | 'E' | 'e' => Suit::<SuitType>::new(Skat::EICHEL),
+                '♤' | '♠' | 'L' | 'l' => Suit::<SuitType>::new(Skat::LAUB),
+                '♡' | '♥' | 'H' | 'h' => Suit::<SuitType>::new(Skat::HERZ),
+                '♢' | '♦' | 'S' | 's' => Suit::<SuitType>::new(Skat::SHELLEN),
+                _ => Suit::<SuitType>::new(FluentName::BLANK),
+            },
+            _ => match c {
+                'S' | 's' | '♤' | '♠' => Suit::<SuitType>::new(Standard52::SPADES),
+                'H' | 'h' | '♡' | '♥' => Suit::<SuitType>::new(Standard52::HEARTS),
+                'D' | 'd' | '♢' | '♦' => Suit::<SuitType>::new(Standard52::DIAMONDS),
+                'C' | 'c' | '♧' | '♣' => Suit::<SuitType>::new(Standard52::CLUBS),
+                '🃟' | 'T' | 't' => Suit::new(Modern::TRUMP),
+                _ => Suit::new(FluentName::BLANK),
+            },
         }
     }
 }

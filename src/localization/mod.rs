@@ -1,5 +1,6 @@
 use crate::types::card_error::CardError;
 use fluent_templates::{langid, static_loader, LanguageIdentifier, Loader};
+use std::fmt::Display;
 use std::str::FromStr;
 use std::string::ToString;
 
@@ -219,6 +220,12 @@ impl FluentName {
 impl Default for FluentName {
     fn default() -> Self {
         FluentName(Self::BLANK.to_string())
+    }
+}
+
+impl Display for FluentName {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0.clone())
     }
 }
 

@@ -13,6 +13,10 @@ use crate::types::traits::{Decked, Ranked};
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Manila {}
 
+impl Manila {
+    pub const DECK_NAME: &'static str = "Manila";
+}
+
 impl Decked<Manila, Standard52> for Manila {
     fn pack(&self) -> Pile<Manila, Standard52> {
         Manila::deck()
@@ -38,6 +42,10 @@ impl Ranked for Manila {
             Standard52::SEVEN,
             Standard52::SIX,
         ]
+    }
+
+    fn type_name() -> &'static str {
+        Manila::DECK_NAME
     }
 }
 

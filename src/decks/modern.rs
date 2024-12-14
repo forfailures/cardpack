@@ -15,6 +15,8 @@ use std::str::FromStr;
 pub struct Modern {}
 
 impl Modern {
+    pub const DECK_NAME: &'static str = "Modern";
+
     // Jokers Fluent Names
     pub const BIG: &'static str = "big-joker";
     pub const LITTLE: &'static str = "little-joker";
@@ -88,6 +90,10 @@ impl Ranked for Modern {
             Standard52::TWO,
         ]
     }
+
+    fn type_name() -> &'static str {
+        Modern::DECK_NAME
+    }
 }
 
 impl Suited for Modern {
@@ -116,6 +122,10 @@ impl Suited for Modern {
             Standard52::DIAMONDS,
             Standard52::CLUBS,
         ]
+    }
+
+    fn type_name() -> &'static str {
+        Modern::DECK_NAME
     }
 }
 

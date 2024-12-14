@@ -5,6 +5,10 @@ use crate::types::traits::Decked;
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct HandAndFoot {}
 
+impl HandAndFoot {
+    pub const DECK_NAME: &'static str = "Hand and Foot";
+}
+
 impl Decked<Modern, Modern> for HandAndFoot {
     fn deck() -> Pile<Modern, Modern> {
         Modern::decks(5).sort()

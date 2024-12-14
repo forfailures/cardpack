@@ -12,6 +12,8 @@ use std::collections::HashMap;
 pub struct Tarot {}
 
 impl Tarot {
+    pub const DECK_NAME: &'static str = "Tarot";
+
     //  Suit Fluent Identifiers
     pub const MAJOR_ARCANA: &'static str = "major-arcana";
     pub const WANDS: &'static str = "wands";
@@ -180,6 +182,10 @@ impl Ranked for Tarot {
             Standard52::ACE,
         ]
     }
+
+    fn type_name() -> &'static str {
+        Tarot::DECK_NAME
+    }
 }
 
 impl Suited for Tarot {
@@ -214,6 +220,10 @@ impl Suited for Tarot {
 
     fn suit_names() -> Vec<&'static str> {
         vec![Tarot::WANDS, Tarot::CUPS, Tarot::SWORDS, Tarot::PENTACLES]
+    }
+
+    fn type_name() -> &'static str {
+        Tarot::DECK_NAME
     }
 }
 

@@ -8,6 +8,10 @@ use crate::types::traits::{Decked, Ranked};
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Pinochle {}
 
+impl Pinochle {
+    pub const DECK_NAME: &'static str = "Pinochle";
+}
+
 impl Decked<Pinochle, Standard52> for Pinochle {
     #[must_use]
     fn deck() -> Pile<Pinochle, Standard52> {
@@ -47,6 +51,10 @@ impl Ranked for Pinochle {
             Standard52::JACK,
             Standard52::NINE,
         ]
+    }
+
+    fn type_name() -> &'static str {
+        Pinochle::DECK_NAME
     }
 }
 

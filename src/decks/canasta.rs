@@ -13,6 +13,8 @@ use crate::types::traits::Decked;
 pub struct Canasta {}
 
 impl Canasta {
+    pub const DECK_NAME: &'static str = "Canasta";
+
     fn red_threes() -> Pile<Modern, Modern> {
         let mut pile = Pile::<Modern, Modern>::new(Vec::new());
 

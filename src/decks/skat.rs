@@ -12,6 +12,8 @@ use std::collections::HashMap;
 pub struct Skat {}
 
 impl Skat {
+    pub const DECK_NAME: &'static str = "Skat";
+
     // Skat Deck Ranks:
     pub const DAUS: &'static str = "daus";
     pub const OBER: &'static str = "ober";
@@ -65,6 +67,10 @@ impl Ranked for Skat {
             Standard52::SEVEN,
         ]
     }
+
+    fn type_name() -> &'static str {
+        Skat::DECK_NAME
+    }
 }
 
 impl Suited for Skat {
@@ -87,6 +93,10 @@ impl Suited for Skat {
     fn suit_names() -> Vec<&'static str> {
         vec![Skat::EICHEL, Skat::LAUB, Skat::HERZ, Skat::SHELLEN]
     }
+
+    fn type_name() -> &'static str {
+        Skat::DECK_NAME
+    }
 }
 
 #[cfg(test)]
@@ -94,6 +104,8 @@ impl Suited for Skat {
 mod decks__skat__tests {
     use super::*;
     use crate::types::rank::Rank;
+    use rstest::rstest;
+    use std::str::FromStr;
 
     #[test]
     fn rank__new_with_weight() {
@@ -120,5 +132,63 @@ mod decks__skat__tests {
 
         // D♣ K♣ O♣ U♣ T♣ 9♣ 8♣ 7♣ D♠ K♠ O♠ U♠ T♠ 9♠ 8♠ 7♠ D♥ K♥ O♥ U♥ T♥ 9♥ 8♥ 7♥ D♦ K♦ O♦ U♦ T♦ 9♦ 8♦ 7♦
         assert_eq!(deck.to_string(), shuffled.to_string());
+    }
+
+    #[test]
+    fn from_str() {
+        let card = Card::<Skat, Skat>::from_str("D♣").unwrap();
+
+        println!("{:?}", card);
+
+        assert_eq!(card.rank.name.to_string(), Skat::DAUS);
+        assert_eq!(card.suit.name.to_string(), Skat::EICHEL);
+    }
+
+    #[test]
+    fn ranked__from() {
+        let rank = Rank::<Skat>::from('D');
+
+        assert_eq!(rank.name.to_string(), Skat::DAUS);
+    }
+
+    #[rstest]
+    #[case('D', Skat::DAUS)]
+    #[case('d', Skat::DAUS)]
+    #[case('T', Standard52::TEN)]
+    #[case('t', Standard52::TEN)]
+    #[case('K', Standard52::KING)]
+    #[case('k', Standard52::KING)]
+    #[case('O', Skat::OBER)]
+    #[case('o', Skat::OBER)]
+    #[case('U', Skat::UNTER)]
+    #[case('u', Skat::UNTER)]
+    #[case('0', Standard52::TEN)]
+    #[case('9', Standard52::NINE)]
+    #[case('8', Standard52::EIGHT)]
+    #[case('7', Standard52::SEVEN)]
+    fn rank__from__char(#[case] input: char, #[case] expected: &str) {
+        assert_eq!(Rank::<Skat>::new(expected), Rank::<Skat>::from(input));
+    }
+
+    #[test]
+    fn suited__is_valid_suit_char() {
+        assert!(Suit::<Skat>::is_valid_suit_char(&'♧'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'♣'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'E'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'e'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'♤'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'♠'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'L'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'l'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'H'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'h'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'♥'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'♡'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'♦'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'♢'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'S'));
+        assert!(Suit::<Skat>::is_valid_suit_char(&'s'));
+        assert!(!Suit::<Skat>::is_valid_suit_char(&'_'));
+        assert!(!Suit::<Skat>::is_valid_suit_char(&'W'));
     }
 }

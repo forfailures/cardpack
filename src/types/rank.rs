@@ -1,4 +1,5 @@
 use crate::decks::modern::Modern;
+use crate::decks::skat::Skat;
 use crate::decks::standard52::Standard52;
 use crate::localization::{FluentName, Named};
 use crate::types::card_error::CardError;
@@ -15,7 +16,7 @@ where
     pub weight: u32,
     pub prime: u32,
     pub name: FluentName,
-    phantom_data: PhantomData<RankType>,
+    pub phantom_data: PhantomData<RankType>,
 }
 
 impl<RankType> Rank<RankType>
@@ -131,6 +132,10 @@ impl<RankType: Ranked> Ranked for Rank<RankType> {
     fn rank_names() -> Vec<&'static str> {
         RankType::rank_names()
     }
+
+    fn type_name() -> &'static str {
+        RankType::type_name()
+    }
 }
 
 impl<RankType: Ranked> From<char> for Rank<RankType> {
@@ -159,6 +164,9 @@ impl<RankType: Ranked> From<char> for Rank<RankType> {
             'A' | 'a' => Rank::new(Standard52::ACE),
             'B' | 'b' => Rank::new(Modern::BIG),
             'L' | 'l' => Rank::new(Modern::LITTLE),
+            'D' | 'd' => Rank::new(Skat::DAUS),
+            'O' | 'o' => Rank::new(Skat::OBER),
+            'U' | 'u' => Rank::new(Skat::UNTER),
             _ => Rank::new(FluentName::BLANK),
         }
     }

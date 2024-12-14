@@ -12,6 +12,8 @@ use std::collections::HashMap;
 pub struct Standard52 {}
 
 impl Standard52 {
+    pub const DECK_NAME: &'static str = "Standard52";
+
     // https://github.com/forfailures/cardpack/actions/runs/11375156606/job/31645291021
     // I can't believe that running the tests through GitHub Actions against
     // Rust version 1.74 finally showed why the IDE was complaining about
@@ -83,6 +85,10 @@ impl Ranked for Standard52 {
             Standard52::TWO,
         ]
     }
+
+    fn type_name() -> &'static str {
+        Standard52::DECK_NAME
+    }
 }
 
 impl Suited for Standard52 {
@@ -108,6 +114,10 @@ impl Suited for Standard52 {
             Standard52::DIAMONDS,
             Standard52::CLUBS,
         ]
+    }
+
+    fn type_name() -> &'static str {
+        Standard52::DECK_NAME
     }
 }
 
@@ -413,7 +423,7 @@ mod decks__standard52__tests {
     #[case('t', FluentName::BLANK)]
     #[case(' ', FluentName::BLANK)]
     #[case('F', FluentName::BLANK)]
-    fn from__char(#[case] input: char, #[case] expected: &str) {
+    fn suit__from__char(#[case] input: char, #[case] expected: &str) {
         assert_eq!(
             Suit::<Standard52>::new(expected),
             Suit::<Standard52>::from(input)

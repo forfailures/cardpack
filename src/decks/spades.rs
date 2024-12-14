@@ -9,6 +9,10 @@ use crate::types::traits::Decked;
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Spades {}
 
+impl Spades {
+    pub const DECK_NAME: &'static str = "Spades";
+}
+
 impl Decked<Modern, Modern> for Spades {
     fn deck() -> Pile<Modern, Modern> {
         let mut deck = Modern::deck();

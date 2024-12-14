@@ -13,6 +13,10 @@ use crate::types::traits::{Decked, Ranked};
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Euchre24 {}
 
+impl Euchre24 {
+    pub const DECK_NAME: &'static str = "Euchre24";
+}
+
 impl Decked<Euchre24, Standard52> for Euchre24 {
     fn pack(&self) -> Pile<Euchre24, Standard52> {
         Euchre24::deck()
@@ -33,6 +37,10 @@ impl Ranked for Euchre24 {
             Standard52::TEN,
             Standard52::NINE,
         ]
+    }
+
+    fn type_name() -> &'static str {
+        Euchre24::DECK_NAME
     }
 }
 

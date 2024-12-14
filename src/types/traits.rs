@@ -100,6 +100,8 @@ pub trait Ranked {
     fn rank_chars() -> Vec<char>;
 
     fn rank_names() -> Vec<&'static str>;
+
+    fn type_name() -> &'static str;
 }
 
 pub trait Suited {
@@ -113,6 +115,8 @@ pub trait Suited {
     fn suit_chars() -> Vec<char>;
 
     fn suit_names() -> Vec<&'static str>;
+
+    fn type_name() -> &'static str;
 }
 
 pub trait Shufflable<RankType: Ranked + Ord + Clone, SuitType: Suited + Ord + Clone> {
