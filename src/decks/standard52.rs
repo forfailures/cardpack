@@ -86,6 +86,15 @@ impl Ranked for Standard52 {
 }
 
 impl Suited for Standard52 {
+    fn colors() -> HashMap<char, Color> {
+        let mut mappie = HashMap::new();
+
+        mappie.insert('H', Color::Red);
+        mappie.insert('D', Color::Red);
+
+        mappie
+    }
+
     fn suit_chars() -> Vec<char> {
         vec![
             '♤', '♠', 'S', 's', '♡', '♥', 'H', 'h', '♢', '♦', 'D', 'd', '♧', '♣', 'C', 'c',
@@ -99,15 +108,6 @@ impl Suited for Standard52 {
             Standard52::DIAMONDS,
             Standard52::CLUBS,
         ]
-    }
-
-    fn colors() -> HashMap<char, Color> {
-        let mut mappie = HashMap::new();
-
-        mappie.insert('H', Color::Red);
-        mappie.insert('D', Color::Red);
-
-        mappie
     }
 }
 

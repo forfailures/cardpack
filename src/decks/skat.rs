@@ -68,16 +68,24 @@ impl Ranked for Skat {
 }
 
 impl Suited for Skat {
+    fn colors() -> HashMap<char, Color> {
+        let mut mappie = HashMap::new();
+
+        mappie.insert('L', Color::Green);
+        mappie.insert('H', Color::Red);
+        mappie.insert('S', Color::BrightBlue);
+
+        mappie
+    }
+
     fn suit_chars() -> Vec<char> {
-        todo!()
+        vec![
+            '♧', '♣', 'E', 'e', '♤', '♠', 'L', 'l', '♡', '♥', 'H', 'h', '♢', '♦', 'S', 's',
+        ]
     }
 
     fn suit_names() -> Vec<&'static str> {
         vec![Skat::EICHEL, Skat::LAUB, Skat::HERZ, Skat::SHELLEN]
-    }
-
-    fn colors() -> HashMap<char, Color> {
-        todo!()
     }
 }
 

@@ -4,15 +4,15 @@ laub-long = Leaves
 herz-long = Hearts
 schellen-long = Bells
 
-eichel-index = A
+eichel-index = E
 laub-index = L
 herz-index = H
-schellen-index = B
+schellen-index = S
 
 ## Ranks
 daus-long = Deuce
-ober-long = Ober
-unter-long = Unter
+ober-long = Over
+unter-long = Under
 
 daus-index = D
 ober-index = O

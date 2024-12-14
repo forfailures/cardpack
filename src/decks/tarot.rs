@@ -183,6 +183,16 @@ impl Ranked for Tarot {
 }
 
 impl Suited for Tarot {
+    fn colors() -> HashMap<char, Color> {
+        let mut mappie = HashMap::new();
+
+        mappie.insert('M', Color::Blue);
+        mappie.insert('H', Color::Red);
+        mappie.insert('D', Color::Red);
+
+        mappie
+    }
+
     fn suit_chars() -> Vec<char> {
         vec![
             Tarot::MAJOR_ARCANA_SYMBOL,
@@ -204,10 +214,6 @@ impl Suited for Tarot {
 
     fn suit_names() -> Vec<&'static str> {
         vec![Tarot::WANDS, Tarot::CUPS, Tarot::SWORDS, Tarot::PENTACLES]
-    }
-
-    fn colors() -> HashMap<char, Color> {
-        todo!()
     }
 }
 

@@ -91,6 +91,16 @@ impl Ranked for Modern {
 }
 
 impl Suited for Modern {
+    fn colors() -> HashMap<char, Color> {
+        let mut mappie = HashMap::new();
+
+        mappie.insert('T', Color::Blue);
+        mappie.insert('H', Color::Red);
+        mappie.insert('D', Color::Red);
+
+        mappie
+    }
+
     fn suit_chars() -> Vec<char> {
         vec![
             '♤', '♠', 'S', 's', '♡', '♥', 'H', 'h', '♢', '♦', 'D', 'd', '♧', '♣', 'C', 'c', '🃟',
@@ -106,10 +116,6 @@ impl Suited for Modern {
             Standard52::DIAMONDS,
             Standard52::CLUBS,
         ]
-    }
-
-    fn colors() -> HashMap<char, Color> {
-        todo!()
     }
 }
 
