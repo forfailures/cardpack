@@ -7,7 +7,7 @@ schellen-long = Bells
 ## Ranks
 daus-long = Deuce
 zhen-long = Ten
-könig-long = King
+konig-long = King
 ober-long = Over
 unter-long = Under
 neun-long = Nine

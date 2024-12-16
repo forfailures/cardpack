@@ -17,7 +17,7 @@ impl Skat {
     // Skat Deck Ranks:
     pub const DAUS: &'static str = "daus";
     pub const ZHEN: &'static str = "zhen";
-    pub const KÖNIG: &'static str = "könig";
+    pub const KÖNIG: &'static str = "konig";
     pub const OBER: &'static str = "ober";
     pub const UNTER: &'static str = "unter";
     pub const NEUN: &'static str = "neun";
