@@ -16,8 +16,13 @@ impl Skat {
 
     // Skat Deck Ranks:
     pub const DAUS: &'static str = "daus";
+    pub const ZHEN: &'static str = "zhen";
+    pub const KÖNIG: &'static str = "konig";
     pub const OBER: &'static str = "ober";
     pub const UNTER: &'static str = "unter";
+    pub const NEUN: &'static str = "neun";
+    pub const ACHT: &'static str = "acht";
+    pub const SIEBEN: &'static str = "sieben";
 
     // Skat Suit Fluent Identifiers
     pub const EICHEL: &'static str = "eichel"; // Acorns
