@@ -22,11 +22,6 @@ hearts-weight = 3
 diamonds-weight = 2
 clubs-weight = 1
 
-eichel-weight = 4
-laub-weight = 3
-herz-weight = 2
-schellen-weight = 1
-
 big-joker-weight = 14
 little-joker-weight = 13
 ace-weight = 12
@@ -60,14 +55,63 @@ three-prime = 3
 two-prime = 2
 
 # Skat Deck
+# Suits
+eichel-long = Eichel
+laub-long = Laub
+herz-long = Herz
+schellen-long = Schellen
+
+eichel-index = E
+laub-index = L
+herz-index = H
+schellen-index = S
+
 eichel-symbol = ♣
 laub-symbol = ♠
 herz-symbol = ♥
 schellen-symbol = ♦
 
-daus-weight = 13
-ober-weight = 12
-unter-weight = 11
+eichel-weight = 4
+laub-weight = 3
+herz-weight = 2
+schellen-weight = 1
+
+# Ranks
+daus-long = Daus
+zhen-long = Zehn
+könig-long = König
+ober-long = Ober
+unter-long = Unter
+neun-long = Neun
+acht-long = Acht
+sieben-long = Sieben
+
+daus-index = D
+zhen-index = T
+könig-index = K
+ober-index = O
+unter-index = U
+neun-index = 9
+acht-index = 8
+sieben-index = 7
+
+daus-weight = 7
+zhen-weight = 6
+könig-weight = 5
+ober-weight = 4
+unter-weight = 3
+neun-weight = 2
+acht-weight = 1
+sieben-weight = 0
+
+#daus-prime = 19
+#zhen-prime = 17
+#könig-prime = 13
+#ober-prime = 11
+#unter-prime = 7
+#neun-prime = 5
+#acht-prime = 3
+#sieben-prime = 2
 
 # Tarot Deck
 major-arcana-symbol = M

@@ -16,8 +16,14 @@ impl Skat {
 
     // Skat Deck Ranks:
     pub const DAUS: &'static str = "daus";
+    pub const ZHEN: &'static str = "zhen";
+    pub const KÖNIG: &'static str = "könig";
     pub const OBER: &'static str = "ober";
     pub const UNTER: &'static str = "unter";
+    pub const NEUN: &'static str = "neun";
+    pub const ACHT: &'static str = "acht";
+    pub const SIEBEN: &'static str = "sieben";
+
 
     // Skat Suit Fluent Identifiers
     pub const EICHEL: &'static str = "eichel"; // Acorns
@@ -27,21 +33,21 @@ impl Skat {
 }
 
 impl Decked<Skat, Skat> for Skat {
-    #[must_use]
-    fn deck() -> Pile<Skat, Skat> {
-        let ranks = Rank::<Skat>::ranks_from_array(&Skat::rank_names());
-        let suits = Suit::<Skat>::suits();
-
-        let mut pile = Pile::<Skat, Skat>::new(Vec::new());
-
-        for suit in &suits {
-            for rank in &ranks {
-                pile.push(Card::<Skat, Skat>::new(rank.clone(), suit.clone()));
-            }
-        }
-
-        pile
-    }
+    // #[must_use]
+    // fn deck() -> Pile<Skat, Skat> {
+    //     let ranks = Rank::<Skat>::ranks_from_array(&Skat::rank_names());
+    //     let suits = Suit::<Skat>::suits();
+    //
+    //     let mut pile = Pile::<Skat, Skat>::new(Vec::new());
+    //
+    //     for suit in &suits {
+    //         for rank in &ranks {
+    //             pile.push(Card::<Skat, Skat>::new(rank.clone(), suit.clone()));
+    //         }
+    //     }
+    //
+    //     pile
+    // }
 
     fn pack(&self) -> Pile<Skat, Skat> {
         Skat::deck()
@@ -58,13 +64,13 @@ impl Ranked for Skat {
     fn rank_names() -> Vec<&'static str> {
         vec![
             Skat::DAUS,
-            Standard52::TEN,
-            Standard52::KING,
+            Skat::ZHEN,
+            Skat::KÖNIG,
             Skat::OBER,
             Skat::UNTER,
-            Standard52::NINE,
-            Standard52::EIGHT,
-            Standard52::SEVEN,
+            Skat::NEUN,
+            Skat::ACHT,
+            Skat::SIEBEN,
         ]
     }
 
@@ -190,5 +196,32 @@ mod decks__skat__tests {
         assert!(Suit::<Skat>::is_valid_suit_char(&'s'));
         assert!(!Suit::<Skat>::is_valid_suit_char(&'_'));
         assert!(!Suit::<Skat>::is_valid_suit_char(&'W'));
+    }
+
+    /// In trying to get this test to pass I've realized that I need
+    /// to give every Rank and Suit its own unique name, that doesn't
+    /// overlap with the Standard52 names, so that I can ensure proper
+    /// sorting.
+    #[test]
+    fn to_string__from_str() {
+        let deck = Skat::deck();
+        let shuffled = deck.shuffle_default().to_string();
+        let parsed = Pile::<Skat, Skat>::from_str(&shuffled).unwrap();
+        let sorted = parsed.sort();
+
+        println!("{deck}");
+        println!("{sorted}");
+
+        for card in deck.v() {
+            println!("{:?}", card);
+        }
+
+        println!("\n=======================\n");
+
+        for card in sorted.v() {
+            println!("{:?}", card);
+        }
+
+        assert!(deck.same(&parsed));
     }
 }

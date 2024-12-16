@@ -148,27 +148,41 @@ impl<RankType: Ranked> From<char> for Rank<RankType> {
                 phantom_data: PhantomData,
             };
         }
-        match c {
-            '2' => Rank::new(Standard52::TWO),
-            '3' => Rank::new(Standard52::THREE),
-            '4' => Rank::new(Standard52::FOUR),
-            '5' => Rank::new(Standard52::FIVE),
-            '6' => Rank::new(Standard52::SIX),
-            '7' => Rank::new(Standard52::SEVEN),
-            '8' => Rank::new(Standard52::EIGHT),
-            '9' => Rank::new(Standard52::NINE),
-            'T' | 't' | '0' => Rank::new(Standard52::TEN),
-            'J' | 'j' => Rank::new(Standard52::JACK),
-            'Q' | 'q' => Rank::new(Standard52::QUEEN),
-            'K' | 'k' => Rank::new(Standard52::KING),
-            'A' | 'a' => Rank::new(Standard52::ACE),
-            'B' | 'b' => Rank::new(Modern::BIG),
-            'L' | 'l' => Rank::new(Modern::LITTLE),
-            'D' | 'd' => Rank::new(Skat::DAUS),
-            'O' | 'o' => Rank::new(Skat::OBER),
-            'U' | 'u' => Rank::new(Skat::UNTER),
-            _ => Rank::new(FluentName::BLANK),
+
+        match RankType::type_name() {
+            Skat::DECK_NAME => match c {
+                'D' | 'd' => Rank::new(Skat::DAUS),
+                'T' | 't' | '0' => Rank::new(Skat::ZHEN),
+                'K' | 'k' => Rank::new(Skat::KÖNIG),
+                'O' | 'o' => Rank::new(Skat::OBER),
+                'U' | 'u' => Rank::new(Skat::UNTER),
+                '9' => Rank::new(Skat::NEUN),
+                '8' => Rank::new(Skat::ACHT),
+                '7' => Rank::new(Skat::SIEBEN),
+                _ => Rank::new(FluentName::BLANK),
+            },
+            _ => match c {
+                '2' => Rank::new(Standard52::TWO),
+                '3' => Rank::new(Standard52::THREE),
+                '4' => Rank::new(Standard52::FOUR),
+                '5' => Rank::new(Standard52::FIVE),
+                '6' => Rank::new(Standard52::SIX),
+                '7' => Rank::new(Standard52::SEVEN),
+                '8' => Rank::new(Standard52::EIGHT),
+                '9' => Rank::new(Standard52::NINE),
+                'T' | 't' | '0' => Rank::new(Standard52::TEN),
+                'J' | 'j' => Rank::new(Standard52::JACK),
+                'Q' | 'q' => Rank::new(Standard52::QUEEN),
+                'K' | 'k' => Rank::new(Standard52::KING),
+                'A' | 'a' => Rank::new(Standard52::ACE),
+                'B' | 'b' => Rank::new(Modern::BIG),
+                'L' | 'l' => Rank::new(Modern::LITTLE),
+                _ => Rank::new(FluentName::BLANK),
+            }
+
         }
+
+
     }
 }
 

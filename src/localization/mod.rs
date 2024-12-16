@@ -72,7 +72,7 @@ pub trait Named<'a> {
     /// ```
     fn fluent_value(&self, key_section: &str, lid: &LanguageIdentifier) -> String {
         let id = format!("{}-{}", self.fluent_name_string(), key_section);
-        LOCALES.lookup(lid, id.as_str())
+            LOCALES.lookup(lid, id.as_str())
     }
 
     /// Returns the value of the `FluentName` index in the fluent templates. An index
