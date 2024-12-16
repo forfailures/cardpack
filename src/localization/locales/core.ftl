@@ -22,11 +22,6 @@ hearts-weight = 3
 diamonds-weight = 2
 clubs-weight = 1
 
-eichel-weight = 4
-laub-weight = 3
-herz-weight = 2
-schellen-weight = 1
-
 big-joker-weight = 14
 little-joker-weight = 13
 ace-weight = 12
@@ -60,10 +55,31 @@ three-prime = 3
 two-prime = 2
 
 # Skat Deck
+# suits
 eichel-symbol = ♣
 laub-symbol = ♠
 herz-symbol = ♥
 schellen-symbol = ♦
+
+eichel-index = E
+laub-index = L
+herz-index = H
+schellen-index = S
+
+eichel-weight = 4
+laub-weight = 3
+herz-weight = 2
+schellen-weight = 1
+
+# rank
+daus-index = D
+zhen-index = T
+konig-index = K
+ober-index = O
+unter-index = U
+neun-index = 9
+acht-index = 8
+sieben-index = 7
 
 daus-weight = 13
 ober-weight = 12

@@ -196,4 +196,31 @@ mod decks__skat__tests {
         assert!(!Suit::<Skat>::is_valid_suit_char(&'_'));
         assert!(!Suit::<Skat>::is_valid_suit_char(&'W'));
     }
+
+    /// In trying to get this test to pass I've realized that I need
+    /// to give every Rank and Suit its own unique name, that doesn't
+    /// overlap with the Standard52 names, so that I can ensure proper
+    /// sorting.
+    #[test]
+    fn to_string__from_str() {
+        let deck = Skat::deck();
+        let shuffled = deck.shuffle_default().to_string();
+        let parsed = Pile::<Skat, Skat>::from_str(&shuffled).unwrap();
+        let sorted = parsed.sort();
+
+        println!("{deck}");
+        println!("{sorted}");
+
+        for card in deck.v() {
+            println!("{:?}", card);
+        }
+
+        println!("\n=======================\n");
+
+        for card in sorted.v() {
+            println!("{:?}", card);
+        }
+
+        assert!(deck.same(&parsed));
+    }
 }
