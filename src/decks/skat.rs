@@ -1,8 +1,4 @@
-use crate::decks::standard52::Standard52;
-use crate::types::card::Card;
 use crate::types::pile::Pile;
-use crate::types::rank::Rank;
-use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked, Suited};
 use colored::Color;
 use std::collections::HashMap;
@@ -32,22 +28,6 @@ impl Skat {
 }
 
 impl Decked<Skat, Skat> for Skat {
-    #[must_use]
-    fn deck() -> Pile<Skat, Skat> {
-        let ranks = Rank::<Skat>::ranks_from_array(&Skat::rank_names());
-        let suits = Suit::<Skat>::suits();
-
-        let mut pile = Pile::<Skat, Skat>::new(Vec::new());
-
-        for suit in &suits {
-            for rank in &ranks {
-                pile.push(Card::<Skat, Skat>::new(rank.clone(), suit.clone()));
-            }
-        }
-
-        pile
-    }
-
     fn pack(&self) -> Pile<Skat, Skat> {
         Skat::deck()
     }
@@ -63,13 +43,13 @@ impl Ranked for Skat {
     fn rank_names() -> Vec<&'static str> {
         vec![
             Skat::DAUS,
-            Standard52::TEN,
-            Standard52::KING,
+            Skat::ZHEN,
+            Skat::KÖNIG,
             Skat::OBER,
             Skat::UNTER,
-            Standard52::NINE,
-            Standard52::EIGHT,
-            Standard52::SEVEN,
+            Skat::NEUN,
+            Skat::ACHT,
+            Skat::SIEBEN,
         ]
     }
 
@@ -108,7 +88,9 @@ impl Suited for Skat {
 #[allow(non_snake_case)]
 mod decks__skat__tests {
     use super::*;
+    use crate::types::card::Card;
     use crate::types::rank::Rank;
+    use crate::types::suit::Suit;
     use rstest::rstest;
     use std::str::FromStr;
 
@@ -135,15 +117,12 @@ mod decks__skat__tests {
         shuffled.shuffle_in_place_default();
         shuffled.sort_in_place();
 
-        // D♣ K♣ O♣ U♣ T♣ 9♣ 8♣ 7♣ D♠ K♠ O♠ U♠ T♠ 9♠ 8♠ 7♠ D♥ K♥ O♥ U♥ T♥ 9♥ 8♥ 7♥ D♦ K♦ O♦ U♦ T♦ 9♦ 8♦ 7♦
         assert_eq!(deck.to_string(), shuffled.to_string());
     }
 
     #[test]
     fn from_str() {
         let card = Card::<Skat, Skat>::from_str("D♣").unwrap();
-
-        println!("{:?}", card);
 
         assert_eq!(card.rank.name.to_string(), Skat::DAUS);
         assert_eq!(card.suit.name.to_string(), Skat::EICHEL);
@@ -159,18 +138,18 @@ mod decks__skat__tests {
     #[rstest]
     #[case('D', Skat::DAUS)]
     #[case('d', Skat::DAUS)]
-    #[case('T', Standard52::TEN)]
-    #[case('t', Standard52::TEN)]
-    #[case('K', Standard52::KING)]
-    #[case('k', Standard52::KING)]
+    #[case('T', Skat::ZHEN)]
+    #[case('t', Skat::ZHEN)]
+    #[case('0', Skat::ZHEN)]
+    #[case('K', Skat::KÖNIG)]
+    #[case('k', Skat::KÖNIG)]
     #[case('O', Skat::OBER)]
     #[case('o', Skat::OBER)]
     #[case('U', Skat::UNTER)]
     #[case('u', Skat::UNTER)]
-    #[case('0', Standard52::TEN)]
-    #[case('9', Standard52::NINE)]
-    #[case('8', Standard52::EIGHT)]
-    #[case('7', Standard52::SEVEN)]
+    #[case('9', Skat::NEUN)]
+    #[case('8', Skat::ACHT)]
+    #[case('7', Skat::SIEBEN)]
     fn rank__from__char(#[case] input: char, #[case] expected: &str) {
         assert_eq!(Rank::<Skat>::new(expected), Rank::<Skat>::from(input));
     }
@@ -206,20 +185,6 @@ mod decks__skat__tests {
         let deck = Skat::deck();
         let shuffled = deck.shuffle_default().to_string();
         let parsed = Pile::<Skat, Skat>::from_str(&shuffled).unwrap();
-        let sorted = parsed.sort();
-
-        println!("{deck}");
-        println!("{sorted}");
-
-        for card in deck.v() {
-            println!("{:?}", card);
-        }
-
-        println!("\n=======================\n");
-
-        for card in sorted.v() {
-            println!("{:?}", card);
-        }
 
         assert!(deck.same(&parsed));
     }
