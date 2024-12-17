@@ -4,16 +4,12 @@ laub-long = Leaves
 herz-long = Hearts
 schellen-long = Bells
 
-eichel-index = E
-laub-index = L
-herz-index = H
-schellen-index = S
-
 ## Ranks
 daus-long = Deuce
+zhen-long = Ten
+konig-long = King
 ober-long = Over
 unter-long = Under
-
-daus-index = D
-ober-index = O
-unter-index = U
+neun-long = Nine
+acht-long = Eight
+sieben-long = Seven
