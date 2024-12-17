@@ -22,6 +22,7 @@ impl Decked<Modern, Modern> for HandAndFoot {
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod decks__hand_and_foot__tests {
+    use std::str::FromStr;
     use super::*;
 
     #[test]
@@ -40,5 +41,14 @@ mod decks__hand_and_foot__tests {
         shuffled.sort_in_place();
 
         assert_eq!(deck.to_string(), shuffled.to_string());
+    }
+
+    #[test]
+    fn to_string__from_str() {
+        let deck = HandAndFoot::deck();
+        let shuffled = deck.shuffle_default().to_string();
+        let parsed = Pile::<Modern, Modern>::from_str(&shuffled).unwrap();
+
+        assert!(deck.same(&parsed));
     }
 }

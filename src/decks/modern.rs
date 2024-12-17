@@ -280,4 +280,13 @@ mod decks__modern__tests {
 
         assert_eq!(deck.to_string(), shuffled.to_string());
     }
+
+    #[test]
+    fn to_string__from_str() {
+        let deck = Modern::deck();
+        let shuffled = deck.shuffle_default().to_string();
+        let parsed = Pile::<Modern, Modern>::from_str(&shuffled).unwrap();
+
+        assert!(deck.same(&parsed));
+    }
 }

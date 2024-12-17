@@ -10,6 +10,13 @@ pub struct Pinochle {}
 
 impl Pinochle {
     pub const DECK_NAME: &'static str = "Pinochle";
+
+    pub const ACE: &'static str = "pinochle-ace";
+    pub const TEN: &'static str = "pinochle-ten";
+    pub const KING: &'static str = "pinochle-king";
+    pub const QUEEN: &'static str = "pinochle-queen";
+    pub const JACK: &'static str = "pinochle-jack";
+    pub const NINE: &'static str = "pinochle-nine";
 }
 
 impl Decked<Pinochle, Standard52> for Pinochle {
@@ -44,12 +51,12 @@ impl Ranked for Pinochle {
 
     fn rank_names() -> Vec<&'static str> {
         vec![
-            Standard52::ACE,
-            Standard52::TEN,
-            Standard52::KING,
-            Standard52::QUEEN,
-            Standard52::JACK,
-            Standard52::NINE,
+            Pinochle::ACE,
+            Pinochle::TEN,
+            Pinochle::KING,
+            Pinochle::QUEEN,
+            Pinochle::JACK,
+            Pinochle::NINE,
         ]
     }
 
@@ -61,6 +68,7 @@ impl Ranked for Pinochle {
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod decks__pinochle__tests {
+    use std::str::FromStr;
     use super::*;
     use crate::localization::Named;
     use crate::types::rank::Rank;
@@ -80,9 +88,9 @@ mod decks__pinochle__tests {
         let ranks = Rank::<Pinochle>::ranks_from_array(&*Pinochle::rank_names());
 
         assert_eq!(ranks.len(), 6);
-        assert_eq!(ranks[0].fluent_name_string(), "ace");
+        assert_eq!(ranks[0].fluent_name_string(), "pinochle-ace");
         assert_eq!(ranks[0].weight, 5);
-        assert_eq!(ranks[1].fluent_name_string(), "ten");
+        assert_eq!(ranks[1].fluent_name_string(), "pinochle-ten");
         assert_eq!(ranks[1].weight, 4);
     }
 
@@ -107,5 +115,18 @@ mod decks__pinochle__tests {
         shuffled.sort_in_place();
 
         assert_eq!(deck.to_string(), shuffled.to_string());
+    }
+
+    #[test]
+    fn to_string__from_str() {
+        let deck = Pinochle::deck();
+        let shuffled = deck.shuffle_default().to_string();
+        let parsed = Pile::<Pinochle, Standard52>::from_str(&shuffled).unwrap();
+        let sorted = parsed.sort();
+
+        println!("{deck}");
+        println!("{sorted}");
+
+        assert!(deck.same(&parsed));
     }
 }

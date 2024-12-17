@@ -52,6 +52,7 @@ impl Ranked for Manila {
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod decks__manila__tests {
+    use std::str::FromStr;
     use super::*;
     use crate::types::rank::Rank;
 
@@ -79,5 +80,14 @@ mod decks__manila__tests {
         shuffled.sort_in_place();
 
         assert_eq!(deck.to_string(), shuffled.to_string());
+    }
+
+    #[test]
+    fn to_string__from_str() {
+        let deck = Manila::deck();
+        let shuffled = deck.shuffle_default().to_string();
+        let parsed = Pile::<Manila, Standard52>::from_str(&shuffled).unwrap();
+
+        assert!(deck.same(&parsed));
     }
 }

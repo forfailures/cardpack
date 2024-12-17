@@ -54,6 +54,21 @@ four-prime = 5
 three-prime = 3
 two-prime = 2
 
+# Pinochle Ranks
+pinochle-ace-weight = 5
+pinochle-ten-weight = 4
+pinochle-king-weight = 3
+pinochle-queen-weight = 2
+pinochle-jack-weight = 1
+pinochle-nine-weight = 0
+
+pinochle-ace-prime = 13
+pinochle-ten-prime = 11
+pinochle-king-prime = 7
+pinochle-queen-prime = 5
+pinochle-jack-prime = 3
+pinochle-nine-prime = 2
+
 # Skat Deck
 # suits
 eichel-symbol = ♣
