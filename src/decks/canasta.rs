@@ -5,7 +5,7 @@ use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
-use crate::types::traits::Decked;
+use crate::types::traits::{Decked, Ranked, Suited};
 use std::str::FromStr;
 
 /// [Canasta](https://en.wikipedia.org/wiki/Canasta)deck
@@ -17,24 +17,89 @@ pub struct Canasta {}
 impl Canasta {
     pub const DECK_NAME: &'static str = "Canasta";
 
+    /// This is probably the clearest way to show just how insane this codebase is with generics.
+    /// I'm wondering if macros will help with this...
+    fn is_red_three<RankType: Ranked + Clone, SuitType: Suited + Clone>(
+        card: &Card<RankType, SuitType>,
+    ) -> bool
+    where
+        Rank<RankType>: PartialEq<Rank<Modern>>,
+        Suit<SuitType>: PartialEq<Suit<Modern>>,
+    {
+        card.rank == Rank::<Modern>::new(Standard52::THREE)
+            && (card.suit == Suit::<Modern>::new(Standard52::HEARTS)
+                || card.suit == Suit::<Modern>::new(Standard52::DIAMONDS))
+    }
+
+    fn is_two<RankType: Ranked + Clone, SuitType: Suited + Clone>(
+        card: &Card<RankType, SuitType>,
+    ) -> bool
+    where
+        Rank<RankType>: PartialEq<Rank<Modern>>,
+        Suit<SuitType>: PartialEq<Suit<Modern>>,
+    {
+        card.rank == Rank::<Modern>::new(Standard52::TWO)
+            && (card.suit == Suit::<Modern>::new(Standard52::SPADES)
+                || card.suit == Suit::<Modern>::new(Standard52::HEARTS)
+                || card.suit == Suit::<Modern>::new(Standard52::DIAMONDS)
+                || card.suit == Suit::<Modern>::new(Standard52::CLUBS))
+    }
+
+    fn two_of_spades() -> Card<Modern, Modern> {
+        Card::new_weighted(
+            Rank::<Modern>::new(Standard52::TWO),
+            Suit::<Modern>::new(Standard52::SPADES),
+            5003,
+        )
+    }
+
+    fn two_of_hearts() -> Card<Modern, Modern> {
+        Card::new_weighted(
+            Rank::<Modern>::new(Standard52::TWO),
+            Suit::<Modern>::new(Standard52::HEARTS),
+            5002,
+        )
+    }
+
+    fn two_of_diamonds() -> Card<Modern, Modern> {
+        Card::new_weighted(
+            Rank::<Modern>::new(Standard52::TWO),
+            Suit::<Modern>::new(Standard52::DIAMONDS),
+            5001,
+        )
+    }
+
+    fn two_of_clubs() -> Card<Modern, Modern> {
+        Card::new_weighted(
+            Rank::<Modern>::new(Standard52::TWO),
+            Suit::<Modern>::new(Standard52::CLUBS),
+            5000,
+        )
+    }
+
+    fn three_of_hearts() -> Card<Modern, Modern> {
+        Card::new_weighted(
+            Rank::<Modern>::new(Standard52::THREE),
+            Suit::<Modern>::new(Standard52::HEARTS),
+            6_000,
+        )
+    }
+
+    fn three_of_diamonds() -> Card<Modern, Modern> {
+        Card::new_weighted(
+            Rank::<Modern>::new(Standard52::THREE),
+            Suit::<Modern>::new(Standard52::DIAMONDS),
+            6_000,
+        )
+    }
+
     fn red_threes() -> Pile<Modern, Modern> {
         let mut pile = Pile::<Modern, Modern>::new(Vec::new());
 
-        let three_hearts = Card::new_weighted(
-            Rank::<Modern>::new(Standard52::THREE),
-            Suit::<Modern>::new(Standard52::HEARTS),
-            100_001,
-        );
-        let three_diamonds = Card::new_weighted(
-            Rank::<Modern>::new(Standard52::THREE),
-            Suit::<Modern>::new(Standard52::DIAMONDS),
-            100_000,
-        );
-
-        pile.push(three_hearts.clone());
-        pile.push(three_hearts);
-        pile.push(three_diamonds.clone());
-        pile.push(three_diamonds);
+        pile.push(Canasta::three_of_hearts());
+        pile.push(Canasta::three_of_hearts());
+        pile.push(Canasta::three_of_diamonds());
+        pile.push(Canasta::three_of_diamonds());
 
         pile
     }
@@ -42,35 +107,14 @@ impl Canasta {
     fn twos() -> Pile<Modern, Modern> {
         let mut pile = Pile::<Modern, Modern>::new(Vec::new());
 
-        let two_spades = Card::new_weighted(
-            Rank::<Modern>::new(Standard52::TWO),
-            Suit::<Modern>::new(Standard52::SPADES),
-            5003,
-        );
-        let two_hearts = Card::new_weighted(
-            Rank::<Modern>::new(Standard52::TWO),
-            Suit::<Modern>::new(Standard52::HEARTS),
-            5002,
-        );
-        let two_diamonds = Card::new_weighted(
-            Rank::<Modern>::new(Standard52::TWO),
-            Suit::<Modern>::new(Standard52::DIAMONDS),
-            5001,
-        );
-        let two_clubs = Card::new_weighted(
-            Rank::<Modern>::new(Standard52::TWO),
-            Suit::<Modern>::new(Standard52::CLUBS),
-            5000,
-        );
-
-        pile.push(two_spades.clone());
-        pile.push(two_spades);
-        pile.push(two_hearts.clone());
-        pile.push(two_hearts);
-        pile.push(two_diamonds.clone());
-        pile.push(two_diamonds);
-        pile.push(two_clubs.clone());
-        pile.push(two_clubs);
+        pile.push(Canasta::two_of_spades());
+        pile.push(Canasta::two_of_spades());
+        pile.push(Canasta::two_of_hearts());
+        pile.push(Canasta::two_of_hearts());
+        pile.push(Canasta::two_of_diamonds());
+        pile.push(Canasta::two_of_diamonds());
+        pile.push(Canasta::two_of_clubs());
+        pile.push(Canasta::two_of_clubs());
 
         pile
     }
@@ -123,6 +167,21 @@ mod decks__canasta__tests {
     }
 
     #[test]
+    fn is_red_three() {
+        let three_of_hearts = Canasta::three_of_hearts();
+        let three_of_diamonds = Canasta::three_of_diamonds();
+        let three_of_spades = Card::new_weighted(
+            Rank::<Modern>::new(Standard52::THREE),
+            Suit::<Modern>::new(Standard52::SPADES),
+            6_000,
+        );
+
+        assert!(Canasta::is_red_three(&three_of_hearts));
+        assert!(Canasta::is_red_three(&three_of_diamonds));
+        assert!(!Canasta::is_red_three(&three_of_spades));
+    }
+
+    #[test]
     fn pile__sort() {
         let deck = Canasta::deck();
         let mut shuffled = deck.shuffle_default();
@@ -147,6 +206,8 @@ mod decks__canasta__tests {
         println!("{deck}");
         println!("{deck_sorted}");
         println!("{sorted}");
+
+        println!("{:?}", deck);
 
         assert!(deck.same(&parsed));
     }
