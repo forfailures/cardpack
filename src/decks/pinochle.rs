@@ -68,10 +68,10 @@ impl Ranked for Pinochle {
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod decks__pinochle__tests {
-    use std::str::FromStr;
     use super::*;
     use crate::localization::Named;
     use crate::types::rank::Rank;
+    use std::str::FromStr;
 
     #[test]
     fn rank__new_with_weight() {
@@ -122,10 +122,6 @@ mod decks__pinochle__tests {
         let deck = Pinochle::deck();
         let shuffled = deck.shuffle_default().to_string();
         let parsed = Pile::<Pinochle, Standard52>::from_str(&shuffled).unwrap();
-        let sorted = parsed.sort();
-
-        println!("{deck}");
-        println!("{sorted}");
 
         assert!(deck.same(&parsed));
     }

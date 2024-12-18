@@ -1,6 +1,8 @@
+use std::str::FromStr;
 use crate::decks::modern::Modern;
 use crate::decks::standard52::Standard52;
 use crate::types::card::Card;
+use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
@@ -72,6 +74,16 @@ impl Canasta {
 
         pile
     }
+
+    /// # Errors
+    ///
+    /// Returns a `CardError` if the index is out of bounds.
+    ///
+    /// TODO: Add deck validation
+    #[allow(clippy::should_implement_trait)]
+    pub fn from_str(index: &str) -> Result<Pile<Modern, Modern>, CardError> {
+        Pile::<Modern, Modern>::from_str(index)
+    }
 }
 
 impl Decked<Modern, Modern> for Canasta {
@@ -98,7 +110,6 @@ impl Decked<Modern, Modern> for Canasta {
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod decks__canasta__tests {
-    use std::str::FromStr;
     use super::*;
 
     #[test]
@@ -130,7 +141,7 @@ mod decks__canasta__tests {
         let deck = Canasta::deck();
         let deck_sorted = deck.shuffle_default().sort();
         let shuffled = deck.shuffle_default().to_string();
-        let parsed = Pile::<Modern, Modern>::from_str(&shuffled).unwrap();
+        let parsed = Canasta::from_str(&shuffled).unwrap();
         let sorted = parsed.sort();
 
         println!("{deck}");

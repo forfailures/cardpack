@@ -52,9 +52,9 @@ impl Ranked for Manila {
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod decks__manila__tests {
-    use std::str::FromStr;
     use super::*;
     use crate::types::rank::Rank;
+    use std::str::FromStr;
 
     #[test]
     fn deck() {

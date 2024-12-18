@@ -7,6 +7,7 @@ use crate::types::traits::{Decked, Ranked, Suited};
 use colored::Color;
 use std::collections::HashMap;
 use std::str::FromStr;
+use crate::types::card_error::CardError;
 
 /// `Standard52` with Jokers.
 ///
@@ -42,6 +43,14 @@ impl Modern {
         pile.push(Self::little_joker());
 
         pile
+    }
+
+    /// # Errors
+    ///
+    /// Returns a `CardError` if the index is out of bounds.
+    #[allow(clippy::should_implement_trait)]
+    pub fn from_str(index: &str) -> Result<Pile<Modern, Modern>, CardError> {
+        Pile::<Modern, Modern>::from_str(index)
     }
 }
 

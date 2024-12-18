@@ -2,6 +2,8 @@ use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked, Suited};
 use colored::Color;
 use std::collections::HashMap;
+use std::str::FromStr;
+use crate::types::card_error::CardError;
 
 /// The [Standard52](https://en.wikipedia.org/wiki/Standard_52-card_deck)
 /// deck with French suited playing cards is
@@ -52,6 +54,14 @@ impl Standard52 {
     pub const HEARTS: &'static str = "hearts";
     pub const DIAMONDS: &'static str = "diamonds";
     pub const CLUBS: &'static str = "clubs";
+
+    /// # Errors
+    ///
+    /// Returns a `CardError` if the index is out of bounds.
+    #[allow(clippy::should_implement_trait)]
+    pub fn from_str(index: &str) -> Result<Pile<Standard52, Standard52>, CardError> {
+        Pile::<Standard52, Standard52>::from_str(index)
+    }
 }
 
 impl Decked<Standard52, Standard52> for Standard52 {
@@ -461,5 +471,14 @@ mod decks__standard52__tests {
         let ranks = deck.ranks_by_suit(&Suit::<Standard52>::new(Standard52::CLUBS));
 
         assert!(ranks.is_none());
+    }
+
+    #[test]
+    fn to_string__from_str() {
+        let deck = Standard52::deck();
+        let shuffled = deck.shuffle_default().to_string();
+        let parsed = Standard52::from_str(&shuffled).unwrap();
+
+        assert!(deck.same(&parsed));
     }
 }

@@ -1,4 +1,5 @@
 use crate::decks::modern::Modern;
+use crate::decks::pinochle::Pinochle;
 use crate::decks::skat::Skat;
 use crate::decks::standard52::Standard52;
 use crate::localization::{FluentName, Named};
@@ -7,7 +8,6 @@ use crate::types::traits::Ranked;
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::str::FromStr;
-use crate::decks::pinochle::Pinochle;
 
 #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Rank<RankType>

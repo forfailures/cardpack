@@ -22,8 +22,8 @@ impl Decked<Modern, Modern> for HandAndFoot {
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod decks__hand_and_foot__tests {
-    use std::str::FromStr;
     use super::*;
+    use std::str::FromStr;
 
     #[test]
     fn deck() {
