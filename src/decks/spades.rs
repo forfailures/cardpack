@@ -1,4 +1,3 @@
-use std::str::FromStr;
 use crate::decks::modern::Modern;
 use crate::decks::standard52::Standard52;
 use crate::types::card::Card;
@@ -7,6 +6,7 @@ use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::traits::Decked;
+use std::str::FromStr;
 
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Spades {}

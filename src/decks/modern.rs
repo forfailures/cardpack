@@ -1,5 +1,6 @@
 use crate::decks::standard52::Standard52;
 use crate::types::card::Card;
+use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
@@ -7,7 +8,6 @@ use crate::types::traits::{Decked, Ranked, Suited};
 use colored::Color;
 use std::collections::HashMap;
 use std::str::FromStr;
-use crate::types::card_error::CardError;
 
 /// `Standard52` with Jokers.
 ///
@@ -294,7 +294,7 @@ mod decks__modern__tests {
     fn to_string__from_str() {
         let deck = Modern::deck();
         let shuffled = deck.shuffle_default().to_string();
-        let parsed = Pile::<Modern, Modern>::from_str(&shuffled).unwrap();
+        let parsed = Modern::from_str(&shuffled).unwrap();
 
         assert!(deck.same(&parsed));
     }

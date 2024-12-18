@@ -1,9 +1,11 @@
 use crate::decks::standard52::Standard52;
 use crate::types::card::Card;
+use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked};
+use std::str::FromStr;
 
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Pinochle {}
@@ -17,6 +19,14 @@ impl Pinochle {
     pub const QUEEN: &'static str = "pinochle-queen";
     pub const JACK: &'static str = "pinochle-jack";
     pub const NINE: &'static str = "pinochle-nine";
+
+    /// # Errors
+    ///
+    /// Returns a `CardError` if the index is out of bounds.
+    #[allow(clippy::should_implement_trait)]
+    pub fn from_str(index: &str) -> Result<Pile<Pinochle, Standard52>, CardError> {
+        Pile::<Pinochle, Standard52>::from_str(index)
+    }
 }
 
 impl Decked<Pinochle, Standard52> for Pinochle {
@@ -71,7 +81,6 @@ mod decks__pinochle__tests {
     use super::*;
     use crate::localization::Named;
     use crate::types::rank::Rank;
-    use std::str::FromStr;
 
     #[test]
     fn rank__new_with_weight() {
@@ -121,7 +130,7 @@ mod decks__pinochle__tests {
     fn to_string__from_str() {
         let deck = Pinochle::deck();
         let shuffled = deck.shuffle_default().to_string();
-        let parsed = Pile::<Pinochle, Standard52>::from_str(&shuffled).unwrap();
+        let parsed = Pinochle::from_str(&shuffled).unwrap();
 
         assert!(deck.same(&parsed));
     }
