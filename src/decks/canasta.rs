@@ -17,59 +17,35 @@ pub struct Canasta {}
 impl Canasta {
     pub const DECK_NAME: &'static str = "Canasta";
 
-    /// This is probably the clearest way to show just how insane this codebase is with generics.
-    /// I'm wondering if macros will help with this...
-    fn is_red_three<RankType: Ranked + Clone, SuitType: Suited + Clone>(
-        card: &Card<RankType, SuitType>,
-    ) -> bool
-    where
-        Rank<RankType>: PartialEq<Rank<Modern>>,
-        Suit<SuitType>: PartialEq<Suit<Modern>>,
-    {
-        card.rank == Rank::<Modern>::new(Standard52::THREE)
-            && (card.suit == Suit::<Modern>::new(Standard52::HEARTS)
-                || card.suit == Suit::<Modern>::new(Standard52::DIAMONDS))
-    }
-
-    fn is_two<RankType: Ranked + Clone, SuitType: Suited + Clone>(
-        card: &Card<RankType, SuitType>,
-    ) -> bool
-    where
-        Rank<RankType>: PartialEq<Rank<Modern>>,
-        Suit<SuitType>: PartialEq<Suit<Modern>>,
-    {
-        card.rank == Rank::<Modern>::new(Standard52::TWO)
-            && (card.suit == Suit::<Modern>::new(Standard52::SPADES)
-                || card.suit == Suit::<Modern>::new(Standard52::HEARTS)
-                || card.suit == Suit::<Modern>::new(Standard52::DIAMONDS)
-                || card.suit == Suit::<Modern>::new(Standard52::CLUBS))
-    }
-
-    fn two_of_spades() -> Card<Modern, Modern> {
+    #[must_use]
+    pub fn two_of_spades() -> Card<Modern, Modern> {
         Card::new_weighted(
             Rank::<Modern>::new(Standard52::TWO),
             Suit::<Modern>::new(Standard52::SPADES),
-            5003,
+            5000,
         )
     }
 
-    fn two_of_hearts() -> Card<Modern, Modern> {
+    #[must_use]
+    pub fn two_of_hearts() -> Card<Modern, Modern> {
         Card::new_weighted(
             Rank::<Modern>::new(Standard52::TWO),
             Suit::<Modern>::new(Standard52::HEARTS),
-            5002,
+            5000,
         )
     }
 
-    fn two_of_diamonds() -> Card<Modern, Modern> {
+    #[must_use]
+    pub fn two_of_diamonds() -> Card<Modern, Modern> {
         Card::new_weighted(
             Rank::<Modern>::new(Standard52::TWO),
             Suit::<Modern>::new(Standard52::DIAMONDS),
-            5001,
+            5000,
         )
     }
 
-    fn two_of_clubs() -> Card<Modern, Modern> {
+    #[must_use]
+    pub fn two_of_clubs() -> Card<Modern, Modern> {
         Card::new_weighted(
             Rank::<Modern>::new(Standard52::TWO),
             Suit::<Modern>::new(Standard52::CLUBS),
@@ -77,7 +53,8 @@ impl Canasta {
         )
     }
 
-    fn three_of_hearts() -> Card<Modern, Modern> {
+    #[must_use]
+    pub fn three_of_hearts() -> Card<Modern, Modern> {
         Card::new_weighted(
             Rank::<Modern>::new(Standard52::THREE),
             Suit::<Modern>::new(Standard52::HEARTS),
@@ -85,38 +62,13 @@ impl Canasta {
         )
     }
 
-    fn three_of_diamonds() -> Card<Modern, Modern> {
+    #[must_use]
+    pub fn three_of_diamonds() -> Card<Modern, Modern> {
         Card::new_weighted(
             Rank::<Modern>::new(Standard52::THREE),
             Suit::<Modern>::new(Standard52::DIAMONDS),
             6_000,
         )
-    }
-
-    fn red_threes() -> Pile<Modern, Modern> {
-        let mut pile = Pile::<Modern, Modern>::new(Vec::new());
-
-        pile.push(Canasta::three_of_hearts());
-        pile.push(Canasta::three_of_hearts());
-        pile.push(Canasta::three_of_diamonds());
-        pile.push(Canasta::three_of_diamonds());
-
-        pile
-    }
-
-    fn twos() -> Pile<Modern, Modern> {
-        let mut pile = Pile::<Modern, Modern>::new(Vec::new());
-
-        pile.push(Canasta::two_of_spades());
-        pile.push(Canasta::two_of_spades());
-        pile.push(Canasta::two_of_hearts());
-        pile.push(Canasta::two_of_hearts());
-        pile.push(Canasta::two_of_diamonds());
-        pile.push(Canasta::two_of_diamonds());
-        pile.push(Canasta::two_of_clubs());
-        pile.push(Canasta::two_of_clubs());
-
-        pile
     }
 
     /// # Errors
@@ -126,24 +78,72 @@ impl Canasta {
     /// TODO: Add deck validation
     #[allow(clippy::should_implement_trait)]
     pub fn from_str(index: &str) -> Result<Pile<Modern, Modern>, CardError> {
-        Pile::<Modern, Modern>::from_str(index)
+        match Pile::<Modern, Modern>::from_str(index) {
+            Ok(pile) => Ok(Canasta::wash(&pile).sort()),
+            Err(e) => Err(e),
+        }
+    }
+
+    /// Bumps up the weight of red threes and twos so that they sort correctly.
+    ///
+    /// The original experiment with this code was much more complex using direct checks:
+    ///
+    /// ```rust
+    /// use cardpack::decks::canasta::Canasta;
+    /// use cardpack::decks::modern::Modern;
+    /// use cardpack::decks::standard52::Standard52;
+    /// use cardpack::types::card::Card;
+    /// use cardpack::types::rank::Rank;
+    /// use cardpack::types::suit::Suit;
+    /// use cardpack::types::traits::{Ranked, Suited};
+    ///
+    /// fn is_red_three<RankType: Ranked + Clone, SuitType: Suited + Clone>(
+    ///         card: &Card<RankType, SuitType>,
+    ///     ) -> bool
+    ///     where
+    ///         Rank<RankType>: PartialEq<Rank<Modern>>,
+    ///         Suit<SuitType>: PartialEq<Suit<Modern>>,
+    ///     {
+    ///         card.rank == Rank::<Modern>::new(Standard52::THREE)
+    ///             && (card.suit == Suit::<Modern>::new(Standard52::HEARTS)
+    ///                 || card.suit == Suit::<Modern>::new(Standard52::DIAMONDS))
+    ///     }
+    ///
+    /// let three_of_hearts = Canasta::three_of_hearts();
+    ///
+    /// assert!(is_red_three(&Canasta::three_of_hearts()));
+    /// assert!(is_red_three(&Canasta::three_of_diamonds()));
+    /// assert!(!is_red_three(&Canasta::two_of_spades()));
+    /// ```
+    fn bump<RankType: Ranked + Clone, SuitType: Suited + Clone>(
+        card: &Card<Modern, Modern>,
+    ) -> Card<Modern, Modern>
+    where
+        Rank<RankType>: PartialEq<Rank<Modern>>,
+        Suit<SuitType>: PartialEq<Suit<Modern>>,
+    {
+        match card.index.as_str() {
+            "3H" => Canasta::three_of_hearts(),
+            "3D" => Canasta::three_of_diamonds(),
+            "2S" => Canasta::two_of_spades(),
+            "2H" => Canasta::two_of_hearts(),
+            "2D" => Canasta::two_of_diamonds(),
+            "2C" => Canasta::two_of_clubs(),
+            _ => card.clone(),
+        }
+    }
+
+    fn wash(pile: &Pile<Modern, Modern>) -> Pile<Modern, Modern> {
+        let washed: Vec<Card<Modern, Modern>> = pile.v().iter().map(Canasta::bump).collect();
+        Pile::new(washed)
     }
 }
 
 impl Decked<Modern, Modern> for Canasta {
     fn deck() -> Pile<Modern, Modern> {
-        let mut deck = Modern::decks(2);
+        let deck = Modern::decks(2);
 
-        let twos = Canasta::twos();
-        deck.remove_cards(&twos);
-        deck.prepend(&twos);
-
-        let red_threes = Canasta::red_threes();
-        deck.remove_cards(&red_threes);
-        deck.prepend(&red_threes);
-
-        deck.sort_in_place();
-        deck
+        Canasta::wash(&deck).sort()
     }
 
     fn pack(&self) -> Pile<Modern, Modern> {
@@ -167,21 +167,6 @@ mod decks__canasta__tests {
     }
 
     #[test]
-    fn is_red_three() {
-        let three_of_hearts = Canasta::three_of_hearts();
-        let three_of_diamonds = Canasta::three_of_diamonds();
-        let three_of_spades = Card::new_weighted(
-            Rank::<Modern>::new(Standard52::THREE),
-            Suit::<Modern>::new(Standard52::SPADES),
-            6_000,
-        );
-
-        assert!(Canasta::is_red_three(&three_of_hearts));
-        assert!(Canasta::is_red_three(&three_of_diamonds));
-        assert!(!Canasta::is_red_three(&three_of_spades));
-    }
-
-    #[test]
     fn pile__sort() {
         let deck = Canasta::deck();
         let mut shuffled = deck.shuffle_default();
@@ -194,20 +179,13 @@ mod decks__canasta__tests {
 
     /// This doesn't work because of the way the red threes are being processed from
     /// `Decked::deck()`
+    ///
+    /// UPDATE: wash() fixes it
     #[test]
-    #[ignore]
     fn to_string__from_str() {
         let deck = Canasta::deck();
-        let deck_sorted = deck.shuffle_default().sort();
         let shuffled = deck.shuffle_default().to_string();
         let parsed = Canasta::from_str(&shuffled).unwrap();
-        let sorted = parsed.sort();
-
-        println!("{deck}");
-        println!("{deck_sorted}");
-        println!("{sorted}");
-
-        println!("{:?}", deck);
 
         assert!(deck.same(&parsed));
     }
