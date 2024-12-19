@@ -1,7 +1,9 @@
+use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked, Suited};
 use colored::Color;
 use std::collections::HashMap;
+use std::str::FromStr;
 
 /// Skat is a German, trick based card game for three players.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -25,6 +27,14 @@ impl Skat {
     pub const LAUB: &'static str = "laub"; // Leaves
     pub const HERZ: &'static str = "herz"; // Hearts
     pub const SHELLEN: &'static str = "schellen"; // Bells
+
+    /// # Errors
+    ///
+    /// Returns a `CardError` if the index is out of bounds.
+    #[allow(clippy::should_implement_trait)]
+    pub fn from_str(index: &str) -> Result<Pile<Skat, Skat>, CardError> {
+        Pile::<Skat, Skat>::from_str(index)
+    }
 }
 
 impl Decked<Skat, Skat> for Skat {
@@ -92,7 +102,6 @@ mod decks__skat__tests {
     use crate::types::rank::Rank;
     use crate::types::suit::Suit;
     use rstest::rstest;
-    use std::str::FromStr;
 
     #[test]
     fn rank__new_with_weight() {
@@ -184,7 +193,7 @@ mod decks__skat__tests {
     fn to_string__from_str() {
         let deck = Skat::deck();
         let shuffled = deck.shuffle_default().to_string();
-        let parsed = Pile::<Skat, Skat>::from_str(&shuffled).unwrap();
+        let parsed = Skat::from_str(&shuffled).unwrap();
 
         assert!(deck.same(&parsed));
     }

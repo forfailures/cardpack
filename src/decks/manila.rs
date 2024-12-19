@@ -1,6 +1,8 @@
 use crate::decks::standard52::Standard52;
+use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked};
+use std::str::FromStr;
 
 /// [Manila, aka Six Plus aka Short-deck](https://en.wikipedia.org/wiki/Six-plus_hold_%27em)
 /// is a version of Texas Hold'em where the card Ranks of 2 through 5
@@ -15,6 +17,14 @@ pub struct Manila {}
 
 impl Manila {
     pub const DECK_NAME: &'static str = "Manila";
+
+    /// # Errors
+    ///
+    /// Returns a `CardError` if the index is out of bounds.
+    #[allow(clippy::should_implement_trait)]
+    pub fn from_str(index: &str) -> Result<Pile<Manila, Standard52>, CardError> {
+        Pile::<Manila, Standard52>::from_str(index)
+    }
 }
 
 impl Decked<Manila, Standard52> for Manila {
@@ -79,5 +89,14 @@ mod decks__manila__tests {
         shuffled.sort_in_place();
 
         assert_eq!(deck.to_string(), shuffled.to_string());
+    }
+
+    #[test]
+    fn to_string__from_str() {
+        let deck = Manila::deck();
+        let shuffled = deck.shuffle_default().to_string();
+        let parsed = Manila::from_str(&shuffled).unwrap();
+
+        assert!(deck.same(&parsed));
     }
 }

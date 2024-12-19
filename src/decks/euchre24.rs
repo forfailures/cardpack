@@ -1,6 +1,8 @@
 use crate::decks::standard52::Standard52;
+use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked};
+use std::str::FromStr;
 
 /// This deck represents the most common 24 card form of
 /// [Euchre](https://en.wikipedia.org/wiki/Euchre) with
@@ -15,6 +17,14 @@ pub struct Euchre24 {}
 
 impl Euchre24 {
     pub const DECK_NAME: &'static str = "Euchre24";
+
+    /// # Errors
+    ///
+    /// Returns a `CardError` if the index is out of bounds.
+    #[allow(clippy::should_implement_trait)]
+    pub fn from_str(index: &str) -> Result<Pile<Euchre24, Standard52>, CardError> {
+        Pile::<Euchre24, Standard52>::from_str(index)
+    }
 }
 
 impl Decked<Euchre24, Standard52> for Euchre24 {
@@ -50,7 +60,6 @@ mod decks__euchre__tests {
     use super::*;
     use crate::localization::{FluentName, Named};
     use crate::types::rank::Rank;
-    use std::str::FromStr;
 
     #[test]
     fn new() {
@@ -147,5 +156,14 @@ mod decks__euchre__tests {
         shuffled.sort_in_place();
 
         assert_eq!(deck.to_string(), shuffled.to_string());
+    }
+
+    #[test]
+    fn to_string__from_str() {
+        let deck = Euchre24::deck();
+        let shuffled = deck.shuffle_default().to_string();
+        let parsed = Euchre24::from_str(&shuffled).unwrap();
+
+        assert!(deck.same(&parsed));
     }
 }

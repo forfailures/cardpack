@@ -1,4 +1,5 @@
 use crate::decks::modern::Modern;
+use crate::decks::pinochle::Pinochle;
 use crate::decks::skat::Skat;
 use crate::decks::standard52::Standard52;
 use crate::localization::{FluentName, Named};
@@ -158,6 +159,15 @@ impl<RankType: Ranked> From<char> for Rank<RankType> {
                 '9' => Rank::new(Skat::NEUN),
                 '8' => Rank::new(Skat::ACHT),
                 '7' => Rank::new(Skat::SIEBEN),
+                _ => Rank::new(FluentName::BLANK),
+            },
+            Pinochle::DECK_NAME => match c {
+                'A' | 'a' => Rank::new(Pinochle::ACE),
+                'T' | 't' => Rank::new(Pinochle::TEN),
+                'K' | 'k' => Rank::new(Pinochle::KING),
+                'Q' | 'q' => Rank::new(Pinochle::QUEEN),
+                'J' | 'j' => Rank::new(Pinochle::JACK),
+                '9' => Rank::new(Pinochle::NINE),
                 _ => Rank::new(FluentName::BLANK),
             },
             _ => match c {

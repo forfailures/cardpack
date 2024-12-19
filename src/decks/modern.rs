@@ -1,5 +1,6 @@
 use crate::decks::standard52::Standard52;
 use crate::types::card::Card;
+use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
@@ -42,6 +43,14 @@ impl Modern {
         pile.push(Self::little_joker());
 
         pile
+    }
+
+    /// # Errors
+    ///
+    /// Returns a `CardError` if the index is out of bounds.
+    #[allow(clippy::should_implement_trait)]
+    pub fn from_str(index: &str) -> Result<Pile<Modern, Modern>, CardError> {
+        Pile::<Modern, Modern>::from_str(index)
     }
 }
 
@@ -100,7 +109,7 @@ impl Suited for Modern {
     fn colors() -> HashMap<char, Color> {
         let mut mappie = HashMap::new();
 
-        mappie.insert('T', Color::Blue);
+        mappie.insert('T', Color::BrightBlue);
         mappie.insert('H', Color::Red);
         mappie.insert('D', Color::Red);
 
@@ -279,5 +288,14 @@ mod decks__modern__tests {
         shuffled.sort_in_place();
 
         assert_eq!(deck.to_string(), shuffled.to_string());
+    }
+
+    #[test]
+    fn to_string__from_str() {
+        let deck = Modern::deck();
+        let shuffled = deck.shuffle_default().to_string();
+        let parsed = Modern::from_str(&shuffled).unwrap();
+
+        assert!(deck.same(&parsed));
     }
 }
