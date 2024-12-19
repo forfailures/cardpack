@@ -109,7 +109,7 @@ impl Suited for Modern {
     fn colors() -> HashMap<char, Color> {
         let mut mappie = HashMap::new();
 
-        mappie.insert('T', Color::Blue);
+        mappie.insert('T', Color::BrightBlue);
         mappie.insert('H', Color::Red);
         mappie.insert('D', Color::Red);
 
