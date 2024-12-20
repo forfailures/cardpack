@@ -239,9 +239,8 @@ mod types__rank__tests {
 
     #[test]
     fn get_bits() {
-        // let card = Card::<Standard52, Standard52>::from_str("AS").unwrap();
         let card = s52card!("AS");
-        let ckc_as = CardNumber::ACE_SPADES & RANK_FLAG_FILTER;
+        let ckc_as = ckc_bits(CardNumber::ACE_SPADES);
 
         // println!("{:b}", ckc_as);
         // println!("{:b}", card.rank.get_bits());
@@ -258,13 +257,21 @@ mod types__rank__tests {
 
     #[test]
     fn prime() {
-        let card = Card::<Standard52, Standard52>::from_str("AS").unwrap();
-        let ckc_as = CardNumber::ACE_SPADES & RANK_PRIME_FILTER;
+        let card = s52card!("AS");
+        let ckc_as = ckc_prime(CardNumber::ACE_SPADES);
 
         // println!("{:b}", ckc_as);
         // println!("{:b}", card.rank.prime);
 
         assert_eq!(card.rank.prime, ckc_as);
+    }
+
+    fn ckc_bits(ckc: u32) -> u32 {
+        ckc & RANK_FLAG_FILTER
+    }
+
+    fn ckc_prime(ckc: u32) -> u32 {
+        ckc & RANK_PRIME_FILTER
     }
 
     fn ckc_shift8(ckc: u32) -> u32 {

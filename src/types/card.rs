@@ -253,7 +253,7 @@ mod types__card__tests {
         let spades = Suit::<Standard52>::from('S');
         let expected_card: Card<Standard52, Standard52> = Card::new(ace, spades);
 
-        let card = Card::<Standard52, Standard52>::from_str("  AS   ").unwrap();
+        let card = s52card!("AS");
 
         assert_eq!(card, expected_card);
         assert!(!card.is_blank());
@@ -268,7 +268,7 @@ mod types__card__tests {
 
     #[test]
     fn from_str__symbol() {
-        let card = Card::<Standard52, Standard52>::from_str("A♠").unwrap();
+        let card = s52card!("AS");
 
         assert_eq!(card.index, "AS");
         assert_eq!(card.rank.name, FluentName::new(Standard52::ACE));
