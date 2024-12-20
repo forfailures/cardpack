@@ -8,7 +8,7 @@ use std::fmt::Display;
 use colored::Colorize;
 use std::str::FromStr;
 
-#[derive(Debug, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
+#[derive(Debug, Default, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub struct Card<RankType, SuitType>
 where
     RankType: Ranked + Clone,
@@ -78,6 +78,7 @@ where
         (suit.weight * 1000) + rank.weight
     }
 
+    #[must_use]
     pub fn get_ckc_number(&self) -> u32 {
         self.rank.ckc_number() + self.suit.ckc_number()
     }
@@ -166,6 +167,7 @@ mod types__card__tests {
     use super::*;
     use crate::decks::standard52::Standard52;
     use crate::localization::FluentName;
+    use crate::s52card;
 
     #[test]
     fn new() {
@@ -204,10 +206,10 @@ mod types__card__tests {
     /// coming first.
     #[test]
     fn test_sort_from_weight() {
-        let ace_of_spades = Card::<Standard52, Standard52>::from_str("AS").unwrap();
-        let ace_of_hearts = Card::<Standard52, Standard52>::from_str("AH").unwrap();
-        let ace_of_diamonds = Card::<Standard52, Standard52>::from_str("AD").unwrap();
-        let ace_of_clubs = Card::<Standard52, Standard52>::from_str("AC").unwrap();
+        let ace_of_spades = s52card!("AS");
+        let ace_of_hearts = s52card!("AH");
+        let ace_of_diamonds = s52card!("AD");
+        let ace_of_clubs = s52card!("AC");
 
         let mut cards = vec![
             ace_of_clubs.clone(),
@@ -226,14 +228,14 @@ mod types__card__tests {
 
     #[test]
     fn to_color_symbol_string__default() {
-        let card = Card::<Standard52, Standard52>::from_str("AS").unwrap();
+        let card = s52card!("AS");
 
         assert_eq!("A♠".to_string(), card.to_color_symbol_string());
     }
 
     #[test]
     fn to_color_symbol_string() {
-        let card = Card::<Standard52, Standard52>::from_str("AH").unwrap();
+        let card = s52card!("AH");
 
         assert_eq!("A♥".red().to_string(), card.to_color_symbol_string());
     }
@@ -259,7 +261,7 @@ mod types__card__tests {
 
     #[test]
     fn from_str_blank() {
-        let card = Card::<Standard52, Standard52>::from_str(" BW ").unwrap();
+        let card = s52card!("BW");
 
         assert!(card.is_blank());
     }

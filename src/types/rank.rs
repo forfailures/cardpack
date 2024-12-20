@@ -9,9 +9,9 @@ use std::fmt::Display;
 use std::marker::PhantomData;
 use std::str::FromStr;
 
-pub const RANK_FLAG_FILTER: u32 = 0x1FFF0000; // 536805376 aka 0b00011111_11111111_00000000_00000000
+pub const RANK_FLAG_FILTER: u32 = 0x1FFF_0000; // 536805376 aka 0b00011111_11111111_00000000_00000000
 pub const RANK_FLAG_SHIFT: u32 = 16;
-pub const RANK_PRIME_FILTER: u32 = 0b00111111;
+pub const RANK_PRIME_FILTER: u32 = 0b0011_1111;
 pub const RANK_NUMBER_FILTER: u32 = 0b1111_00000000;
 
 #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -232,13 +232,15 @@ impl<RankType: Ranked> FromStr for Rank<RankType> {
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod types__rank__tests {
-    use ckc_rs::{CardNumber};
-    use crate::types::card::Card;
     use super::*;
+    use crate::s52card;
+    use crate::types::card::Card;
+    use ckc_rs::CardNumber;
 
     #[test]
     fn get_bits() {
-        let card = Card::<Standard52, Standard52>::from_str("AS").unwrap();
+        // let card = Card::<Standard52, Standard52>::from_str("AS").unwrap();
+        let card = s52card!("AS");
         let ckc_as = CardNumber::ACE_SPADES & RANK_FLAG_FILTER;
 
         // println!("{:b}", ckc_as);
@@ -251,8 +253,7 @@ mod types__rank__tests {
     fn get_shift8() {
         let card = Card::<Standard52, Standard52>::from_str("3S").unwrap();
 
-        assert_eq!(card.rank.get_shift8(), ckc_shift8(CardNumber::TREY_SPADES ));
-
+        assert_eq!(card.rank.get_shift8(), ckc_shift8(CardNumber::TREY_SPADES));
     }
 
     #[test]
@@ -267,7 +268,6 @@ mod types__rank__tests {
     }
 
     fn ckc_shift8(ckc: u32) -> u32 {
-        ckc  & RANK_NUMBER_FILTER
+        ckc & RANK_NUMBER_FILTER
     }
-
 }

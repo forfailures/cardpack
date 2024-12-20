@@ -4,13 +4,20 @@ use crate::types::traits::{Decked, Ranked, Suited};
 use colored::Color;
 use std::collections::HashMap;
 use std::str::FromStr;
-use crate::types::card::Card;
 
-macro_rules! card {
+/// These macros make me very happy. They wallpaper over a lot of headaches from the generics.
+#[macro_export]
+macro_rules! s52card {
     ($card_str:expr) => {
-        Card::<Standard52, Standard52>::from_str($card_str).unwrap_or_else(|_| {
-            Card::<Standard52, Standard52>::default()
-        })
+        Card::<Standard52, Standard52>::from_str($card_str)
+            .unwrap_or_else(|_| Card::<Standard52, Standard52>::default())
+    };
+}
+
+#[macro_export]
+macro_rules! standard52 {
+    ($card_str:expr) => {
+        Pile::<Standard52, Standard52>::from_str($card_str)
     };
 }
 
@@ -150,6 +157,14 @@ mod decks__standard52__tests {
     use crate::types::suit::Suit;
     use rstest::rstest;
     use std::str::FromStr;
+
+    #[test]
+    fn macro_standard52() {
+        let deck = standard52!("A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠ 5♠ 4♠ 3♠ 2♠ A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥ 5♥ 4♥ 3♥ 2♥ A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦ 5♦ 4♦ 3♦ 2♦ A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣ 5♣ 4♣ 3♣ 2♣").unwrap();
+
+        assert_eq!(deck.to_string(), Standard52::deck().to_string());
+        assert!(standard52!("AA xx __").is_err());
+    }
 
     #[test]
     fn decked__decks() {
@@ -304,10 +319,7 @@ mod decks__standard52__tests {
             4096,
             Suit::<Standard52>::from('C').binary_signature_revised()
         );
-        assert_eq!(
-            0,
-            Suit::<Standard52>::from('_').binary_signature_revised()
-        );
+        assert_eq!(0, Suit::<Standard52>::from('_').binary_signature_revised());
     }
 
     #[test]
@@ -390,7 +402,7 @@ mod decks__standard52__tests {
     }
 
     #[test]
-    fn from_char() {
+    fn rank__from_char() {
         let rank = Rank::<Standard52>::from('A');
 
         assert_eq!(rank.name, FluentName::new(Standard52::ACE));
@@ -399,7 +411,7 @@ mod decks__standard52__tests {
     }
 
     #[test]
-    fn from_str() {
+    fn rank__from_str() {
         let rank = Rank::<Standard52>::from_str("A'").unwrap();
 
         assert_eq!(rank.name, FluentName::new(Standard52::ACE));
@@ -408,7 +420,7 @@ mod decks__standard52__tests {
     }
 
     #[test]
-    fn from_str__invalid() {
+    fn rank__from_str__invalid() {
         let rank = Rank::<Standard52>::from_str("Z'");
 
         assert!(rank.is_err());
