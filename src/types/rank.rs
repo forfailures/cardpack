@@ -12,6 +12,7 @@ use std::str::FromStr;
 pub const RANK_FLAG_FILTER: u32 = 0x1FFF0000; // 536805376 aka 0b00011111_11111111_00000000_00000000
 pub const RANK_FLAG_SHIFT: u32 = 16;
 pub const RANK_PRIME_FILTER: u32 = 0b00111111;
+pub const RANK_NUMBER_FILTER: u32 = 0b1111_00000000;
 
 #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Rank<RankType>
@@ -240,10 +241,18 @@ mod types__rank__tests {
         let card = Card::<Standard52, Standard52>::from_str("AS").unwrap();
         let ckc_as = CardNumber::ACE_SPADES & RANK_FLAG_FILTER;
 
-        println!("{:b}", ckc_as);
-        println!("{:b}", card.rank.get_bits());
+        // println!("{:b}", ckc_as);
+        // println!("{:b}", card.rank.get_bits());
 
         assert_eq!(card.rank.get_bits(), ckc_as);
+    }
+
+    #[test]
+    fn get_shift8() {
+        let card = Card::<Standard52, Standard52>::from_str("3S").unwrap();
+
+        assert_eq!(card.rank.get_shift8(), ckc_shift8(CardNumber::TREY_SPADES ));
+
     }
 
     #[test]
@@ -251,20 +260,14 @@ mod types__rank__tests {
         let card = Card::<Standard52, Standard52>::from_str("AS").unwrap();
         let ckc_as = CardNumber::ACE_SPADES & RANK_PRIME_FILTER;
 
-        println!("{:b}", ckc_as);
-        println!("{:b}", card.rank.prime);
+        // println!("{:b}", ckc_as);
+        // println!("{:b}", card.rank.prime);
 
         assert_eq!(card.rank.prime, ckc_as);
     }
 
-    #[test]
-    fn get_shift8() {
-        let card = Card::<Standard52, Standard52>::from_str("AS").unwrap();
-        let ckc_as = CardNumber::ACE_SPADES >> 8;
-
-        println!("{:b}", ckc_as);
-        println!("{:b}", card.rank.get_shift8());
-
-        assert_eq!(card.rank.get_shift8(), ckc_as);
+    fn ckc_shift8(ckc: u32) -> u32 {
+        ckc  & RANK_NUMBER_FILTER
     }
+
 }

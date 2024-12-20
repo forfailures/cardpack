@@ -4,6 +4,15 @@ use crate::types::traits::{Decked, Ranked, Suited};
 use colored::Color;
 use std::collections::HashMap;
 use std::str::FromStr;
+use crate::types::card::Card;
+
+macro_rules! card {
+    ($card_str:expr) => {
+        Card::<Standard52, Standard52>::from_str($card_str).unwrap_or_else(|_| {
+            Card::<Standard52, Standard52>::default()
+        })
+    };
+}
 
 /// The [Standard52](https://en.wikipedia.org/wiki/Standard_52-card_deck)
 /// deck with French suited playing cards is
