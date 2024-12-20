@@ -29,6 +29,9 @@ decks of various sizes and suites. Possibilities include:
 ## Dependencies
 
 * [Clap](https://crates.io/crates/clap)
+* [colored](https://github.com/colored-rs/colored)
+* [hashbag](https://github.com/jonhoo/hashbag)
+* [log](https://github.com/rust-lang/log)
 * [rand](https://crates.io/crates/rand)
   * [The Rust Rand Book](https://rust-random.github.io/book/)
 * [thiserror](https://github.com/dtolnay/thiserror)
