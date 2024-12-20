@@ -296,7 +296,7 @@ mod decks__standard52__tests {
             Suit::<Standard52>::from('C').binary_signature_revised()
         );
         assert_eq!(
-            61440,
+            0,
             Suit::<Standard52>::from('_').binary_signature_revised()
         );
     }

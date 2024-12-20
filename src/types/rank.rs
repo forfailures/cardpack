@@ -9,6 +9,10 @@ use std::fmt::Display;
 use std::marker::PhantomData;
 use std::str::FromStr;
 
+pub const RANK_FLAG_FILTER: u32 = 0x1FFF0000; // 536805376 aka 0b00011111_11111111_00000000_00000000
+pub const RANK_FLAG_SHIFT: u32 = 16;
+pub const RANK_PRIME_FILTER: u32 = 0b00111111;
+
 #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Rank<RankType>
 where
@@ -80,6 +84,21 @@ where
     #[must_use]
     pub fn ranks_index_all(joiner: &str) -> String {
         Rank::<RankType>::ranks_index(&Rank::<RankType>::ranks(), joiner)
+    }
+
+    #[must_use]
+    pub fn ckc_number(&self) -> u32 {
+        todo!("Implement Rank::ckc_number()");
+    }
+
+    #[must_use]
+    pub fn get_bits(&self) -> u32 {
+        1 << (RANK_FLAG_SHIFT + self.weight)
+    }
+
+    #[must_use]
+    pub fn get_shift8(&self) -> u32 {
+        self.weight << 8
     }
 
     #[must_use]
@@ -206,5 +225,46 @@ impl<RankType: Ranked> FromStr for Rank<RankType> {
         } else {
             Err(CardError::InvalidFluentRank(s.to_string()))
         }
+    }
+}
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod types__rank__tests {
+    use ckc_rs::{CardNumber};
+    use crate::types::card::Card;
+    use super::*;
+
+    #[test]
+    fn get_bits() {
+        let card = Card::<Standard52, Standard52>::from_str("AS").unwrap();
+        let ckc_as = CardNumber::ACE_SPADES & RANK_FLAG_FILTER;
+
+        println!("{:b}", ckc_as);
+        println!("{:b}", card.rank.get_bits());
+
+        assert_eq!(card.rank.get_bits(), ckc_as);
+    }
+
+    #[test]
+    fn prime() {
+        let card = Card::<Standard52, Standard52>::from_str("AS").unwrap();
+        let ckc_as = CardNumber::ACE_SPADES & RANK_PRIME_FILTER;
+
+        println!("{:b}", ckc_as);
+        println!("{:b}", card.rank.prime);
+
+        assert_eq!(card.rank.prime, ckc_as);
+    }
+
+    #[test]
+    fn get_shift8() {
+        let card = Card::<Standard52, Standard52>::from_str("AS").unwrap();
+        let ckc_as = CardNumber::ACE_SPADES >> 8;
+
+        println!("{:b}", ckc_as);
+        println!("{:b}", card.rank.get_shift8());
+
+        assert_eq!(card.rank.get_shift8(), ckc_as);
     }
 }

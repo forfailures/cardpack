@@ -219,7 +219,7 @@ mod decks__modern__tests {
     }
 
     #[test]
-    fn from_char() {
+    fn rank__from_char() {
         let rank = Rank::<Modern>::from('A');
 
         assert_eq!(rank.name, FluentName::new(Standard52::ACE));
@@ -228,7 +228,7 @@ mod decks__modern__tests {
     }
 
     #[test]
-    fn from_str() {
+    fn rank__from_str() {
         let rank = Rank::<Modern>::from_str("A'").unwrap();
 
         assert_eq!(rank.name, FluentName::new(Standard52::ACE));
@@ -288,6 +288,13 @@ mod decks__modern__tests {
         shuffled.sort_in_place();
 
         assert_eq!(deck.to_string(), shuffled.to_string());
+    }
+
+    #[test]
+    fn suit__binary_signature_revised() {
+        let suit = Suit::<Modern>::new(Modern::TRUMP);
+
+        assert_eq!(0xF000, suit.binary_signature_revised());
     }
 
     #[test]

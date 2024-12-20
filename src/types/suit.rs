@@ -59,8 +59,14 @@ where
             2 => 0x2000,
             3 => 0x4000,
             4 => 0x8000,
-            _ => 0xF000,
+            5 => 0xF000,
+            _ => 0x0000,
         }
+    }
+
+    #[must_use]
+    pub fn ckc_number(&self) -> u32 {
+        todo!("Implement Suit::ckc_number()");
     }
 
     #[must_use]

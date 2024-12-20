@@ -78,6 +78,10 @@ where
         (suit.weight * 1000) + rank.weight
     }
 
+    pub fn get_ckc_number(&self) -> u32 {
+        self.rank.ckc_number() + self.suit.ckc_number()
+    }
+
     #[must_use]
     pub fn get_index_suit_char(&self) -> char {
         self.index.chars().last().unwrap_or('_')
