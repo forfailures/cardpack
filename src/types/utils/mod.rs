@@ -1,7 +1,38 @@
 pub struct Bit;
 
 impl Bit {
+    pub const RANK_FLAG_FILTER: u32 = 0x1FFF_0000; // 536805376 aka 0b00011111_11111111_00000000_00000000
+    pub const RANK_FLAG_SHIFT: u32 = 16;
+    pub const RANK_PRIME_FILTER: u32 = 0b0011_1111;
+    pub const RANK_NUMBER_FILTER: u32 = 0b1111_00000000;
+
+    /// Binary filter for `CardNumber` `Suit` flags.
+    /// 00000000 00000000 11110000 00000000
+    pub const SUIT_FLAG_FILTER: u32 = 0b1111_0000_0000_0000; // 61440 aka 0xF000
+    pub const SUIT_SHORT_MASK: u32 = 0b1111;
+    pub const SUIT_FLAG_SHIFT: u32 = 12;
+
     const GUIDE: &'static str = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp";
+
+    #[must_use]
+    pub fn ckc_bits(ckc: u32) -> u32 {
+        ckc & Bit::RANK_FLAG_FILTER
+    }
+
+    #[must_use]
+    pub fn ckc_prime(ckc: u32) -> u32 {
+        ckc & Bit::RANK_PRIME_FILTER
+    }
+
+    #[must_use]
+    pub fn ckc_shift8(ckc: u32) -> u32 {
+        ckc & Bit::RANK_NUMBER_FILTER
+    }
+
+    #[must_use]
+    pub fn strip_suit_flags(ckc: u32) -> u32 {
+        ckc & !Bit::SUIT_FLAG_FILTER
+    }
 
     /// These utility methods come from `pkcore`, a library that is currently a work in progress.
     #[must_use]

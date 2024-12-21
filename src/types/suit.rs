@@ -8,12 +8,6 @@ use std::collections::HashMap;
 use std::fmt::Display;
 use std::marker::PhantomData;
 
-/// Binary filter for `CardNumber` `Suit` flags.
-/// 00000000 00000000 11110000 00000000
-pub const SUIT_FLAG_FILTER: u32 = 0b11110000_00000000; // 61440 aka 0xF000
-pub const SUIT_SHORT_MASK: u32 = 0b1111;
-pub const SUIT_FLAG_SHIFT: u32 = 12;
-
 /// TODO: Create a five suited deck to test the boundaries.
 /// <https://cards.fandom.com/wiki/Suit_(cards)#Five_Suit_Decks/>
 #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]

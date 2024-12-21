@@ -5,14 +5,10 @@ use crate::decks::standard52::Standard52;
 use crate::localization::{FluentName, Named};
 use crate::types::card_error::CardError;
 use crate::types::traits::Ranked;
+use crate::types::utils::Bit;
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::str::FromStr;
-
-pub const RANK_FLAG_FILTER: u32 = 0x1FFF_0000; // 536805376 aka 0b00011111_11111111_00000000_00000000
-pub const RANK_FLAG_SHIFT: u32 = 16;
-pub const RANK_PRIME_FILTER: u32 = 0b0011_1111;
-pub const RANK_NUMBER_FILTER: u32 = 0b1111_00000000;
 
 #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Rank<RankType>
@@ -88,13 +84,18 @@ where
     }
 
     #[must_use]
+    pub fn get_rank_flags(&self) -> u32 {
+        self.get_bits() | self.get_shift8() | self.prime
+    }
+
+    #[must_use]
     pub fn ckc_number(&self) -> u32 {
         todo!("Implement Rank::ckc_number()");
     }
 
     #[must_use]
     pub fn get_bits(&self) -> u32 {
-        1 << (RANK_FLAG_SHIFT + self.weight)
+        1 << (Bit::RANK_FLAG_SHIFT + self.weight)
     }
 
     #[must_use]
@@ -235,12 +236,13 @@ mod types__rank__tests {
     use super::*;
     use crate::s52card;
     use crate::types::card::Card;
+    use crate::types::utils::Bit;
     use ckc_rs::CardNumber;
 
     #[test]
     fn get_bits() {
         let card = s52card!("AS");
-        let ckc_as = ckc_bits(CardNumber::ACE_SPADES);
+        let ckc_as = Bit::ckc_bits(CardNumber::ACE_SPADES);
 
         // println!("{:b}", ckc_as);
         // println!("{:b}", card.rank.get_bits());
@@ -252,13 +254,16 @@ mod types__rank__tests {
     fn get_shift8() {
         let card = Card::<Standard52, Standard52>::from_str("3S").unwrap();
 
-        assert_eq!(card.rank.get_shift8(), ckc_shift8(CardNumber::TREY_SPADES));
+        assert_eq!(
+            card.rank.get_shift8(),
+            Bit::ckc_shift8(CardNumber::TREY_SPADES)
+        );
     }
 
     #[test]
     fn prime() {
         let card = s52card!("AS");
-        let ckc_as = ckc_prime(CardNumber::ACE_SPADES);
+        let ckc_as = Bit::ckc_prime(CardNumber::ACE_SPADES);
 
         // println!("{:b}", ckc_as);
         // println!("{:b}", card.rank.prime);
@@ -266,15 +271,11 @@ mod types__rank__tests {
         assert_eq!(card.rank.prime, ckc_as);
     }
 
-    fn ckc_bits(ckc: u32) -> u32 {
-        ckc & RANK_FLAG_FILTER
-    }
+    #[test]
+    fn get_rank_flags() {
+        let card = s52card!("AS");
+        let ckc_as = Bit::strip_suit_flags(CardNumber::ACE_SPADES);
 
-    fn ckc_prime(ckc: u32) -> u32 {
-        ckc & RANK_PRIME_FILTER
-    }
-
-    fn ckc_shift8(ckc: u32) -> u32 {
-        ckc & RANK_NUMBER_FILTER
+        assert_eq!(card.rank.get_rank_flags(), ckc_as);
     }
 }
