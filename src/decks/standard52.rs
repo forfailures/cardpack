@@ -152,9 +152,12 @@ impl Suited for Standard52 {
 mod decks__standard52__tests {
     use super::*;
     use crate::localization::{FluentName, Named};
+    use crate::types::card::Card;
     use crate::types::rank::Rank;
     use crate::types::suit::Suit;
     use std::str::FromStr;
+    use rstest::rstest;
+    use ckc_rs::CardNumber;
 
     #[test]
     fn macro_standard52() {
@@ -162,6 +165,69 @@ mod decks__standard52__tests {
 
         assert_eq!(deck.to_string(), Standard52::deck().to_string());
         assert!(standard52!("AA xx __").is_err());
+    }
+
+    #[rstest]
+    #[case("A♠", CardNumber::ACE_SPADES)]
+    #[case("ks", CardNumber::KING_SPADES)]
+    #[case("QS", CardNumber::QUEEN_SPADES)]
+    #[case("J♠", CardNumber::JACK_SPADES)]
+    #[case("TS", CardNumber::TEN_SPADES)]
+    #[case("9s", CardNumber::NINE_SPADES)]
+    #[case("8♠", CardNumber::EIGHT_SPADES)]
+    #[case("7S", CardNumber::SEVEN_SPADES)]
+    #[case("6♠", CardNumber::SIX_SPADES)]
+    #[case("5S", CardNumber::FIVE_SPADES)]
+    #[case("4♠", CardNumber::FOUR_SPADES)]
+    #[case("3s", CardNumber::TREY_SPADES)]
+    #[case("2S", CardNumber::DEUCE_SPADES)]
+    #[case("A♥", CardNumber::ACE_HEARTS)]
+    #[case("k♥", CardNumber::KING_HEARTS)]
+    #[case("QH", CardNumber::QUEEN_HEARTS)]
+    #[case("jh", CardNumber::JACK_HEARTS)]
+    #[case("T♥", CardNumber::TEN_HEARTS)]
+    #[case("9♥", CardNumber::NINE_HEARTS)]
+    #[case("8h", CardNumber::EIGHT_HEARTS)]
+    #[case("7H", CardNumber::SEVEN_HEARTS)]
+    #[case("6h", CardNumber::SIX_HEARTS)]
+    #[case("5H", CardNumber::FIVE_HEARTS)]
+    #[case("4♥", CardNumber::FOUR_HEARTS)]
+    #[case("3♥", CardNumber::TREY_HEARTS)]
+    #[case("2h", CardNumber::DEUCE_HEARTS)]
+    #[case("A♦", CardNumber::ACE_DIAMONDS)]
+    #[case("k♦", CardNumber::KING_DIAMONDS)]
+    #[case("Q♦", CardNumber::QUEEN_DIAMONDS)]
+    #[case("Jd", CardNumber::JACK_DIAMONDS)]
+    #[case("tD", CardNumber::TEN_DIAMONDS)]
+    #[case("9♦", CardNumber::NINE_DIAMONDS)]
+    #[case("8D", CardNumber::EIGHT_DIAMONDS)]
+    #[case("7♦", CardNumber::SEVEN_DIAMONDS)]
+    #[case("6D", CardNumber::SIX_DIAMONDS)]
+    #[case("5D", CardNumber::FIVE_DIAMONDS)]
+    #[case("4♦", CardNumber::FOUR_DIAMONDS)]
+    #[case("3♦", CardNumber::TREY_DIAMONDS)]
+    #[case("2d", CardNumber::DEUCE_DIAMONDS)]
+    #[case("a♣", CardNumber::ACE_CLUBS)]
+    #[case("k♣", CardNumber::KING_CLUBS)]
+    #[case("QC", CardNumber::QUEEN_CLUBS)]
+    #[case("jc", CardNumber::JACK_CLUBS)]
+    #[case("tC", CardNumber::TEN_CLUBS)]
+    #[case("9♣", CardNumber::NINE_CLUBS)]
+    #[case("8♣", CardNumber::EIGHT_CLUBS)]
+    #[case("7c", CardNumber::SEVEN_CLUBS)]
+    #[case("6♣", CardNumber::SIX_CLUBS)]
+    #[case("5C", CardNumber::FIVE_CLUBS)]
+    #[case("4c", CardNumber::FOUR_CLUBS)]
+    #[case("3C", CardNumber::TREY_CLUBS)]
+    #[case("2C", CardNumber::DEUCE_CLUBS)]
+    #[case("__", 0u32)]
+    fn card__get_ckc_number(#[case] input: &str, #[case] expected_ckc: u32) {
+        assert_eq!(expected_ckc, s52card!(input).get_ckc_number());
+    }
+
+    #[test]
+    fn card__get_ckc_number__blank() {
+        assert_eq!(0, s52card!("__").get_ckc_number());
     }
 
     #[test]
