@@ -217,9 +217,9 @@ mod decks__standard52__tests {
         let ranks = Rank::<Standard52>::weighted_vector(&v);
 
         assert_eq!(ranks.len(), 13);
-        assert_eq!(ranks[0].weight, 0);
+        assert_eq!(ranks[0].weight, 12);
         assert_eq!(ranks[0].name.fluent_name_string(), "two");
-        assert_eq!(ranks[1].weight, 1);
+        assert_eq!(ranks[1].weight, 11);
         assert_eq!(ranks[1].name.fluent_name_string(), "three");
     }
 
@@ -293,36 +293,6 @@ mod decks__standard52__tests {
     }
 
     #[test]
-    fn suit__binary_signature() {
-        assert_eq!(4096, Suit::<Standard52>::from('S').bits());
-        assert_eq!(8192, Suit::<Standard52>::from('H').bits());
-        assert_eq!(16384, Suit::<Standard52>::from('D').bits());
-        assert_eq!(32768, Suit::<Standard52>::from('C').bits());
-        assert_eq!(61440, Suit::<Standard52>::from('_').bits());
-    }
-
-    #[test]
-    fn suit__binary_signature_revised() {
-        assert_eq!(
-            32768,
-            Suit::<Standard52>::from('S').bits()
-        );
-        assert_eq!(
-            16384,
-            Suit::<Standard52>::from('H').bits()
-        );
-        assert_eq!(
-            8192,
-            Suit::<Standard52>::from('D').bits()
-        );
-        assert_eq!(
-            4096,
-            Suit::<Standard52>::from('C').bits()
-        );
-        assert_eq!(0, Suit::<Standard52>::from('_').bits());
-    }
-
-    #[test]
     fn suit__symbol() {
         let suit = Suit::<Standard52>::new(Standard52::SPADES);
 
@@ -336,24 +306,6 @@ mod decks__standard52__tests {
 
         assert_eq!(suit.symbol(), "_");
         assert_eq!(suit.to_string(), suit.symbol())
-    }
-
-    #[test]
-    fn suit__weighted_vector() {
-        let mut v = Suit::<Standard52>::suit_names();
-        v.reverse();
-
-        let suits = Suit::<Standard52>::weighted_vector(&v);
-
-        assert_eq!(suits.len(), 4);
-        assert_eq!(suits[0].fluent_name_string(), "clubs");
-        assert_eq!(suits[0].weight, 0);
-        assert_eq!(suits[1].fluent_name_string(), "diamonds");
-        assert_eq!(suits[1].weight, 1);
-        assert_eq!(suits[2].fluent_name_string(), "hearts");
-        assert_eq!(suits[2].weight, 2);
-        assert_eq!(suits[3].fluent_name_string(), "spades");
-        assert_eq!(suits[3].weight, 3);
     }
 
     #[test]

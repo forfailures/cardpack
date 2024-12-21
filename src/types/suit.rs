@@ -3,11 +3,11 @@ use crate::decks::skat::Skat;
 use crate::decks::standard52::Standard52;
 use crate::localization::{FluentName, Named};
 use crate::types::traits::Suited;
+use crate::types::utils::Bit;
 use colored::Color;
 use std::collections::HashMap;
 use std::fmt::Display;
 use std::marker::PhantomData;
-use crate::types::utils::Bit;
 
 /// TODO: Create a five suited deck to test the boundaries.
 /// <https://cards.fandom.com/wiki/Suit_(cards)#Five_Suit_Decks/>
@@ -41,14 +41,14 @@ where
     ///
     /// Revised version that inverts the weight for sorting, making Spades be the highest. Has no
     /// effect on the generated card ranks, but does make sorting easier.
-    #[must_use]
-    pub fn bits(&self) -> u32 {
-        1 << (Bit::SUIT_FLAG_SHIFT + self.weight)
-    }
-
+    ///
+    /// TODO: need a way to add trumps suit. Right now this assumes standard 52
     #[must_use]
     pub fn ckc_number(&self) -> u32 {
-        todo!("Implement Suit::ckc_number()");
+        match self.weight {
+            0 => 0,
+            _ => 1 << (Bit::SUIT_FLAG_SHIFT + self.weight),
+        }
     }
 
     #[must_use]
@@ -155,7 +155,6 @@ impl<SuitType: Suited> From<char> for Suit<SuitType> {
 #[allow(non_snake_case)]
 mod types__suit__tests {
     use super::*;
-    use crate::types::utils::Bit;
 
     #[test]
     fn from_str__symbol() {
@@ -165,13 +164,45 @@ mod types__suit__tests {
     }
 
     #[test]
-    fn binary_signature() {
-        let spades = Suit::<Standard52>::from('♠');
+    fn ckc_number() {
+        assert_eq!(
+            0b0000_0000_0000_0000_1000_0000_0000_0000,
+            Suit::<Standard52>::from('♠').ckc_number()
+        );
+        assert_eq!(
+            0b0000_0000_0000_0000_1000_0000_0000_0000,
+            Suit::<Standard52>::from('S').ckc_number()
+        );
+        assert_eq!(
+            0b0000_0000_0000_0000_0100_0000_0000_0000,
+            Suit::<Standard52>::from('H').ckc_number()
+        );
+        assert_eq!(
+            0b0000_0000_0000_0000_0010_0000_0000_0000,
+            Suit::<Standard52>::from('D').ckc_number()
+        );
+        assert_eq!(
+            0b0000_0000_0000_0000_0001_0000_0000_0000,
+            Suit::<Standard52>::from('C').ckc_number()
+        );
+        assert_eq!(0, Suit::<Standard52>::from('_').ckc_number());
+    }
 
-        let expected = 0b0000_0000_0000_0000_1000_0000_0000_0000;
+    #[test]
+    fn named__weighted_vector() {
+        let mut v = Suit::<Standard52>::suit_names();
+        v.reverse();
 
-        // println!("{}", Bit::string_guided(spades.bits()));
+        let suits = Suit::<Standard52>::weighted_vector(&v);
 
-        assert_eq!(spades.bits(), expected);
+        assert_eq!(suits.len(), 4);
+        assert_eq!(suits[0].fluent_name_string(), "clubs");
+        assert_eq!(suits[0].weight, 3);
+        assert_eq!(suits[1].fluent_name_string(), "diamonds");
+        assert_eq!(suits[1].weight, 2);
+        assert_eq!(suits[2].fluent_name_string(), "hearts");
+        assert_eq!(suits[2].weight, 1);
+        assert_eq!(suits[3].fluent_name_string(), "spades");
+        assert_eq!(suits[3].weight, 0);
     }
 }

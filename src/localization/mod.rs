@@ -38,18 +38,20 @@ pub trait Named<'a> {
 
     /// Returns a Vector of Ranks with their weights determined by the order they're passed in, high to
     /// low. This facilitates the easy creation of custom decks, such as for pinochle.
+    ///
+    /// UPDATE: This was doing things in the wrong order.
     #[must_use]
     fn weighted_vector(names: &[&'static str]) -> Vec<Self>
     where
         Self: Sized,
     {
-        let mut weight = 0;
+        let mut weight = u32::try_from(names.len()).unwrap_or(0);
         names
             .iter()
             .map(|name| {
-                let named = Self::new_with_weight(name, weight);
-                weight += 1;
-                named
+                weight -= 1;
+
+                Self::new_with_weight(name, weight)
             })
             .collect()
     }

@@ -84,13 +84,8 @@ where
     }
 
     #[must_use]
-    pub fn get_rank_flags(&self) -> u32 {
-        self.get_bits() | self.get_shift8() | self.prime
-    }
-
-    #[must_use]
     pub fn ckc_number(&self) -> u32 {
-        todo!("Implement Rank::ckc_number()");
+        self.get_bits() | self.get_shift8() | self.prime
     }
 
     #[must_use]
@@ -272,10 +267,10 @@ mod types__rank__tests {
     }
 
     #[test]
-    fn get_rank_flags() {
+    fn ckc_number() {
         let card = s52card!("AS");
         let ckc_as = Bit::strip_suit_flags(CardNumber::ACE_SPADES);
 
-        assert_eq!(card.rank.get_rank_flags(), ckc_as);
+        assert_eq!(card.rank.ckc_number(), ckc_as);
     }
 }

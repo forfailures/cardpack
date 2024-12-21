@@ -11,5 +11,5 @@ fn main() {
 
     println!("{}", Bit::string_guided(ckc_as));
     println!("{}", Bit::string(CardNumber::ACE_SPADES));
-    println!("{}", Bit::string(card.rank.get_rank_flags()));
+    println!("{}", Bit::string(card.rank.ckc_number()));
 }
