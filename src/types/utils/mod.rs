@@ -10,7 +10,7 @@ impl Bit {
     /// 00000000 00000000 11110000 00000000
     pub const SUIT_FLAG_FILTER: u32 = 0b1111_0000_0000_0000; // 61440 aka 0xF000
     pub const SUIT_SHORT_MASK: u32 = 0b1111;
-    pub const SUIT_FLAG_SHIFT: u32 = 12;
+    pub const SUIT_FLAG_SHIFT: u32 = 11;
 
     const GUIDE: &'static str = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp";
 

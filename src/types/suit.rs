@@ -7,6 +7,7 @@ use colored::Color;
 use std::collections::HashMap;
 use std::fmt::Display;
 use std::marker::PhantomData;
+use crate::types::utils::Bit;
 
 /// TODO: Create a five suited deck to test the boundaries.
 /// <https://cards.fandom.com/wiki/Suit_(cards)#Five_Suit_Decks/>
@@ -35,33 +36,14 @@ where
         }
     }
 
-    /// Used to generate the `Card`'s binary signature.
-    ///
-    /// The value that is used to generate [Cactus Kev](https://suffe.cool/poker/evaluator.html)
+    /// Used to generate the `Card`'s binary signature, aka [Cactus Kev](https://suffe.cool/poker/evaluator.html)
     /// numbers.
+    ///
+    /// Revised version that inverts the weight for sorting, making Spades be the highest. Has no
+    /// effect on the generated card ranks, but does make sorting easier.
     #[must_use]
-    pub fn binary_signature(&self) -> u32 {
-        match self.weight {
-            4 => 0x1000,
-            3 => 0x2000,
-            2 => 0x4000,
-            1 => 0x8000,
-            _ => 0xF000,
-        }
-    }
-
-    /// Revised version of the `binary_signature()` method that inverts the weight for sorting
-    /// Spades first. Has no effect on the generated card ranks, but does make sorting easier.
-    #[must_use]
-    pub fn binary_signature_revised(&self) -> u32 {
-        match self.weight {
-            1 => 0x1000,
-            2 => 0x2000,
-            3 => 0x4000,
-            4 => 0x8000,
-            5 => 0xF000,
-            _ => 0x0000,
-        }
+    pub fn bits(&self) -> u32 {
+        1 << (Bit::SUIT_FLAG_SHIFT + self.weight)
     }
 
     #[must_use]
@@ -186,11 +168,10 @@ mod types__suit__tests {
     fn binary_signature() {
         let spades = Suit::<Standard52>::from('♠');
 
-        let original = spades.binary_signature_revised();
+        let expected = 0b0000_0000_0000_0000_1000_0000_0000_0000;
 
-        println!("{}", Bit::string_guided(original));
+        // println!("{}", Bit::string_guided(spades.bits()));
 
-        // xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp
-        // 00000000 00000000 10000000 00000000
+        assert_eq!(spades.bits(), expected);
     }
 }

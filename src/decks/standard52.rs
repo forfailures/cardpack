@@ -294,32 +294,32 @@ mod decks__standard52__tests {
 
     #[test]
     fn suit__binary_signature() {
-        assert_eq!(4096, Suit::<Standard52>::from('S').binary_signature());
-        assert_eq!(8192, Suit::<Standard52>::from('H').binary_signature());
-        assert_eq!(16384, Suit::<Standard52>::from('D').binary_signature());
-        assert_eq!(32768, Suit::<Standard52>::from('C').binary_signature());
-        assert_eq!(61440, Suit::<Standard52>::from('_').binary_signature());
+        assert_eq!(4096, Suit::<Standard52>::from('S').bits());
+        assert_eq!(8192, Suit::<Standard52>::from('H').bits());
+        assert_eq!(16384, Suit::<Standard52>::from('D').bits());
+        assert_eq!(32768, Suit::<Standard52>::from('C').bits());
+        assert_eq!(61440, Suit::<Standard52>::from('_').bits());
     }
 
     #[test]
     fn suit__binary_signature_revised() {
         assert_eq!(
             32768,
-            Suit::<Standard52>::from('S').binary_signature_revised()
+            Suit::<Standard52>::from('S').bits()
         );
         assert_eq!(
             16384,
-            Suit::<Standard52>::from('H').binary_signature_revised()
+            Suit::<Standard52>::from('H').bits()
         );
         assert_eq!(
             8192,
-            Suit::<Standard52>::from('D').binary_signature_revised()
+            Suit::<Standard52>::from('D').bits()
         );
         assert_eq!(
             4096,
-            Suit::<Standard52>::from('C').binary_signature_revised()
+            Suit::<Standard52>::from('C').bits()
         );
-        assert_eq!(0, Suit::<Standard52>::from('_').binary_signature_revised());
+        assert_eq!(0, Suit::<Standard52>::from('_').bits());
     }
 
     #[test]

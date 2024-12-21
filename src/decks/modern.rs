@@ -291,13 +291,6 @@ mod decks__modern__tests {
     }
 
     #[test]
-    fn suit__binary_signature_revised() {
-        let suit = Suit::<Modern>::new(Modern::TRUMP);
-
-        assert_eq!(0xF000, suit.binary_signature_revised());
-    }
-
-    #[test]
     fn to_string__from_str() {
         let deck = Modern::deck();
         let shuffled = deck.shuffle_default().to_string();
