@@ -173,11 +173,24 @@ impl<SuitType: Suited> From<char> for Suit<SuitType> {
 #[allow(non_snake_case)]
 mod types__suit__tests {
     use super::*;
+    use crate::types::utils::Bit;
 
     #[test]
     fn from_str__symbol() {
         let suit = Suit::<Standard52>::from('♠');
 
         assert_eq!(suit.symbol(), "♠");
+    }
+
+    #[test]
+    fn binary_signature() {
+        let spades = Suit::<Standard52>::from('♠');
+
+        let original = spades.binary_signature_revised();
+
+        println!("{}", Bit::string_guided(original));
+
+        // xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp
+        // 00000000 00000000 10000000 00000000
     }
 }

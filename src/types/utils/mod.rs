@@ -30,6 +30,11 @@ impl Bit {
     }
 
     #[must_use]
+    pub fn only_suit_flags(ckc: u32) -> u32 {
+        ckc & Bit::SUIT_FLAG_FILTER
+    }
+
+    #[must_use]
     pub fn strip_suit_flags(ckc: u32) -> u32 {
         ckc & !Bit::SUIT_FLAG_FILTER
     }
@@ -91,5 +96,12 @@ mod types__rank__tests {
         let ckc = 0b1010_1010_1010_1010_1010_1010_1010_1010;
         let expected = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp\n10101010 10101010 10101010 10101010";
         assert_eq!(Bit::string_guided(ckc), expected);
+    }
+
+    #[test]
+    fn only_suit_flags() {
+        let ckc = 0b1111_1111_1111_1111_1111_1111_1111_1111;
+        let exp = 0b0000_0000_0000_0000_1111_0000_0000_0000;
+        assert_eq!(Bit::only_suit_flags(ckc), exp);
     }
 }
