@@ -155,6 +155,7 @@ impl<SuitType: Suited> From<char> for Suit<SuitType> {
 #[allow(non_snake_case)]
 mod types__suit__tests {
     use super::*;
+    use rstest::rstest;
 
     #[test]
     fn from_str__symbol() {
@@ -186,6 +187,51 @@ mod types__suit__tests {
             Suit::<Standard52>::from('C').ckc_number()
         );
         assert_eq!(0, Suit::<Standard52>::from('_').ckc_number());
+    }
+
+    #[test]
+    fn symbol() {
+        let suit = Suit::<Standard52>::new(Standard52::SPADES);
+
+        assert_eq!(suit.symbol(), "♠");
+        assert_eq!(suit.to_string(), suit.symbol())
+    }
+
+    #[test]
+    fn symbol_blank() {
+        let suit = Suit::<Standard52>::from('_');
+
+        assert_eq!(suit.symbol(), "_");
+        assert_eq!(suit.to_string(), suit.symbol())
+    }
+
+    #[rstest]
+    #[case('♠', Standard52::SPADES)]
+    #[case('♤', Standard52::SPADES)]
+    #[case('S', Standard52::SPADES)]
+    #[case('s', Standard52::SPADES)]
+    #[case('♥', Standard52::HEARTS)]
+    #[case('♡', Standard52::HEARTS)]
+    #[case('H', Standard52::HEARTS)]
+    #[case('h', Standard52::HEARTS)]
+    #[case('♦', Standard52::DIAMONDS)]
+    #[case('♢', Standard52::DIAMONDS)]
+    #[case('D', Standard52::DIAMONDS)]
+    #[case('d', Standard52::DIAMONDS)]
+    #[case('♣', Standard52::CLUBS)]
+    #[case('♧', Standard52::CLUBS)]
+    #[case('C', Standard52::CLUBS)]
+    #[case('c', Standard52::CLUBS)]
+    #[case('🃟', FluentName::BLANK)]
+    #[case('T', FluentName::BLANK)]
+    #[case('t', FluentName::BLANK)]
+    #[case(' ', FluentName::BLANK)]
+    #[case('F', FluentName::BLANK)]
+    fn from__char(#[case] input: char, #[case] expected: &str) {
+        assert_eq!(
+            Suit::<Standard52>::new(expected),
+            Suit::<Standard52>::from(input)
+        );
     }
 
     #[test]

@@ -273,4 +273,35 @@ mod types__rank__tests {
 
         assert_eq!(card.rank.ckc_number(), ckc_as);
     }
+
+    #[test]
+    fn from_char() {
+        let rank = Rank::<Standard52>::from('A');
+
+        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.weight, 12);
+        assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn from_str() {
+        let rank = Rank::<Standard52>::from_str("A'").unwrap();
+
+        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.weight, 12);
+        assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn from_str__invalid() {
+        let rank = Rank::<Standard52>::from_str("Z'");
+
+        assert!(rank.is_err());
+        if let Err(CardError::InvalidFluentRank(_)) = rank {
+            // The error is of type CardError::InvalidFluentRank
+            // There has got to be a better way to test this.
+        } else {
+            panic!("Expected CardError::InvalidFluentRank");
+        }
+    }
 }

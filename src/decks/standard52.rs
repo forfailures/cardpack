@@ -152,10 +152,8 @@ impl Suited for Standard52 {
 mod decks__standard52__tests {
     use super::*;
     use crate::localization::{FluentName, Named};
-    use crate::types::card_error::CardError;
     use crate::types::rank::Rank;
     use crate::types::suit::Suit;
-    use rstest::rstest;
     use std::str::FromStr;
 
     #[test]
@@ -293,22 +291,6 @@ mod decks__standard52__tests {
     }
 
     #[test]
-    fn suit__symbol() {
-        let suit = Suit::<Standard52>::new(Standard52::SPADES);
-
-        assert_eq!(suit.symbol(), "♠");
-        assert_eq!(suit.to_string(), suit.symbol())
-    }
-
-    #[test]
-    fn suit__symbol_blank() {
-        let suit = Suit::<Standard52>::from('_');
-
-        assert_eq!(suit.symbol(), "_");
-        assert_eq!(suit.to_string(), suit.symbol())
-    }
-
-    #[test]
     fn suited__colors() {
         let mut expected = HashMap::new();
         expected.insert('H', Color::Red);
@@ -351,66 +333,6 @@ mod decks__standard52__tests {
         let names = Suit::<Standard52>::suit_names();
 
         assert_eq!(names, expected);
-    }
-
-    #[test]
-    fn rank__from_char() {
-        let rank = Rank::<Standard52>::from('A');
-
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
-        assert_eq!(rank.weight, 12);
-        assert_eq!(rank.prime, 41);
-    }
-
-    #[test]
-    fn rank__from_str() {
-        let rank = Rank::<Standard52>::from_str("A'").unwrap();
-
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
-        assert_eq!(rank.weight, 12);
-        assert_eq!(rank.prime, 41);
-    }
-
-    #[test]
-    fn rank__from_str__invalid() {
-        let rank = Rank::<Standard52>::from_str("Z'");
-
-        assert!(rank.is_err());
-        if let Err(CardError::InvalidFluentRank(_)) = rank {
-            // The error is of type CardError::InvalidFluentRank
-            // There has got to be a better way to test this.
-        } else {
-            panic!("Expected CardError::InvalidFluentRank");
-        }
-    }
-
-    #[rstest]
-    #[case('♠', Standard52::SPADES)]
-    #[case('♤', Standard52::SPADES)]
-    #[case('S', Standard52::SPADES)]
-    #[case('s', Standard52::SPADES)]
-    #[case('♥', Standard52::HEARTS)]
-    #[case('♡', Standard52::HEARTS)]
-    #[case('H', Standard52::HEARTS)]
-    #[case('h', Standard52::HEARTS)]
-    #[case('♦', Standard52::DIAMONDS)]
-    #[case('♢', Standard52::DIAMONDS)]
-    #[case('D', Standard52::DIAMONDS)]
-    #[case('d', Standard52::DIAMONDS)]
-    #[case('♣', Standard52::CLUBS)]
-    #[case('♧', Standard52::CLUBS)]
-    #[case('C', Standard52::CLUBS)]
-    #[case('c', Standard52::CLUBS)]
-    #[case('🃟', FluentName::BLANK)]
-    #[case('T', FluentName::BLANK)]
-    #[case('t', FluentName::BLANK)]
-    #[case(' ', FluentName::BLANK)]
-    #[case('F', FluentName::BLANK)]
-    fn suit__from__char(#[case] input: char, #[case] expected: &str) {
-        assert_eq!(
-            Suit::<Standard52>::new(expected),
-            Suit::<Standard52>::from(input)
-        );
     }
 
     #[test]
