@@ -1,3 +1,4 @@
+use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked, Suited};
@@ -88,6 +89,10 @@ impl Standard52 {
 }
 
 impl Decked<Standard52, Standard52> for Standard52 {
+    fn blank() -> Card<Standard52, Standard52> {
+        todo!()
+    }
+
     fn pack(&self) -> Pile<Standard52, Standard52> {
         Standard52::deck()
     }

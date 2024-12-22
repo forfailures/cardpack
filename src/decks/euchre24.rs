@@ -1,4 +1,5 @@
 use crate::decks::standard52::Standard52;
+use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked};
@@ -28,6 +29,10 @@ impl Euchre24 {
 }
 
 impl Decked<Euchre24, Standard52> for Euchre24 {
+    fn blank() -> Card<Euchre24, Standard52> {
+        todo!()
+    }
+
     fn pack(&self) -> Pile<Euchre24, Standard52> {
         Euchre24::deck()
     }

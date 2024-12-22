@@ -1,3 +1,4 @@
+use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked, Suited};
@@ -63,6 +64,10 @@ impl Skat {
 }
 
 impl Decked<Skat, Skat> for Skat {
+    fn blank() -> Card<Skat, Skat> {
+        Card::<Skat, Skat>::default()
+    }
+
     fn pack(&self) -> Pile<Skat, Skat> {
         Skat::deck()
     }
@@ -123,10 +128,28 @@ impl Suited for Skat {
 #[allow(non_snake_case)]
 mod decks__skat__tests {
     use super::*;
+    use crate::localization::FluentName;
     use crate::types::card::Card;
     use crate::types::rank::Rank;
     use crate::types::suit::Suit;
     use rstest::rstest;
+
+    #[test]
+    fn decked__blank() {
+        let skat_blank = Skat::blank();
+        let macro_blank = skat_card!("xx");
+        let card_default = Card::<Skat, Skat>::default();
+
+        let expected = Card::<Skat, Skat>::new(
+            Rank::<Skat>::new(FluentName::BLANK),
+            Suit::<Skat>::new(FluentName::BLANK),
+        );
+
+        assert_eq!(expected, skat_blank);
+        assert_eq!(expected, macro_blank);
+        assert_eq!(expected, card_default);
+        assert!(skat_blank.is_blank())
+    }
 
     #[test]
     fn rank__new_with_weight() {

@@ -83,6 +83,10 @@ impl Decked<Modern, Modern> for Modern {
         deck
     }
 
+    fn blank() -> Card<Modern, Modern> {
+        todo!()
+    }
+
     fn pack(&self) -> Pile<Modern, Modern> {
         Modern::deck()
     }

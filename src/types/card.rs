@@ -8,7 +8,7 @@ use std::fmt::Display;
 use colored::Colorize;
 use std::str::FromStr;
 
-#[derive(Debug, Default, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub struct Card<RankType, SuitType>
 where
     RankType: Ranked + Clone,
@@ -118,6 +118,17 @@ where
             }
         } else {
             self.to_string()
+        }
+    }
+}
+
+impl<RankType: Ranked + Clone, SuitType: Suited + Clone> Default for Card<RankType, SuitType> {
+    fn default() -> Self {
+        Card {
+            weight: 0,
+            index: "__".to_string(),
+            rank: Rank::<RankType>::default(),
+            suit: Suit::<SuitType>::default(),
         }
     }
 }

@@ -1,4 +1,5 @@
 use crate::decks::modern::Modern;
+use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::traits::Decked;
@@ -22,6 +23,10 @@ impl HandAndFoot {
 impl Decked<Modern, Modern> for HandAndFoot {
     fn deck() -> Pile<Modern, Modern> {
         Modern::decks(5).sort()
+    }
+
+    fn blank() -> Card<Modern, Modern> {
+        todo!()
     }
 
     fn pack(&self) -> Pile<Modern, Modern> {

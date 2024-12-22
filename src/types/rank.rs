@@ -10,7 +10,7 @@ use std::fmt::Display;
 use std::marker::PhantomData;
 use std::str::FromStr;
 
-#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Rank<RankType>
 where
     RankType: Ranked,
@@ -101,6 +101,20 @@ where
     #[must_use]
     pub fn update_weight(&self, weight: u32) -> Self {
         Self::new_with_weight(self.fluent_name_string().as_str(), weight)
+    }
+}
+
+impl<RankType> Default for Rank<RankType>
+where
+    RankType: Ranked,
+{
+    fn default() -> Self {
+        Rank::<RankType> {
+            weight: 0,
+            prime: 0,
+            name: FluentName::default(),
+            phantom_data: PhantomData,
+        }
     }
 }
 
