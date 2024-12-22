@@ -152,6 +152,8 @@ impl Suited for Standard52 {
 mod decks__standard52__tests {
     use super::*;
     use crate::localization::{FluentName, Named};
+    use crate::s52card;
+    use crate::standard52;
     use crate::types::card::Card;
     use crate::types::rank::Rank;
     use crate::types::suit::Suit;

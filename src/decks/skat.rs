@@ -5,6 +5,22 @@ use colored::Color;
 use std::collections::HashMap;
 use std::str::FromStr;
 
+#[macro_export]
+#[allow(clippy::pedantic)]
+macro_rules! skat_card {
+    ($card_str:expr) => {
+        Card::<Skat, Skat>::from_str($card_str).unwrap_or_else(|_| Card::<Skat, Skat>::default())
+    };
+}
+
+#[macro_export]
+#[allow(clippy::pedantic)]
+macro_rules! skat {
+    ($card_str:expr) => {
+        Pile::<Skat, Skat>::from_str($card_str)
+    };
+}
+
 /// Skat is a German, trick based card game for three players.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Skat {}
@@ -131,7 +147,7 @@ mod decks__skat__tests {
 
     #[test]
     fn from_str() {
-        let card = Card::<Skat, Skat>::from_str("D♣").unwrap();
+        let card = skat_card!("D♣");
 
         assert_eq!(card.rank.name.to_string(), Skat::DAUS);
         assert_eq!(card.suit.name.to_string(), Skat::EICHEL);
