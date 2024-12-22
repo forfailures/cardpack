@@ -1,15 +1,14 @@
-use cardpack::decks::standard52::Standard52;
-use cardpack::s52card;
-use cardpack::types::card::Card;
-use cardpack::types::utils::Bit;
-use ckc_rs::CardNumber;
-use std::str::FromStr;
+use cardpack::decks::skat::Skat;
+use cardpack::types::traits::Decked;
 
 fn main() {
-    let card = s52card!("AS");
-    let ckc_as = Bit::strip_suit_flags(CardNumber::ACE_SPADES);
+    let deck = Skat::deck();
 
-    println!("{}", Bit::string_guided(ckc_as));
-    println!("{}", Bit::string(CardNumber::ACE_SPADES));
-    println!("{}", Bit::string(card.rank.ckc_number()));
+    for card in deck.v() {
+        println!(
+            "{} \n{}",
+            card.index,
+            Skat::string_guided(card.get_ckc_number())
+        );
+    }
 }

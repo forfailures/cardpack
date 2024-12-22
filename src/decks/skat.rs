@@ -1,6 +1,7 @@
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked, Suited};
+use crate::types::utils::Bit;
 use colored::Color;
 use std::collections::HashMap;
 use std::str::FromStr;
@@ -27,6 +28,9 @@ pub struct Skat {}
 
 impl Skat {
     pub const DECK_NAME: &'static str = "Skat";
+    const GUIDE: &'static str = "xxxxxxxx DTKOU987 ELHSrrrr xxpppppp";
+
+    // D♣ T♣ K♣ O♣ U♣ 9♣ 8♣ 7♣
 
     // Skat Deck Ranks:
     pub const DAUS: &'static str = "daus";
@@ -50,6 +54,11 @@ impl Skat {
     #[allow(clippy::should_implement_trait)]
     pub fn from_str(index: &str) -> Result<Pile<Skat, Skat>, CardError> {
         Pile::<Skat, Skat>::from_str(index)
+    }
+
+    #[must_use]
+    pub fn string_guided(ckc: u32) -> String {
+        format!("{}\n{}", Skat::GUIDE, Bit::string(ckc))
     }
 }
 

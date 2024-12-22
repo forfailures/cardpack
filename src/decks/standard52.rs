@@ -1,6 +1,7 @@
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked, Suited};
+use crate::types::utils::Bit;
 use colored::Color;
 use std::collections::HashMap;
 use std::str::FromStr;
@@ -31,6 +32,7 @@ pub struct Standard52 {}
 
 impl Standard52 {
     pub const DECK_NAME: &'static str = "Standard52";
+    const GUIDE: &'static str = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp";
 
     // https://github.com/forfailures/cardpack/actions/runs/11375156606/job/31645291021
     // I can't believe that running the tests through GitHub Actions against
@@ -77,6 +79,11 @@ impl Standard52 {
     #[allow(clippy::should_implement_trait)]
     pub fn from_str(index: &str) -> Result<Pile<Standard52, Standard52>, CardError> {
         Pile::<Standard52, Standard52>::from_str(index)
+    }
+
+    #[must_use]
+    pub fn string_guided(ckc: u32) -> String {
+        format!("{}\n{}", Standard52::GUIDE, Bit::string(ckc))
     }
 }
 
@@ -443,5 +450,20 @@ mod decks__standard52__tests {
         let parsed = Standard52::from_str(&shuffled).unwrap();
 
         assert!(deck.same(&parsed));
+    }
+
+    #[test]
+    fn string_guided() {
+        let ckc = 0b0000_0000_0000_0000_0000_0000_0000_0000;
+        let expected = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp\n00000000 00000000 00000000 00000000";
+        assert_eq!(Standard52::string_guided(ckc), expected);
+
+        let ckc = 0b1111_1111_1111_1111_1111_1111_1111_1111;
+        let expected = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp\n11111111 11111111 11111111 11111111";
+        assert_eq!(Standard52::string_guided(ckc), expected);
+
+        let ckc = 0b1010_1010_1010_1010_1010_1010_1010_1010;
+        let expected = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp\n10101010 10101010 10101010 10101010";
+        assert_eq!(Standard52::string_guided(ckc), expected);
     }
 }

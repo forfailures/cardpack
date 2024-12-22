@@ -12,8 +12,6 @@ impl Bit {
     pub const SUIT_SHORT_MASK: u32 = 0b1111;
     pub const SUIT_FLAG_SHIFT: u32 = 11;
 
-    const GUIDE: &'static str = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp";
-
     #[must_use]
     pub fn ckc_bits(ckc: u32) -> u32 {
         ckc & Bit::RANK_FLAG_FILTER
@@ -56,11 +54,6 @@ impl Bit {
         }
         bit_string
     }
-
-    #[must_use]
-    pub fn string_guided(ckc: u32) -> String {
-        format!("{}\n{}", Bit::GUIDE, Bit::string(ckc))
-    }
 }
 
 #[cfg(test)]
@@ -81,21 +74,6 @@ mod types__rank__tests {
         let ckc = 0b1010_1010_1010_1010_1010_1010_1010_1010;
         let expected = "10101010 10101010 10101010 10101010";
         assert_eq!(Bit::string(ckc), expected);
-    }
-
-    #[test]
-    fn string_guided() {
-        let ckc = 0b0000_0000_0000_0000_0000_0000_0000_0000;
-        let expected = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp\n00000000 00000000 00000000 00000000";
-        assert_eq!(Bit::string_guided(ckc), expected);
-
-        let ckc = 0b1111_1111_1111_1111_1111_1111_1111_1111;
-        let expected = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp\n11111111 11111111 11111111 11111111";
-        assert_eq!(Bit::string_guided(ckc), expected);
-
-        let ckc = 0b1010_1010_1010_1010_1010_1010_1010_1010;
-        let expected = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp\n10101010 10101010 10101010 10101010";
-        assert_eq!(Bit::string_guided(ckc), expected);
     }
 
     #[test]
