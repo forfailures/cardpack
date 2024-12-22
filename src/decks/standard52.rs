@@ -155,9 +155,9 @@ mod decks__standard52__tests {
     use crate::types::card::Card;
     use crate::types::rank::Rank;
     use crate::types::suit::Suit;
-    use std::str::FromStr;
-    use rstest::rstest;
     use ckc_rs::CardNumber;
+    use rstest::rstest;
+    use std::str::FromStr;
 
     #[test]
     fn macro_standard52() {

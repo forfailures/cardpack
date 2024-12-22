@@ -80,6 +80,9 @@ where
 
     #[must_use]
     pub fn get_ckc_number(&self) -> u32 {
+        if self.is_blank() {
+            return 0;
+        }
         self.rank.ckc_number() + self.suit.ckc_number()
     }
 
