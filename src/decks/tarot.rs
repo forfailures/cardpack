@@ -150,6 +150,10 @@ impl Decked<Tarot, Tarot> for Tarot {
         major_arcana
     }
 
+    fn blank() -> Card<Tarot, Tarot> {
+        Card::<Tarot, Tarot>::default()
+    }
+
     fn pack(&self) -> Pile<Tarot, Tarot> {
         Tarot::deck()
     }

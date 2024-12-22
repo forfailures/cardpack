@@ -5,11 +5,12 @@ use crate::decks::standard52::Standard52;
 use crate::localization::{FluentName, Named};
 use crate::types::card_error::CardError;
 use crate::types::traits::Ranked;
+use crate::types::utils::Bit;
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::str::FromStr;
 
-#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Rank<RankType>
 where
     RankType: Ranked,
@@ -83,8 +84,37 @@ where
     }
 
     #[must_use]
+    pub fn ckc_number(&self) -> u32 {
+        self.get_bits() | self.get_shift8() | self.prime
+    }
+
+    #[must_use]
+    pub fn get_bits(&self) -> u32 {
+        1 << (Bit::RANK_FLAG_SHIFT + self.weight)
+    }
+
+    #[must_use]
+    pub fn get_shift8(&self) -> u32 {
+        self.weight << 8
+    }
+
+    #[must_use]
     pub fn update_weight(&self, weight: u32) -> Self {
         Self::new_with_weight(self.fluent_name_string().as_str(), weight)
+    }
+}
+
+impl<RankType> Default for Rank<RankType>
+where
+    RankType: Ranked,
+{
+    fn default() -> Self {
+        Rank::<RankType> {
+            weight: 0,
+            prime: 0,
+            name: FluentName::default(),
+            phantom_data: PhantomData,
+        }
     }
 }
 
@@ -205,6 +235,87 @@ impl<RankType: Ranked> FromStr for Rank<RankType> {
             }
         } else {
             Err(CardError::InvalidFluentRank(s.to_string()))
+        }
+    }
+}
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod types__rank__tests {
+    use super::*;
+    use crate::s52card;
+    use crate::types::card::Card;
+    use crate::types::utils::Bit;
+    use ckc_rs::CardNumber;
+
+    #[test]
+    fn get_bits() {
+        let card = s52card!("AS");
+        let ckc_as = Bit::ckc_bits(CardNumber::ACE_SPADES);
+
+        // println!("{:b}", ckc_as);
+        // println!("{:b}", card.rank.get_bits());
+
+        assert_eq!(card.rank.get_bits(), ckc_as);
+    }
+
+    #[test]
+    fn get_shift8() {
+        let card = Card::<Standard52, Standard52>::from_str("3S").unwrap();
+
+        assert_eq!(
+            card.rank.get_shift8(),
+            Bit::ckc_shift8(CardNumber::TREY_SPADES)
+        );
+    }
+
+    #[test]
+    fn prime() {
+        let card = s52card!("AS");
+        let ckc_as = Bit::ckc_prime(CardNumber::ACE_SPADES);
+
+        // println!("{:b}", ckc_as);
+        // println!("{:b}", card.rank.prime);
+
+        assert_eq!(card.rank.prime, ckc_as);
+    }
+
+    #[test]
+    fn ckc_number() {
+        let card = s52card!("AS");
+        let ckc_as = Bit::strip_suit_flags(CardNumber::ACE_SPADES);
+
+        assert_eq!(card.rank.ckc_number(), ckc_as);
+    }
+
+    #[test]
+    fn from_char() {
+        let rank = Rank::<Standard52>::from('A');
+
+        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.weight, 12);
+        assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn from_str() {
+        let rank = Rank::<Standard52>::from_str("A'").unwrap();
+
+        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.weight, 12);
+        assert_eq!(rank.prime, 41);
+    }
+
+    #[test]
+    fn from_str__invalid() {
+        let rank = Rank::<Standard52>::from_str("Z'");
+
+        assert!(rank.is_err());
+        if let Err(CardError::InvalidFluentRank(_)) = rank {
+            // The error is of type CardError::InvalidFluentRank
+            // There has got to be a better way to test this.
+        } else {
+            panic!("Expected CardError::InvalidFluentRank");
         }
     }
 }

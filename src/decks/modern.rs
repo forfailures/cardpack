@@ -9,6 +9,22 @@ use colored::Color;
 use std::collections::HashMap;
 use std::str::FromStr;
 
+#[macro_export]
+#[allow(clippy::pedantic)]
+macro_rules! modern_card {
+    ($card_str:expr) => {
+        Card::<Modern, Modern>::from_str($card_str)
+            .unwrap_or_else(|_| Card::<Modern, Modern>::default())
+    };
+}
+
+#[macro_export]
+macro_rules! modern {
+    ($card_str:expr) => {
+        Pile::<Modern, Modern>::from_str($card_str)
+    };
+}
+
 /// `Standard52` with Jokers.
 ///
 /// <https://www.pagat.com/rummy/canasta.html#classic-threes>
@@ -65,6 +81,10 @@ impl Decked<Modern, Modern> for Modern {
         deck.extend(&base52);
 
         deck
+    }
+
+    fn blank() -> Card<Modern, Modern> {
+        Card::<Modern, Modern>::default()
     }
 
     fn pack(&self) -> Pile<Modern, Modern> {
@@ -143,6 +163,8 @@ impl Suited for Modern {
 mod decks__modern__tests {
     use super::*;
     use crate::localization::{FluentName, Named};
+    use crate::modern;
+    use crate::modern_card;
     use crate::types::rank::Rank;
     use std::str::FromStr;
 
@@ -194,7 +216,7 @@ mod decks__modern__tests {
 
     #[test]
     fn card__from_str() {
-        let card = Card::<Modern, Modern>::from_str("A♠").unwrap();
+        let card = modern_card!("A♠");
 
         assert_eq!(card.index, "AS");
         assert_eq!(card.rank.name, FluentName::new(Standard52::ACE));
@@ -219,7 +241,7 @@ mod decks__modern__tests {
     }
 
     #[test]
-    fn from_char() {
+    fn rank__from_char() {
         let rank = Rank::<Modern>::from('A');
 
         assert_eq!(rank.name, FluentName::new(Standard52::ACE));
@@ -228,7 +250,7 @@ mod decks__modern__tests {
     }
 
     #[test]
-    fn from_str() {
+    fn rank__from_str() {
         let rank = Rank::<Modern>::from_str("A'").unwrap();
 
         assert_eq!(rank.name, FluentName::new(Standard52::ACE));
@@ -294,7 +316,7 @@ mod decks__modern__tests {
     fn to_string__from_str() {
         let deck = Modern::deck();
         let shuffled = deck.shuffle_default().to_string();
-        let parsed = Modern::from_str(&shuffled).unwrap();
+        let parsed = modern!(&shuffled).unwrap();
 
         assert!(deck.same(&parsed));
     }

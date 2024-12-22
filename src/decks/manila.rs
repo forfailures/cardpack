@@ -1,4 +1,5 @@
 use crate::decks::standard52::Standard52;
+use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked};
@@ -28,6 +29,10 @@ impl Manila {
 }
 
 impl Decked<Manila, Standard52> for Manila {
+    fn blank() -> Card<Manila, Standard52> {
+        Card::<Manila, Standard52>::default()
+    }
+
     fn pack(&self) -> Pile<Manila, Standard52> {
         Manila::deck()
     }

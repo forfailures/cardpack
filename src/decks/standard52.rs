@@ -1,9 +1,27 @@
+use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked, Suited};
+use crate::types::utils::Bit;
 use colored::Color;
 use std::collections::HashMap;
 use std::str::FromStr;
+
+/// These macros make me very happy. They wallpaper over a lot of headaches from the generics.
+#[macro_export]
+macro_rules! s52card {
+    ($card_str:expr) => {
+        Card::<Standard52, Standard52>::from_str($card_str)
+            .unwrap_or_else(|_| Card::<Standard52, Standard52>::default())
+    };
+}
+
+#[macro_export]
+macro_rules! standard52 {
+    ($card_str:expr) => {
+        Pile::<Standard52, Standard52>::from_str($card_str)
+    };
+}
 
 /// The [Standard52](https://en.wikipedia.org/wiki/Standard_52-card_deck)
 /// deck with French suited playing cards is
@@ -15,6 +33,7 @@ pub struct Standard52 {}
 
 impl Standard52 {
     pub const DECK_NAME: &'static str = "Standard52";
+    const GUIDE: &'static str = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp";
 
     // https://github.com/forfailures/cardpack/actions/runs/11375156606/job/31645291021
     // I can't believe that running the tests through GitHub Actions against
@@ -62,9 +81,18 @@ impl Standard52 {
     pub fn from_str(index: &str) -> Result<Pile<Standard52, Standard52>, CardError> {
         Pile::<Standard52, Standard52>::from_str(index)
     }
+
+    #[must_use]
+    pub fn string_guided(ckc: u32) -> String {
+        format!("{}\n{}", Standard52::GUIDE, Bit::string(ckc))
+    }
 }
 
 impl Decked<Standard52, Standard52> for Standard52 {
+    fn blank() -> Card<Standard52, Standard52> {
+        Card::<Standard52, Standard52>::default()
+    }
+
     fn pack(&self) -> Pile<Standard52, Standard52> {
         Standard52::deck()
     }
@@ -136,11 +164,85 @@ impl Suited for Standard52 {
 mod decks__standard52__tests {
     use super::*;
     use crate::localization::{FluentName, Named};
-    use crate::types::card_error::CardError;
+    use crate::s52card;
+    use crate::standard52;
+    use crate::types::card::Card;
     use crate::types::rank::Rank;
     use crate::types::suit::Suit;
+    use ckc_rs::CardNumber;
     use rstest::rstest;
     use std::str::FromStr;
+
+    #[test]
+    fn macro_standard52() {
+        let deck = standard52!("A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠ 5♠ 4♠ 3♠ 2♠ A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥ 5♥ 4♥ 3♥ 2♥ A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦ 5♦ 4♦ 3♦ 2♦ A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣ 5♣ 4♣ 3♣ 2♣").unwrap();
+
+        assert_eq!(deck.to_string(), Standard52::deck().to_string());
+        assert!(standard52!("AA xx __").is_err());
+    }
+
+    #[rstest]
+    #[case("A♠", CardNumber::ACE_SPADES)]
+    #[case("ks", CardNumber::KING_SPADES)]
+    #[case("QS", CardNumber::QUEEN_SPADES)]
+    #[case("J♠", CardNumber::JACK_SPADES)]
+    #[case("TS", CardNumber::TEN_SPADES)]
+    #[case("9s", CardNumber::NINE_SPADES)]
+    #[case("8♠", CardNumber::EIGHT_SPADES)]
+    #[case("7S", CardNumber::SEVEN_SPADES)]
+    #[case("6♠", CardNumber::SIX_SPADES)]
+    #[case("5S", CardNumber::FIVE_SPADES)]
+    #[case("4♠", CardNumber::FOUR_SPADES)]
+    #[case("3s", CardNumber::TREY_SPADES)]
+    #[case("2S", CardNumber::DEUCE_SPADES)]
+    #[case("A♥", CardNumber::ACE_HEARTS)]
+    #[case("k♥", CardNumber::KING_HEARTS)]
+    #[case("QH", CardNumber::QUEEN_HEARTS)]
+    #[case("jh", CardNumber::JACK_HEARTS)]
+    #[case("T♥", CardNumber::TEN_HEARTS)]
+    #[case("9♥", CardNumber::NINE_HEARTS)]
+    #[case("8h", CardNumber::EIGHT_HEARTS)]
+    #[case("7H", CardNumber::SEVEN_HEARTS)]
+    #[case("6h", CardNumber::SIX_HEARTS)]
+    #[case("5H", CardNumber::FIVE_HEARTS)]
+    #[case("4♥", CardNumber::FOUR_HEARTS)]
+    #[case("3♥", CardNumber::TREY_HEARTS)]
+    #[case("2h", CardNumber::DEUCE_HEARTS)]
+    #[case("A♦", CardNumber::ACE_DIAMONDS)]
+    #[case("k♦", CardNumber::KING_DIAMONDS)]
+    #[case("Q♦", CardNumber::QUEEN_DIAMONDS)]
+    #[case("Jd", CardNumber::JACK_DIAMONDS)]
+    #[case("tD", CardNumber::TEN_DIAMONDS)]
+    #[case("9♦", CardNumber::NINE_DIAMONDS)]
+    #[case("8D", CardNumber::EIGHT_DIAMONDS)]
+    #[case("7♦", CardNumber::SEVEN_DIAMONDS)]
+    #[case("6D", CardNumber::SIX_DIAMONDS)]
+    #[case("5D", CardNumber::FIVE_DIAMONDS)]
+    #[case("4♦", CardNumber::FOUR_DIAMONDS)]
+    #[case("3♦", CardNumber::TREY_DIAMONDS)]
+    #[case("2d", CardNumber::DEUCE_DIAMONDS)]
+    #[case("a♣", CardNumber::ACE_CLUBS)]
+    #[case("k♣", CardNumber::KING_CLUBS)]
+    #[case("QC", CardNumber::QUEEN_CLUBS)]
+    #[case("jc", CardNumber::JACK_CLUBS)]
+    #[case("tC", CardNumber::TEN_CLUBS)]
+    #[case("9♣", CardNumber::NINE_CLUBS)]
+    #[case("8♣", CardNumber::EIGHT_CLUBS)]
+    #[case("7c", CardNumber::SEVEN_CLUBS)]
+    #[case("6♣", CardNumber::SIX_CLUBS)]
+    #[case("5C", CardNumber::FIVE_CLUBS)]
+    #[case("4c", CardNumber::FOUR_CLUBS)]
+    #[case("3C", CardNumber::TREY_CLUBS)]
+    #[case("2C", CardNumber::DEUCE_CLUBS)]
+    #[case("__", 0u32)]
+    fn card__get_ckc_number(#[case] input: &str, #[case] expected_ckc: u32) {
+        assert_eq!(expected_ckc, s52card!(input).get_ckc_number());
+    }
+
+    #[test]
+    fn card__get_ckc_number__blank() {
+        assert_eq!(0, s52card!("__").get_ckc_number());
+    }
 
     #[test]
     fn decked__decks() {
@@ -193,9 +295,9 @@ mod decks__standard52__tests {
         let ranks = Rank::<Standard52>::weighted_vector(&v);
 
         assert_eq!(ranks.len(), 13);
-        assert_eq!(ranks[0].weight, 0);
+        assert_eq!(ranks[0].weight, 12);
         assert_eq!(ranks[0].name.fluent_name_string(), "two");
-        assert_eq!(ranks[1].weight, 1);
+        assert_eq!(ranks[1].weight, 11);
         assert_eq!(ranks[1].name.fluent_name_string(), "three");
     }
 
@@ -269,73 +371,6 @@ mod decks__standard52__tests {
     }
 
     #[test]
-    fn suit__binary_signature() {
-        assert_eq!(4096, Suit::<Standard52>::from('S').binary_signature());
-        assert_eq!(8192, Suit::<Standard52>::from('H').binary_signature());
-        assert_eq!(16384, Suit::<Standard52>::from('D').binary_signature());
-        assert_eq!(32768, Suit::<Standard52>::from('C').binary_signature());
-        assert_eq!(61440, Suit::<Standard52>::from('_').binary_signature());
-    }
-
-    #[test]
-    fn suit__binary_signature_revised() {
-        assert_eq!(
-            32768,
-            Suit::<Standard52>::from('S').binary_signature_revised()
-        );
-        assert_eq!(
-            16384,
-            Suit::<Standard52>::from('H').binary_signature_revised()
-        );
-        assert_eq!(
-            8192,
-            Suit::<Standard52>::from('D').binary_signature_revised()
-        );
-        assert_eq!(
-            4096,
-            Suit::<Standard52>::from('C').binary_signature_revised()
-        );
-        assert_eq!(
-            61440,
-            Suit::<Standard52>::from('_').binary_signature_revised()
-        );
-    }
-
-    #[test]
-    fn suit__symbol() {
-        let suit = Suit::<Standard52>::new(Standard52::SPADES);
-
-        assert_eq!(suit.symbol(), "♠");
-        assert_eq!(suit.to_string(), suit.symbol())
-    }
-
-    #[test]
-    fn suit__symbol_blank() {
-        let suit = Suit::<Standard52>::from('_');
-
-        assert_eq!(suit.symbol(), "_");
-        assert_eq!(suit.to_string(), suit.symbol())
-    }
-
-    #[test]
-    fn suit__weighted_vector() {
-        let mut v = Suit::<Standard52>::suit_names();
-        v.reverse();
-
-        let suits = Suit::<Standard52>::weighted_vector(&v);
-
-        assert_eq!(suits.len(), 4);
-        assert_eq!(suits[0].fluent_name_string(), "clubs");
-        assert_eq!(suits[0].weight, 0);
-        assert_eq!(suits[1].fluent_name_string(), "diamonds");
-        assert_eq!(suits[1].weight, 1);
-        assert_eq!(suits[2].fluent_name_string(), "hearts");
-        assert_eq!(suits[2].weight, 2);
-        assert_eq!(suits[3].fluent_name_string(), "spades");
-        assert_eq!(suits[3].weight, 3);
-    }
-
-    #[test]
     fn suited__colors() {
         let mut expected = HashMap::new();
         expected.insert('H', Color::Red);
@@ -381,66 +416,6 @@ mod decks__standard52__tests {
     }
 
     #[test]
-    fn from_char() {
-        let rank = Rank::<Standard52>::from('A');
-
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
-        assert_eq!(rank.weight, 12);
-        assert_eq!(rank.prime, 41);
-    }
-
-    #[test]
-    fn from_str() {
-        let rank = Rank::<Standard52>::from_str("A'").unwrap();
-
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
-        assert_eq!(rank.weight, 12);
-        assert_eq!(rank.prime, 41);
-    }
-
-    #[test]
-    fn from_str__invalid() {
-        let rank = Rank::<Standard52>::from_str("Z'");
-
-        assert!(rank.is_err());
-        if let Err(CardError::InvalidFluentRank(_)) = rank {
-            // The error is of type CardError::InvalidFluentRank
-            // There has got to be a better way to test this.
-        } else {
-            panic!("Expected CardError::InvalidFluentRank");
-        }
-    }
-
-    #[rstest]
-    #[case('♠', Standard52::SPADES)]
-    #[case('♤', Standard52::SPADES)]
-    #[case('S', Standard52::SPADES)]
-    #[case('s', Standard52::SPADES)]
-    #[case('♥', Standard52::HEARTS)]
-    #[case('♡', Standard52::HEARTS)]
-    #[case('H', Standard52::HEARTS)]
-    #[case('h', Standard52::HEARTS)]
-    #[case('♦', Standard52::DIAMONDS)]
-    #[case('♢', Standard52::DIAMONDS)]
-    #[case('D', Standard52::DIAMONDS)]
-    #[case('d', Standard52::DIAMONDS)]
-    #[case('♣', Standard52::CLUBS)]
-    #[case('♧', Standard52::CLUBS)]
-    #[case('C', Standard52::CLUBS)]
-    #[case('c', Standard52::CLUBS)]
-    #[case('🃟', FluentName::BLANK)]
-    #[case('T', FluentName::BLANK)]
-    #[case('t', FluentName::BLANK)]
-    #[case(' ', FluentName::BLANK)]
-    #[case('F', FluentName::BLANK)]
-    fn suit__from__char(#[case] input: char, #[case] expected: &str) {
-        assert_eq!(
-            Suit::<Standard52>::new(expected),
-            Suit::<Standard52>::from(input)
-        );
-    }
-
-    #[test]
     fn pile__sort() {
         let deck = Standard52::deck();
         let mut shuffled = deck.shuffle_default();
@@ -480,5 +455,20 @@ mod decks__standard52__tests {
         let parsed = Standard52::from_str(&shuffled).unwrap();
 
         assert!(deck.same(&parsed));
+    }
+
+    #[test]
+    fn string_guided() {
+        let ckc = 0b0000_0000_0000_0000_0000_0000_0000_0000;
+        let expected = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp\n00000000 00000000 00000000 00000000";
+        assert_eq!(Standard52::string_guided(ckc), expected);
+
+        let ckc = 0b1111_1111_1111_1111_1111_1111_1111_1111;
+        let expected = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp\n11111111 11111111 11111111 11111111";
+        assert_eq!(Standard52::string_guided(ckc), expected);
+
+        let ckc = 0b1010_1010_1010_1010_1010_1010_1010_1010;
+        let expected = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp\n10101010 10101010 10101010 10101010";
+        assert_eq!(Standard52::string_guided(ckc), expected);
     }
 }

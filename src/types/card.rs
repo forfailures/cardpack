@@ -79,6 +79,14 @@ where
     }
 
     #[must_use]
+    pub fn get_ckc_number(&self) -> u32 {
+        if self.is_blank() {
+            return 0;
+        }
+        self.rank.ckc_number() + self.suit.ckc_number()
+    }
+
+    #[must_use]
     pub fn get_index_suit_char(&self) -> char {
         self.index.chars().last().unwrap_or('_')
     }
@@ -110,6 +118,17 @@ where
             }
         } else {
             self.to_string()
+        }
+    }
+}
+
+impl<RankType: Ranked + Clone, SuitType: Suited + Clone> Default for Card<RankType, SuitType> {
+    fn default() -> Self {
+        Card {
+            weight: 0,
+            index: "__".to_string(),
+            rank: Rank::<RankType>::default(),
+            suit: Suit::<SuitType>::default(),
         }
     }
 }
@@ -162,6 +181,7 @@ mod types__card__tests {
     use super::*;
     use crate::decks::standard52::Standard52;
     use crate::localization::FluentName;
+    use crate::s52card;
 
     #[test]
     fn new() {
@@ -200,10 +220,10 @@ mod types__card__tests {
     /// coming first.
     #[test]
     fn test_sort_from_weight() {
-        let ace_of_spades = Card::<Standard52, Standard52>::from_str("AS").unwrap();
-        let ace_of_hearts = Card::<Standard52, Standard52>::from_str("AH").unwrap();
-        let ace_of_diamonds = Card::<Standard52, Standard52>::from_str("AD").unwrap();
-        let ace_of_clubs = Card::<Standard52, Standard52>::from_str("AC").unwrap();
+        let ace_of_spades = s52card!("AS");
+        let ace_of_hearts = s52card!("AH");
+        let ace_of_diamonds = s52card!("AD");
+        let ace_of_clubs = s52card!("AC");
 
         let mut cards = vec![
             ace_of_clubs.clone(),
@@ -222,14 +242,14 @@ mod types__card__tests {
 
     #[test]
     fn to_color_symbol_string__default() {
-        let card = Card::<Standard52, Standard52>::from_str("AS").unwrap();
+        let card = s52card!("AS");
 
         assert_eq!("A♠".to_string(), card.to_color_symbol_string());
     }
 
     #[test]
     fn to_color_symbol_string() {
-        let card = Card::<Standard52, Standard52>::from_str("AH").unwrap();
+        let card = s52card!("AH");
 
         assert_eq!("A♥".red().to_string(), card.to_color_symbol_string());
     }
@@ -247,7 +267,7 @@ mod types__card__tests {
         let spades = Suit::<Standard52>::from('S');
         let expected_card: Card<Standard52, Standard52> = Card::new(ace, spades);
 
-        let card = Card::<Standard52, Standard52>::from_str("  AS   ").unwrap();
+        let card = s52card!("AS");
 
         assert_eq!(card, expected_card);
         assert!(!card.is_blank());
@@ -255,14 +275,14 @@ mod types__card__tests {
 
     #[test]
     fn from_str_blank() {
-        let card = Card::<Standard52, Standard52>::from_str(" BW ").unwrap();
+        let card = s52card!("BW");
 
         assert!(card.is_blank());
     }
 
     #[test]
     fn from_str__symbol() {
-        let card = Card::<Standard52, Standard52>::from_str("A♠").unwrap();
+        let card = s52card!("AS");
 
         assert_eq!(card.index, "AS");
         assert_eq!(card.rank.name, FluentName::new(Standard52::ACE));

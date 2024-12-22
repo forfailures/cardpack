@@ -1,5 +1,6 @@
 use crate::decks::modern::Modern;
 use crate::decks::standard52::Standard52;
+use crate::modern_card;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
@@ -8,20 +9,59 @@ use crate::types::suit::Suit;
 use crate::types::traits::Decked;
 use std::str::FromStr;
 
+#[macro_export]
+#[allow(clippy::pedantic)]
+macro_rules! spades_card {
+    ($card_str:expr) => {
+        Spades::card($card_str)
+    };
+}
+
+#[macro_export]
+macro_rules! spades {
+    ($card_str:expr) => {
+        Spades::from_str($card_str)
+    };
+}
+
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Spades {}
 
 impl Spades {
     pub const DECK_NAME: &'static str = "Spades";
 
+    #[allow(dead_code)]
+    fn card(s: &str) -> Card<Modern, Modern> {
+        let card = modern_card!(s);
+
+        match card.index.as_str() {
+            "2C" | "2D" => Card::<Modern, Modern>::default(),
+            _ => card,
+        }
+    }
+
     /// # Errors
     ///
     /// Returns a `CardError` if the index is out of bounds.
     ///
     /// TODO: Add deck validation
-    #[allow(clippy::should_implement_trait)]
-    pub fn from_str(index: &str) -> Result<Pile<Modern, Modern>, CardError> {
-        Pile::<Modern, Modern>::from_str(index)
+    #[allow(dead_code, clippy::should_implement_trait)]
+    fn from_str(index: &str) -> Result<Pile<Modern, Modern>, CardError> {
+        let pile = Pile::<Modern, Modern>::from_str(index)?;
+
+        if pile.contains(&modern_card!("2C")) {
+            return Err(CardError::InvalidCard(
+                "2♣ is not in a Spades deck".to_string(),
+            ));
+        }
+
+        if pile.contains(&modern_card!("2D")) {
+            return Err(CardError::InvalidCard(
+                "2♦ is not in a Spades deck".to_string(),
+            ));
+        }
+
+        Ok(pile)
     }
 }
 
@@ -44,6 +84,10 @@ impl Decked<Modern, Modern> for Spades {
         deck
     }
 
+    fn blank() -> Card<Modern, Modern> {
+        Card::<Modern, Modern>::default()
+    }
+
     fn pack(&self) -> Pile<Modern, Modern> {
         Spades::deck()
     }
@@ -59,6 +103,21 @@ mod decks__spades__tests {
         let deck = Spades::deck();
 
         assert_eq!(deck.len(), 52);
+    }
+
+    #[test]
+    fn spades_card() {
+        assert_eq!(modern_card!("2H"), spades_card!("2H"));
+        assert_eq!(Card::<Modern, Modern>::default(), spades_card!("2C"));
+        assert_eq!(Card::<Modern, Modern>::default(), spades_card!("2D"));
+    }
+
+    #[test]
+    fn from_str() {
+        assert!(spades!("2H").is_ok());
+        assert!(Spades::from_str("2C").is_err());
+        assert!(Spades::from_str("2D").is_err());
+        assert!(Spades::from_str("2H 2C").is_err());
     }
 
     #[test]

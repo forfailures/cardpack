@@ -3,6 +3,7 @@ use crate::decks::skat::Skat;
 use crate::decks::standard52::Standard52;
 use crate::localization::{FluentName, Named};
 use crate::types::traits::Suited;
+use crate::types::utils::Bit;
 use colored::Color;
 use std::collections::HashMap;
 use std::fmt::Display;
@@ -10,7 +11,7 @@ use std::marker::PhantomData;
 
 /// TODO: Create a five suited deck to test the boundaries.
 /// <https://cards.fandom.com/wiki/Suit_(cards)#Five_Suit_Decks/>
-#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Suit<SuitType>
 where
     SuitType: Suited,
@@ -35,31 +36,18 @@ where
         }
     }
 
-    /// Used to generate the `Card`'s binary signature.
-    ///
-    /// The value that is used to generate [Cactus Kev](https://suffe.cool/poker/evaluator.html)
+    /// Used to generate the `Card`'s binary signature, aka [Cactus Kev](https://suffe.cool/poker/evaluator.html)
     /// numbers.
+    ///
+    /// Revised version that inverts the weight for sorting, making Spades be the highest. Has no
+    /// effect on the generated card ranks, but does make sorting easier.
+    ///
+    /// TODO: need a way to add trumps suit. Right now this assumes standard 52
     #[must_use]
-    pub fn binary_signature(&self) -> u32 {
+    pub fn ckc_number(&self) -> u32 {
         match self.weight {
-            4 => 0x1000,
-            3 => 0x2000,
-            2 => 0x4000,
-            1 => 0x8000,
-            _ => 0xF000,
-        }
-    }
-
-    /// Revised version of the `binary_signature()` method that inverts the weight for sorting
-    /// Spades first. Has no effect on the generated card ranks, but does make sorting easier.
-    #[must_use]
-    pub fn binary_signature_revised(&self) -> u32 {
-        match self.weight {
-            1 => 0x1000,
-            2 => 0x2000,
-            3 => 0x4000,
-            4 => 0x8000,
-            _ => 0xF000,
+            0 => 0,
+            _ => 1 << (Bit::SUIT_FLAG_SHIFT + self.weight),
         }
     }
 
@@ -77,6 +65,19 @@ where
             Suit::<SuitType>::FLUENT_SYMBOL_SECTION,
             &Suit::<SuitType>::US_ENGLISH,
         )
+    }
+}
+
+impl<SuitType> Default for Suit<SuitType>
+where
+    SuitType: Suited,
+{
+    fn default() -> Self {
+        Suit::<SuitType> {
+            weight: 0,
+            name: FluentName::default(),
+            phantom_data: PhantomData,
+        }
     }
 }
 
@@ -167,11 +168,100 @@ impl<SuitType: Suited> From<char> for Suit<SuitType> {
 #[allow(non_snake_case)]
 mod types__suit__tests {
     use super::*;
+    use rstest::rstest;
 
     #[test]
     fn from_str__symbol() {
         let suit = Suit::<Standard52>::from('♠');
 
         assert_eq!(suit.symbol(), "♠");
+    }
+
+    #[test]
+    fn ckc_number() {
+        assert_eq!(
+            0b0000_0000_0000_0000_1000_0000_0000_0000,
+            Suit::<Standard52>::from('♠').ckc_number()
+        );
+        assert_eq!(
+            0b0000_0000_0000_0000_1000_0000_0000_0000,
+            Suit::<Standard52>::from('S').ckc_number()
+        );
+        assert_eq!(
+            0b0000_0000_0000_0000_0100_0000_0000_0000,
+            Suit::<Standard52>::from('H').ckc_number()
+        );
+        assert_eq!(
+            0b0000_0000_0000_0000_0010_0000_0000_0000,
+            Suit::<Standard52>::from('D').ckc_number()
+        );
+        assert_eq!(
+            0b0000_0000_0000_0000_0001_0000_0000_0000,
+            Suit::<Standard52>::from('C').ckc_number()
+        );
+        assert_eq!(0, Suit::<Standard52>::from('_').ckc_number());
+    }
+
+    #[test]
+    fn symbol() {
+        let suit = Suit::<Standard52>::new(Standard52::SPADES);
+
+        assert_eq!(suit.symbol(), "♠");
+        assert_eq!(suit.to_string(), suit.symbol())
+    }
+
+    #[test]
+    fn symbol_blank() {
+        let suit = Suit::<Standard52>::from('_');
+
+        assert_eq!(suit.symbol(), "_");
+        assert_eq!(suit.to_string(), suit.symbol())
+    }
+
+    #[rstest]
+    #[case('♠', Standard52::SPADES)]
+    #[case('♤', Standard52::SPADES)]
+    #[case('S', Standard52::SPADES)]
+    #[case('s', Standard52::SPADES)]
+    #[case('♥', Standard52::HEARTS)]
+    #[case('♡', Standard52::HEARTS)]
+    #[case('H', Standard52::HEARTS)]
+    #[case('h', Standard52::HEARTS)]
+    #[case('♦', Standard52::DIAMONDS)]
+    #[case('♢', Standard52::DIAMONDS)]
+    #[case('D', Standard52::DIAMONDS)]
+    #[case('d', Standard52::DIAMONDS)]
+    #[case('♣', Standard52::CLUBS)]
+    #[case('♧', Standard52::CLUBS)]
+    #[case('C', Standard52::CLUBS)]
+    #[case('c', Standard52::CLUBS)]
+    #[case('🃟', FluentName::BLANK)]
+    #[case('T', FluentName::BLANK)]
+    #[case('t', FluentName::BLANK)]
+    #[case(' ', FluentName::BLANK)]
+    #[case('F', FluentName::BLANK)]
+    fn from__char(#[case] input: char, #[case] expected: &str) {
+        assert_eq!(
+            Suit::<Standard52>::new(expected),
+            Suit::<Standard52>::from(input)
+        );
+    }
+
+    #[test]
+    fn named__weighted_vector() {
+        let mut v = Suit::<Standard52>::suit_names();
+        v.reverse();
+
+        let suits = Suit::<Standard52>::weighted_vector(&v);
+
+        assert_eq!(suits.len(), 4);
+        assert_eq!(suits[0].fluent_name_string(), "clubs");
+        assert_eq!(suits[0].weight, 3);
+        assert_eq!(suits[1].fluent_name_string(), "diamonds");
+        assert_eq!(suits[1].weight, 2);
+        assert_eq!(suits[2].fluent_name_string(), "hearts");
+        assert_eq!(suits[2].weight, 1);
+        assert_eq!(suits[3].fluent_name_string(), "spades");
+        assert_eq!(suits[3].weight, 0);
     }
 }

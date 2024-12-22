@@ -1,9 +1,27 @@
+use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked, Suited};
+use crate::types::utils::Bit;
 use colored::Color;
 use std::collections::HashMap;
 use std::str::FromStr;
+
+#[macro_export]
+#[allow(clippy::pedantic)]
+macro_rules! skat_card {
+    ($card_str:expr) => {
+        Card::<Skat, Skat>::from_str($card_str).unwrap_or_else(|_| Card::<Skat, Skat>::default())
+    };
+}
+
+#[macro_export]
+#[allow(clippy::pedantic)]
+macro_rules! skat {
+    ($card_str:expr) => {
+        Pile::<Skat, Skat>::from_str($card_str)
+    };
+}
 
 /// Skat is a German, trick based card game for three players.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -11,6 +29,9 @@ pub struct Skat {}
 
 impl Skat {
     pub const DECK_NAME: &'static str = "Skat";
+    const GUIDE: &'static str = "xxxxxxxx DTKOU987 ELHSrrrr xxpppppp";
+
+    // D♣ T♣ K♣ O♣ U♣ 9♣ 8♣ 7♣
 
     // Skat Deck Ranks:
     pub const DAUS: &'static str = "daus";
@@ -35,9 +56,18 @@ impl Skat {
     pub fn from_str(index: &str) -> Result<Pile<Skat, Skat>, CardError> {
         Pile::<Skat, Skat>::from_str(index)
     }
+
+    #[must_use]
+    pub fn string_guided(ckc: u32) -> String {
+        format!("{}\n{}", Skat::GUIDE, Bit::string(ckc))
+    }
 }
 
 impl Decked<Skat, Skat> for Skat {
+    fn blank() -> Card<Skat, Skat> {
+        Card::<Skat, Skat>::default()
+    }
+
     fn pack(&self) -> Pile<Skat, Skat> {
         Skat::deck()
     }
@@ -98,10 +128,28 @@ impl Suited for Skat {
 #[allow(non_snake_case)]
 mod decks__skat__tests {
     use super::*;
+    use crate::localization::FluentName;
     use crate::types::card::Card;
     use crate::types::rank::Rank;
     use crate::types::suit::Suit;
     use rstest::rstest;
+
+    #[test]
+    fn decked__blank() {
+        let skat_blank = Skat::blank();
+        let macro_blank = skat_card!("xx");
+        let card_default = Card::<Skat, Skat>::default();
+
+        let expected = Card::<Skat, Skat>::new(
+            Rank::<Skat>::new(FluentName::BLANK),
+            Suit::<Skat>::new(FluentName::BLANK),
+        );
+
+        assert_eq!(expected, skat_blank);
+        assert_eq!(expected, macro_blank);
+        assert_eq!(expected, card_default);
+        assert!(skat_blank.is_blank())
+    }
 
     #[test]
     fn rank__new_with_weight() {
@@ -131,7 +179,7 @@ mod decks__skat__tests {
 
     #[test]
     fn from_str() {
-        let card = Card::<Skat, Skat>::from_str("D♣").unwrap();
+        let card = skat_card!("D♣");
 
         assert_eq!(card.rank.name.to_string(), Skat::DAUS);
         assert_eq!(card.suit.name.to_string(), Skat::EICHEL);

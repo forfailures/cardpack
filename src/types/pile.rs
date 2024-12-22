@@ -318,6 +318,9 @@ impl<
 
 /// This is probably my biggest embarrassment when coding this library the first time. I had no
 /// idea that this trait existed, and bent over backwards trying to duplicate its functionality.
+///
+/// TODO: Add a step that validates that the cards are of the correct number for the type of deck.
+/// Perhaps using the `Decked::deck()` method.
 impl<
         RankType: Ranked + Ord + Clone + Default + Hash,
         SuitType: Suited + Ord + Clone + Default + Hash,

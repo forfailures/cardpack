@@ -146,6 +146,10 @@ impl Decked<Modern, Modern> for Canasta {
         Canasta::wash(&deck).sort()
     }
 
+    fn blank() -> Card<Modern, Modern> {
+        Card::<Modern, Modern>::default()
+    }
+
     fn pack(&self) -> Pile<Modern, Modern> {
         Canasta::deck()
     }

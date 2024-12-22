@@ -43,7 +43,7 @@ pub trait Decked<
         pile
     }
 
-    fn deck_name() {}
+    fn blank() -> Card<RankType, SuitType>;
 
     /// This function was `Pile::pile_on()` in the v.0 cardpack library.
     #[must_use]
