@@ -50,7 +50,7 @@ impl Decked<Pinochle, Standard52> for Pinochle {
     }
 
     fn blank() -> Card<Pinochle, Standard52> {
-        todo!()
+        Card::<Pinochle, Standard52>::default()
     }
 
     fn pack(&self) -> Pile<Pinochle, Standard52> {

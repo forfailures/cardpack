@@ -26,7 +26,7 @@ impl Decked<Modern, Modern> for HandAndFoot {
     }
 
     fn blank() -> Card<Modern, Modern> {
-        todo!()
+        Card::<Modern, Modern>::default()
     }
 
     fn pack(&self) -> Pile<Modern, Modern> {

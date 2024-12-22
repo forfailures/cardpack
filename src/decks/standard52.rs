@@ -90,7 +90,7 @@ impl Standard52 {
 
 impl Decked<Standard52, Standard52> for Standard52 {
     fn blank() -> Card<Standard52, Standard52> {
-        todo!()
+        Card::<Standard52, Standard52>::default()
     }
 
     fn pack(&self) -> Pile<Standard52, Standard52> {

@@ -30,7 +30,7 @@ impl Euchre24 {
 
 impl Decked<Euchre24, Standard52> for Euchre24 {
     fn blank() -> Card<Euchre24, Standard52> {
-        todo!()
+        Card::<Euchre24, Standard52>::default()
     }
 
     fn pack(&self) -> Pile<Euchre24, Standard52> {

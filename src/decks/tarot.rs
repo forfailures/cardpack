@@ -151,7 +151,7 @@ impl Decked<Tarot, Tarot> for Tarot {
     }
 
     fn blank() -> Card<Tarot, Tarot> {
-        todo!()
+        Card::<Tarot, Tarot>::default()
     }
 
     fn pack(&self) -> Pile<Tarot, Tarot> {

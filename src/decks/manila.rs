@@ -30,7 +30,7 @@ impl Manila {
 
 impl Decked<Manila, Standard52> for Manila {
     fn blank() -> Card<Manila, Standard52> {
-        todo!()
+        Card::<Manila, Standard52>::default()
     }
 
     fn pack(&self) -> Pile<Manila, Standard52> {
