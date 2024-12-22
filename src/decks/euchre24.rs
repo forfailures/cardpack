@@ -33,6 +33,10 @@ impl Decked<Euchre24, Standard52> for Euchre24 {
         Card::<Euchre24, Standard52>::default()
     }
 
+    fn guide() -> Option<String> {
+        None
+    }
+
     fn pack(&self) -> Pile<Euchre24, Standard52> {
         Euchre24::deck()
     }

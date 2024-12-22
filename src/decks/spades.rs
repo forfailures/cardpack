@@ -88,6 +88,10 @@ impl Decked<Modern, Modern> for Spades {
         Card::<Modern, Modern>::default()
     }
 
+    fn guide() -> Option<String> {
+        None
+    }
+
     fn pack(&self) -> Pile<Modern, Modern> {
         Spades::deck()
     }

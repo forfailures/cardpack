@@ -93,6 +93,10 @@ impl Decked<Standard52, Standard52> for Standard52 {
         Card::<Standard52, Standard52>::default()
     }
 
+    fn guide() -> Option<String> {
+        Some(Standard52::GUIDE.to_string())
+    }
+
     fn pack(&self) -> Pile<Standard52, Standard52> {
         Standard52::deck()
     }

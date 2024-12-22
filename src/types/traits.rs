@@ -83,6 +83,8 @@ pub trait Decked<
         }
     }
 
+    fn guide() -> Option<String>;
+
     #[must_use]
     fn name() -> String {
         let full_name = std::any::type_name::<Self>();

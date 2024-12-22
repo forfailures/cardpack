@@ -33,6 +33,10 @@ impl Decked<Manila, Standard52> for Manila {
         Card::<Manila, Standard52>::default()
     }
 
+    fn guide() -> Option<String> {
+        None
+    }
+
     fn pack(&self) -> Pile<Manila, Standard52> {
         Manila::deck()
     }

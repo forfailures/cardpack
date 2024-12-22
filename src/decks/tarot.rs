@@ -154,6 +154,10 @@ impl Decked<Tarot, Tarot> for Tarot {
         Card::<Tarot, Tarot>::default()
     }
 
+    fn guide() -> Option<String> {
+        None
+    }
+
     fn pack(&self) -> Pile<Tarot, Tarot> {
         Tarot::deck()
     }

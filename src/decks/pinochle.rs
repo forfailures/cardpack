@@ -53,6 +53,10 @@ impl Decked<Pinochle, Standard52> for Pinochle {
         Card::<Pinochle, Standard52>::default()
     }
 
+    fn guide() -> Option<String> {
+        None
+    }
+
     fn pack(&self) -> Pile<Pinochle, Standard52> {
         Pinochle::deck()
     }
