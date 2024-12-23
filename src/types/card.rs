@@ -78,6 +78,8 @@ where
         (suit.weight * 1000) + rank.weight
     }
 
+    /// Used to generate the `Card`'s binary signature, aka [Cactus Kev](https://suffe.cool/poker/evaluator.html)
+    /// numbers.
     #[must_use]
     pub fn get_ckc_number(&self) -> u32 {
         if self.is_blank() {

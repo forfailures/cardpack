@@ -83,6 +83,8 @@ where
         Rank::<RankType>::ranks_index(&Rank::<RankType>::ranks(), joiner)
     }
 
+    /// Used to generate the `Card`'s binary signature, aka [Cactus Kev](https://suffe.cool/poker/evaluator.html)
+    /// numbers.
     #[must_use]
     pub fn ckc_number(&self) -> u32 {
         self.get_bits() | self.get_shift8() | self.prime
