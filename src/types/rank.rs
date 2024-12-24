@@ -2,6 +2,7 @@ use crate::decks::modern::Modern;
 use crate::decks::pinochle::Pinochle;
 use crate::decks::skat::Skat;
 use crate::decks::standard52::Standard52;
+use crate::decks::tarot::Tarot;
 use crate::localization::{FluentName, Named};
 use crate::types::card_error::CardError;
 use crate::types::traits::Ranked;
@@ -9,7 +10,6 @@ use crate::types::utils::Bit;
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::str::FromStr;
-use crate::decks::tarot::Tarot;
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Rank<RankType>
@@ -241,7 +241,7 @@ impl<RankType: Ranked> From<char> for Rank<RankType> {
                 '🔔' => Rank::new(Tarot::JUDGEMENT),
                 '🌍' => Rank::new(Tarot::WORLD),
                 _ => Rank::new(FluentName::BLANK),
-            }
+            },
             _ => match c {
                 '2' => Rank::new(Standard52::TWO),
                 '3' => Rank::new(Standard52::THREE),

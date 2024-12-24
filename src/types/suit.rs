@@ -1,6 +1,7 @@
 use crate::decks::modern::Modern;
 use crate::decks::skat::Skat;
 use crate::decks::standard52::Standard52;
+use crate::decks::tarot::Tarot;
 use crate::localization::{FluentName, Named};
 use crate::types::traits::Suited;
 use crate::types::utils::Bit;
@@ -158,6 +159,7 @@ impl<SuitType: Suited> From<char> for Suit<SuitType> {
                 'D' | 'd' | '♢' | '♦' => Suit::<SuitType>::new(Standard52::DIAMONDS),
                 'C' | 'c' | '♧' | '♣' => Suit::<SuitType>::new(Standard52::CLUBS),
                 '🃟' | 'T' | 't' => Suit::new(Modern::TRUMP),
+                'M' | 'm' => Suit::new(Tarot::MAJOR_ARCANA),
                 _ => Suit::new(FluentName::BLANK),
             },
         }
