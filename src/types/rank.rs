@@ -9,6 +9,7 @@ use crate::types::utils::Bit;
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::str::FromStr;
+use crate::decks::tarot::Tarot;
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Rank<RankType>
@@ -202,6 +203,45 @@ impl<RankType: Ranked> From<char> for Rank<RankType> {
                 '9' => Rank::new(Pinochle::NINE),
                 _ => Rank::new(FluentName::BLANK),
             },
+            Tarot::DECK_NAME => match c {
+                '2' => Rank::new(Standard52::TWO),
+                '3' => Rank::new(Standard52::THREE),
+                '4' => Rank::new(Standard52::FOUR),
+                '5' => Rank::new(Standard52::FIVE),
+                '6' => Rank::new(Standard52::SIX),
+                '7' => Rank::new(Standard52::SEVEN),
+                '8' => Rank::new(Standard52::EIGHT),
+                '9' => Rank::new(Standard52::NINE),
+                'T' | 't' | '0' => Rank::new(Standard52::TEN),
+                'P' | 'p' => Rank::new(Tarot::PAGE),
+                'J' | 'j' => Rank::new(Tarot::KNIGHT),
+                'Q' | 'q' => Rank::new(Standard52::QUEEN),
+                'K' | 'k' => Rank::new(Standard52::KING),
+                'A' | 'a' => Rank::new(Standard52::ACE),
+                '🤡' => Rank::new(Tarot::FOOL),
+                '🧙' => Rank::new(Tarot::MAGICIAN),
+                '😇' => Rank::new(Tarot::PRIESTESS),
+                '👑' => Rank::new(Tarot::EMPRESS),
+                '🤴' => Rank::new(Tarot::EMPEROR),
+                '🧎' => Rank::new(Tarot::HIEROPHANT),
+                '💏' => Rank::new(Tarot::LOVERS),
+                '🏎' => Rank::new(Tarot::CHARIOT),
+                '💪' => Rank::new(Tarot::STRENGTH),
+                '💡' => Rank::new(Tarot::HERMIT),
+                '🍀' => Rank::new(Tarot::FORTUNE),
+                '⚖' => Rank::new(Tarot::JUSTICE),
+                '🙃' => Rank::new(Tarot::HANGED),
+                '💀' => Rank::new(Tarot::DEATH),
+                '🚭' => Rank::new(Tarot::TEMPERANCE),
+                '😈' => Rank::new(Tarot::DEVIL),
+                '🏢' => Rank::new(Tarot::TOWER),
+                '⭐' => Rank::new(Tarot::STAR),
+                '🌙' => Rank::new(Tarot::MOON),
+                '🌞' => Rank::new(Tarot::SUN),
+                '🔔' => Rank::new(Tarot::JUDGEMENT),
+                '🌍' => Rank::new(Tarot::WORLD),
+                _ => Rank::new(FluentName::BLANK),
+            }
             _ => match c {
                 '2' => Rank::new(Standard52::TWO),
                 '3' => Rank::new(Standard52::THREE),

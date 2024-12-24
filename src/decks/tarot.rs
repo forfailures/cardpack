@@ -6,6 +6,8 @@ use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked, Suited};
 use colored::Color;
 use std::collections::HashMap;
+use std::str::FromStr;
+use crate::types::card_error::CardError;
 
 /// The great thing about trying to get T
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -138,6 +140,14 @@ impl Tarot {
 
         pile
     }
+
+    /// # Errors
+    ///
+    /// Returns a `CardError` if the index is out of bounds.
+    #[allow(clippy::should_implement_trait)]
+    pub fn from_str(index: &str) -> Result<Pile<Tarot, Tarot>, CardError> {
+        Pile::<Tarot, Tarot>::from_str(index)
+    }
 }
 
 impl Decked<Tarot, Tarot> for Tarot {
@@ -263,5 +273,15 @@ mod decks__tarot__tests {
         shuffled.sort_in_place();
 
         assert_eq!(deck.to_string(), shuffled.to_string());
+    }
+
+    #[test]
+    #[ignore]
+    fn to_string__from_str() {
+        let deck = Tarot::deck();
+        let shuffled = deck.shuffle_default().to_string();
+        let parsed = Tarot::from_str(&shuffled).unwrap();
+
+        assert!(deck.same(&parsed));
     }
 }
