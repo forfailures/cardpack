@@ -55,9 +55,10 @@ macro_rules! standard52 {
 ///     }
 /// }
 ///
-/// let deck: Pile::<Standard52, Standard52> = Standard52::deck();
+/// let deck: Pile<Standard52, Standard52> = Standard52::deck();
 ///
 /// assert_eq!(deck, pile);
+/// println!("{}", deck.to_color_symbol_string());
 /// ```
 ///
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]

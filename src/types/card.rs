@@ -20,6 +20,30 @@ use std::str::FromStr;
 /// For example, a standard 52 card deck would use the [`Standard52`](crate::decks::standard52::Standard52)
 /// _unit-like struct_.
 ///
+/// ```
+/// use cardpack::decks::standard52::Standard52;
+/// use cardpack::types::card::Card;
+/// use cardpack::types::rank::Rank;
+/// use cardpack::types::suit::Suit;
+///
+/// let rank = Rank::<Standard52>::new(Standard52::JACK);
+/// let suit = Suit::<Standard52>::new(Standard52::CLUBS);
+/// let card = Card::<Standard52, Standard52>::new(rank, suit);
+///
+/// assert_eq!(card.to_string(), "J♣");
+/// ```
+///
+/// Many of the decks have macros to make instantiating a single `Card` or a
+/// [`Pile`](crate::types::pile::Pile) of `Cards`:
+///
+/// ```
+/// use cardpack::s52card;
+/// use cardpack::decks::standard52::Standard52;
+/// use cardpack::types::card::Card;
+/// use std::str::FromStr;
+///
+/// assert_eq!(s52card!("JC").to_string(), "J♣");
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub struct Card<RankType, SuitType>
 where
