@@ -8,6 +8,18 @@ use std::fmt::Display;
 use colored::Colorize;
 use std::str::FromStr;
 
+/// `Card` is the fundamental struct of this library, being an abstract representation of a playing
+/// card.
+///
+/// Each Card is made up of [unit-like struct](https://doc.rust-lang.org/book/ch05-01-defining-structs.html#unit-like-structs-without-any-fields)
+/// that is tied to a [`Rank`](crate::types::rank::Rank)
+/// that implements the [`Ranked`](crate::types::traits::Ranked) trait, and a [`Suit`](crate::types::suit::Suit)
+/// that implements the [`Suited`](crate::types::traits::Suited) trait.
+///
+/// The goal of this structure is to allow for the flexibility in how decks of cards are represented.
+/// For example, a standard 52 card deck would use the [`Standard52`](crate::decks::standard52::Standard52)
+/// _unit-like struct_.
+///
 #[derive(Debug, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub struct Card<RankType, SuitType>
 where

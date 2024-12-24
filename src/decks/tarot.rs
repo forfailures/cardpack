@@ -267,13 +267,13 @@ impl Suited for Tarot {
 #[allow(non_snake_case)]
 mod decks__tarot__tests {
     use super::*;
-    use rstest::rstest;
+    // use rstest::rstest;
 
     #[test]
     fn macro__tarot_card() {
-        let _card = tarot_card!("🤡M");
+        let card = tarot_card!("🤡M");
 
-        // assert_eq!(card.to_string(), "🤡M");
+        assert_eq!(card.to_string(), "🤡M");
     }
 
     #[test]
