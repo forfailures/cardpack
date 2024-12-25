@@ -4,7 +4,6 @@ use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked};
 use std::str::FromStr;
-use crate::prelude::Suited;
 
 /// [Manila, aka Six Plus aka Short-deck](https://en.wikipedia.org/wiki/Six-plus_hold_%27em)
 /// is a version of Texas Hold'em where the card Ranks of 2 through 5
