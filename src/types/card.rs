@@ -19,7 +19,7 @@ use std::str::FromStr;
 /// - `rank`: A [`Rank`] that implements the [`Ranked`] trait.
 ///
 /// Each card's suit and rank is turned to a deck [unit-like struct](https://doc.rust-lang.org/book/ch05-01-defining-structs.html#unit-like-structs-without-any-fields)
-/// that determines the card's 
+/// that determines the card's
 ///
 /// The goal of this structure is to allow for the flexibility in how decks of cards are represented.
 /// For example, a standard 52 card deck would use the [`Standard52`](crate::decks::standard52::Standard52)
