@@ -35,8 +35,11 @@ use std::str::FromStr;
 /// ```
 /// use cardpack::prelude::*;
 ///
-/// assert_eq!(s52card!("JC").to_string(), "J♣");
-/// assert_eq!(standard52!("KS QC").unwrap().to_string(), "K♠ Q♣");
+/// let card = s52card!("JC");
+/// assert_eq!(card.to_string(), "J♣");
+///
+/// let pile = standard52!("KS QC");
+/// assert_eq!(pile.unwrap().to_string(), "K♠ Q♣");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub struct Card<RankType, SuitType>
@@ -57,6 +60,25 @@ where
     RankType: Ranked + Clone,
     SuitType: Suited + Clone,
 {
+    /// Creates a new `Card` with a [`Rank`] and [`Suit`]. The `weight` field is determined by
+    /// `(suit.weight * 1000) + rank.weight`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// let expected: Card<Standard52, Standard52> = Card {
+    ///     weight: 4012,
+    ///     index: "AS".to_string(),
+    ///     rank: Rank::<Standard52>::from('A'),
+    ///     suit: Suit::<Standard52>::from('S'),
+    /// };
+    ///
+    /// let ace = Rank::<Standard52>::from('A');
+    /// let spades = Suit::<Standard52>::from('S');
+    /// let card: Card<Standard52, Standard52> = Card::new(ace, spades);
+    ///
+    /// assert_eq!(card, expected);
+    /// ```
     #[must_use]
     pub fn new(rank: Rank<RankType>, suit: Suit<SuitType>) -> Self {
         Self {

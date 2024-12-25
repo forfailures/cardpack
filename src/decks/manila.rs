@@ -10,7 +10,7 @@ use std::str::FromStr;
 /// are removed from the deck.
 ///
 /// This means that they are made up of the [`Standard52`]
-/// implementation of the [`Suited`]trait that's declared in the
+/// implementation of the [`Suited`](crate::types::traits::Suited) trait that's declared in the
 /// [`Standard52`] deck and the `Manila` implementation of the
 /// [`Ranked`] trait.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
