@@ -21,10 +21,7 @@ use std::str::FromStr;
 /// _unit-like struct_.
 ///
 /// ```
-/// use cardpack::decks::standard52::Standard52;
-/// use cardpack::types::card::Card;
-/// use cardpack::types::rank::Rank;
-/// use cardpack::types::suit::Suit;
+/// use cardpack::prelude::*;
 ///
 /// let rank = Rank::<Standard52>::new(Standard52::JACK);
 /// let suit = Suit::<Standard52>::new(Standard52::CLUBS);
@@ -37,12 +34,10 @@ use std::str::FromStr;
 /// [`Pile`](crate::types::pile::Pile) of `Cards`:
 ///
 /// ```
-/// use cardpack::s52card;
-/// use cardpack::decks::standard52::Standard52;
-/// use cardpack::types::card::Card;
-/// use std::str::FromStr;
+/// use cardpack::prelude::*;
 ///
 /// assert_eq!(s52card!("JC").to_string(), "J♣");
+/// assert_eq!(standard52!("KS QC").unwrap().to_string(), "K♠ Q♣");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub struct Card<RankType, SuitType>
