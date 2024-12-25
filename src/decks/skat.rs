@@ -71,10 +71,6 @@ impl Decked<Skat, Skat> for Skat {
     fn guide() -> Option<String> {
         Some(Skat::GUIDE.to_string())
     }
-
-    fn pack(&self) -> Pile<Skat, Skat> {
-        Skat::deck()
-    }
 }
 
 impl Ranked for Skat {

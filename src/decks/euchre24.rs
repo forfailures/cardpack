@@ -9,10 +9,10 @@ use std::str::FromStr;
 /// [Euchre](https://en.wikipedia.org/wiki/Euchre) with
 /// `A K Q J T 9` ranks.
 ///
-/// This means that they are made up of the [Standard52]
-/// implementation of the [Suited] trait that's declared in the
-/// [Standard52] deck and the [Euchre24] implementation of the
-/// [Ranked] trait.
+/// This means that they are made up of the [`Standard52`]
+/// implementation of the [`Suited`](crate::types::traits::Suited) trait that's declared in the
+/// [`Standard52`] deck and the `Euchre24` implementation of the
+/// [`Ranked`] trait.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Euchre24 {}
 
@@ -35,10 +35,6 @@ impl Decked<Euchre24, Standard52> for Euchre24 {
 
     fn guide() -> Option<String> {
         None
-    }
-
-    fn pack(&self) -> Pile<Euchre24, Standard52> {
-        Euchre24::deck()
     }
 }
 

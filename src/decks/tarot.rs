@@ -184,10 +184,6 @@ impl Decked<Tarot, Tarot> for Tarot {
     fn guide() -> Option<String> {
         None
     }
-
-    fn pack(&self) -> Pile<Tarot, Tarot> {
-        Tarot::deck()
-    }
 }
 
 impl Ranked for Tarot {

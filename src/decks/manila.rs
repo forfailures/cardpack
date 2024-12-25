@@ -4,15 +4,16 @@ use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::traits::{Decked, Ranked};
 use std::str::FromStr;
+use crate::prelude::Suited;
 
 /// [Manila, aka Six Plus aka Short-deck](https://en.wikipedia.org/wiki/Six-plus_hold_%27em)
 /// is a version of Texas Hold'em where the card Ranks of 2 through 5
 /// are removed from the deck.
 ///
-/// This means that they are made up of the [Standard52]
-/// implementation of the [Suited] trait that's declared in the
-/// [Standard52] deck and the [Manila] implementation of the
-/// [Ranked] trait.
+/// This means that they are made up of the [`Standard52`]
+/// implementation of the [`Suited`]trait that's declared in the
+/// [`Standard52`] deck and the `Manila` implementation of the
+/// [`Ranked`] trait.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Manila {}
 
@@ -35,10 +36,6 @@ impl Decked<Manila, Standard52> for Manila {
 
     fn guide() -> Option<String> {
         None
-    }
-
-    fn pack(&self) -> Pile<Manila, Standard52> {
-        Manila::deck()
     }
 }
 

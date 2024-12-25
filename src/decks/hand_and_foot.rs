@@ -32,10 +32,6 @@ impl Decked<Modern, Modern> for HandAndFoot {
     fn guide() -> Option<String> {
         None
     }
-
-    fn pack(&self) -> Pile<Modern, Modern> {
-        HandAndFoot::deck()
-    }
 }
 
 #[cfg(test)]

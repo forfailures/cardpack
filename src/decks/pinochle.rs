@@ -56,10 +56,6 @@ impl Decked<Pinochle, Standard52> for Pinochle {
     fn guide() -> Option<String> {
         None
     }
-
-    fn pack(&self) -> Pile<Pinochle, Standard52> {
-        Pinochle::deck()
-    }
 }
 
 impl Ranked for Pinochle {

@@ -91,10 +91,6 @@ impl Decked<Modern, Modern> for Spades {
     fn guide() -> Option<String> {
         None
     }
-
-    fn pack(&self) -> Pile<Modern, Modern> {
-        Spades::deck()
-    }
 }
 
 #[cfg(test)]

@@ -90,10 +90,6 @@ impl Decked<Modern, Modern> for Modern {
     fn guide() -> Option<String> {
         None
     }
-
-    fn pack(&self) -> Pile<Modern, Modern> {
-        Modern::deck()
-    }
 }
 
 impl Ranked for Modern {

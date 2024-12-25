@@ -153,10 +153,6 @@ impl Decked<Modern, Modern> for Canasta {
     fn guide() -> Option<String> {
         None
     }
-
-    fn pack(&self) -> Pile<Modern, Modern> {
-        Canasta::deck()
-    }
 }
 
 #[cfg(test)]

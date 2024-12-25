@@ -27,8 +27,8 @@ macro_rules! standard52 {
 /// [unit-like struct](https://doc.rust-lang.org/book/ch05-01-defining-structs.html#unit-like-structs-without-any-fields)
 /// that represents a deck made up of with French suited playing cards used for Bridge, Blackjack,
 /// and most variations of Poker. Many other decks will use its implementation of the
-/// [`Suited`](crate::types::traits::Suited) trait while creating their own variation of
-/// [`Ranked`](crate::types::traits::Ranked).
+/// [`Suited`] trait while creating their own variation of
+/// [`Ranked`].
 ///
 /// Here's how we instantiate a `Standard52` deck from its base structs and traits. These are
 /// used to create a `Pile` of `Cards`. It is functionally same as [Decked's](crate::types::traits::Decked) `deck()`
@@ -129,10 +129,6 @@ impl Decked<Standard52, Standard52> for Standard52 {
 
     fn guide() -> Option<String> {
         Some(Standard52::GUIDE.to_string())
-    }
-
-    fn pack(&self) -> Pile<Standard52, Standard52> {
-        Standard52::deck()
     }
 }
 
