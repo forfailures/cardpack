@@ -42,6 +42,8 @@ macro_rules! standard52 {
 /// use cardpack::types::suit::Suit;
 /// use cardpack::types::traits::Decked;
 ///
+/// // use cardpack::prelude::*; also works
+///
 /// let ranks = Rank::<Standard52>::ranks();
 /// let suits = Suit::<Standard52>::suits();
 ///
@@ -58,7 +60,6 @@ macro_rules! standard52 {
 /// let deck: Pile<Standard52, Standard52> = Standard52::deck();
 ///
 /// assert_eq!(deck, pile);
-/// println!("{}", deck.to_color_symbol_string());
 /// ```
 ///
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
