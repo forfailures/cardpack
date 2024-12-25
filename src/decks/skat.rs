@@ -68,8 +68,8 @@ impl Decked<Skat, Skat> for Skat {
         Card::<Skat, Skat>::default()
     }
 
-    fn pack(&self) -> Pile<Skat, Skat> {
-        Skat::deck()
+    fn guide() -> Option<String> {
+        Some(Skat::GUIDE.to_string())
     }
 }
 

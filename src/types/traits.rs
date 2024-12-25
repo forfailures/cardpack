@@ -83,14 +83,13 @@ pub trait Decked<
         }
     }
 
+    fn guide() -> Option<String>;
+
     #[must_use]
     fn name() -> String {
         let full_name = std::any::type_name::<Self>();
         full_name.split("::").last().unwrap().to_string()
     }
-
-    /// Returns the pack of cards that this `Pile` is from.
-    fn pack(&self) -> Pile<RankType, SuitType>;
 }
 
 pub trait Ranked {

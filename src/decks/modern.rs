@@ -87,8 +87,8 @@ impl Decked<Modern, Modern> for Modern {
         Card::<Modern, Modern>::default()
     }
 
-    fn pack(&self) -> Pile<Modern, Modern> {
-        Modern::deck()
+    fn guide() -> Option<String> {
+        None
     }
 }
 

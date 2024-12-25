@@ -1,11 +1,30 @@
 use crate::decks::standard52::Standard52;
 use crate::types::card::Card;
+use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
 use crate::types::rank::Rank;
 use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked, Suited};
 use colored::Color;
 use std::collections::HashMap;
+use std::str::FromStr;
+
+// #[macro_export] These macros doesn't work yet.
+#[allow(unused_macros, clippy::pedantic)]
+macro_rules! tarot_card {
+    ($card_str:expr) => {
+        Card::<Tarot, Tarot>::from_str($card_str)
+            .unwrap_or_else(|_| Card::<Tarot, Tarot>::default())
+    };
+}
+
+// #[macro_export]
+#[allow(unused_macros, clippy::pedantic)]
+macro_rules! tarot {
+    ($card_str:expr) => {
+        Pile::<Tarot, Tarot>::from_str($card_str)
+    };
+}
 
 /// The great thing about trying to get T
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -138,6 +157,14 @@ impl Tarot {
 
         pile
     }
+
+    /// # Errors
+    ///
+    /// Returns a `CardError` if the index is out of bounds.
+    #[allow(clippy::should_implement_trait)]
+    pub fn from_str(index: &str) -> Result<Pile<Tarot, Tarot>, CardError> {
+        Pile::<Tarot, Tarot>::from_str(index)
+    }
 }
 
 impl Decked<Tarot, Tarot> for Tarot {
@@ -154,8 +181,8 @@ impl Decked<Tarot, Tarot> for Tarot {
         Card::<Tarot, Tarot>::default()
     }
 
-    fn pack(&self) -> Pile<Tarot, Tarot> {
-        Tarot::deck()
+    fn guide() -> Option<String> {
+        None
     }
 }
 
@@ -206,6 +233,7 @@ impl Suited for Tarot {
     fn suit_chars() -> Vec<char> {
         vec![
             Tarot::MAJOR_ARCANA_SYMBOL,
+            'M',
             'm',
             Tarot::WANDS_SYMBOL,
             'W',
@@ -235,6 +263,14 @@ impl Suited for Tarot {
 #[allow(non_snake_case)]
 mod decks__tarot__tests {
     use super::*;
+    // use rstest::rstest;
+
+    #[test]
+    fn macro__tarot_card() {
+        let card = tarot_card!("🤡M");
+
+        assert_eq!(card.to_string(), "🤡M");
+    }
 
     #[test]
     fn deck() {
@@ -259,5 +295,40 @@ mod decks__tarot__tests {
         shuffled.sort_in_place();
 
         assert_eq!(deck.to_string(), shuffled.to_string());
+    }
+
+    // #[rstest]
+    // #[ignore]
+    // #[case("🤡M")]
+    // #[case("🧙M")]
+    // #[case("😇M")]
+    // #[case("👑M")]
+    // #[case("🤴M")]
+    // #[case("🧎M")]
+    // #[case("💏M")]
+    // // #[case("🚗M")]
+    // fn card(#[case] s: &str) {
+    //     let s = s.trim();
+    //     if let Some(c) = s.chars().next() {
+    //         let rank = Rank::<Tarot>::from(c);
+    //         println!("{:?}", rank);
+    //         if let Some(d) = s.chars().last() {
+    //             let suit = Suit::<Tarot>::from(d);
+    //             println!("{:?}", suit);
+    //         }
+    //     }
+    //     let card = tarot_card!(s);
+    //     println!("{:?}", card);
+    //     println!();
+    // }
+
+    #[test]
+    #[ignore]
+    fn to_string__from_str() {
+        let deck = Tarot::deck();
+        let shuffled = deck.shuffle_default().to_string();
+        let parsed = Tarot::from_str(&shuffled).unwrap();
+
+        assert!(deck.same(&parsed));
     }
 }

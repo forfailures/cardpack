@@ -150,8 +150,8 @@ impl Decked<Modern, Modern> for Canasta {
         Card::<Modern, Modern>::default()
     }
 
-    fn pack(&self) -> Pile<Modern, Modern> {
-        Canasta::deck()
+    fn guide() -> Option<String> {
+        None
     }
 }
 

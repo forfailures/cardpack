@@ -23,11 +23,45 @@ macro_rules! standard52 {
     };
 }
 
-/// The [Standard52](https://en.wikipedia.org/wiki/Standard_52-card_deck)
-/// deck with French suited playing cards is
-/// the one used for Bridge, Blackjack, and most variations of
-/// Poker. Many other decks will use its implementation of the
-/// [Suited] trait while creating their own variation of [Ranked].
+/// [Standard52](https://en.wikipedia.org/wiki/Standard_52-card_deck) is a
+/// [unit-like struct](https://doc.rust-lang.org/book/ch05-01-defining-structs.html#unit-like-structs-without-any-fields)
+/// that represents a deck made up of with French suited playing cards used for Bridge, Blackjack,
+/// and most variations of Poker. Many other decks will use its implementation of the
+/// [`Suited`] trait while creating their own variation of
+/// [`Ranked`].
+///
+/// Here's how we instantiate a `Standard52` deck from its base structs and traits. These are
+/// used to create a `Pile` of `Cards`. It is functionally same as [Decked's](crate::types::traits::Decked) `deck()`
+/// trait method.
+///
+/// ```
+/// use cardpack::decks::standard52::Standard52;
+/// use cardpack::types::card::Card;
+/// use cardpack::types::pile::Pile;
+/// use cardpack::types::rank::Rank;
+/// use cardpack::types::suit::Suit;
+/// use cardpack::types::traits::Decked;
+///
+/// // use cardpack::prelude::*; also works
+///
+/// let ranks = Rank::<Standard52>::ranks();
+/// let suits = Suit::<Standard52>::suits();
+///
+/// let mut pile = Pile::<Standard52, Standard52>::new(Vec::new());
+///
+/// for suit in &suits {
+///     for rank in &ranks {
+///         let card = Card::<Standard52, Standard52>::new(rank.clone(), suit.clone());
+///         assert!(!card.is_blank());
+///         pile.push(card);
+///     }
+/// }
+///
+/// let deck: Pile<Standard52, Standard52> = Standard52::deck();
+///
+/// assert_eq!(deck, pile);
+/// ```
+///
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Standard52 {}
 
@@ -93,8 +127,8 @@ impl Decked<Standard52, Standard52> for Standard52 {
         Card::<Standard52, Standard52>::default()
     }
 
-    fn pack(&self) -> Pile<Standard52, Standard52> {
-        Standard52::deck()
+    fn guide() -> Option<String> {
+        Some(Standard52::GUIDE.to_string())
     }
 }
 
@@ -241,7 +275,9 @@ mod decks__standard52__tests {
 
     #[test]
     fn card__get_ckc_number__blank() {
-        assert_eq!(0, s52card!("__").get_ckc_number());
+        let blank = s52card!("__");
+        assert!(blank.is_blank());
+        assert_eq!(0, blank.get_ckc_number());
     }
 
     #[test]

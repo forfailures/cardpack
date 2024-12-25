@@ -9,10 +9,10 @@ use std::str::FromStr;
 /// is a version of Texas Hold'em where the card Ranks of 2 through 5
 /// are removed from the deck.
 ///
-/// This means that they are made up of the [Standard52]
-/// implementation of the [Suited] trait that's declared in the
-/// [Standard52] deck and the [Manila] implementation of the
-/// [Ranked] trait.
+/// This means that they are made up of the [`Standard52`]
+/// implementation of the [`Suited`](crate::types::traits::Suited) trait that's declared in the
+/// [`Standard52`] deck and the `Manila` implementation of the
+/// [`Ranked`] trait.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Manila {}
 
@@ -33,8 +33,8 @@ impl Decked<Manila, Standard52> for Manila {
         Card::<Manila, Standard52>::default()
     }
 
-    fn pack(&self) -> Pile<Manila, Standard52> {
-        Manila::deck()
+    fn guide() -> Option<String> {
+        None
     }
 }
 
