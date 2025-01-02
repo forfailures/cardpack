@@ -7,6 +7,7 @@ use std::fmt::Display;
 
 use colored::Colorize;
 use std::str::FromStr;
+use fluent_templates::LanguageIdentifier;
 
 /// `Card` is the fundamental struct of this library, being an abstract representation of a playing
 /// card.
@@ -154,6 +155,11 @@ where
     #[must_use]
     pub fn is_blank(&self) -> bool {
         self.rank.name.is_blank() || self.suit.name.is_blank()
+    }
+
+    #[must_use]
+    pub fn long_name(&self, lid: &LanguageIdentifier) -> String {
+        format!("{} of {}", self.rank.name.long(lid), self.suit.name.long(lid))
     }
 
     #[must_use]
