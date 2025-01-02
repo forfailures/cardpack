@@ -22,15 +22,15 @@ use std::str::FromStr;
 /// that determines the card's
 ///
 /// The goal of this structure is to allow for the flexibility in how decks of cards are represented.
-/// For example, a standard 52 card deck would use the [`Standard52`](crate::decks::standard52::Standard52)
+/// For example, a standard 52 card deck would use the [`French`](crate::decks::french::French)
 /// _unit-like struct_.
 ///
 /// ```
 /// use cardpack::prelude::*;
 ///
-/// let rank = Rank::<Standard52>::new(Standard52::JACK);
-/// let suit = Suit::<Standard52>::new(Standard52::CLUBS);
-/// let card = Card::<Standard52, Standard52>::new(rank, suit);
+/// let rank = Rank::<French>::new(French::JACK);
+/// let suit = Suit::<French>::new(French::CLUBS);
+/// let card = Card::<French, French>::new(rank, suit);
 ///
 /// assert_eq!(card.to_string(), "J♣");
 /// ```
@@ -41,10 +41,10 @@ use std::str::FromStr;
 /// ```
 /// use cardpack::prelude::*;
 ///
-/// let card = s52card!("JC");
+/// let card = card!("JC");
 /// assert_eq!(card.to_string(), "J♣");
 ///
-/// let pile = standard52!("KS QC");
+/// let pile = cards!("KS QC");
 /// assert_eq!(pile.unwrap().to_string(), "K♠ Q♣");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
@@ -72,16 +72,16 @@ where
     /// ```
     /// use cardpack::prelude::*;
     ///
-    /// let expected: Card<Standard52, Standard52> = Card {
+    /// let expected: Card<French, French> = Card {
     ///     weight: 4012,
     ///     index: "AS".to_string(),
-    ///     rank: Rank::<Standard52>::from('A'),
-    ///     suit: Suit::<Standard52>::from('S'),
+    ///     rank: Rank::<French>::from('A'),
+    ///     suit: Suit::<French>::from('S'),
     /// };
     ///
-    /// let ace = Rank::<Standard52>::from('A');
-    /// let spades = Suit::<Standard52>::from('S');
-    /// let card: Card<Standard52, Standard52> = Card::new(ace, spades);
+    /// let ace = Rank::<French>::from('A');
+    /// let spades = Suit::<French>::from('S');
+    /// let card: Card<French, French> = Card::new(ace, spades);
     ///
     /// assert_eq!(card, expected);
     /// ```
@@ -114,10 +114,10 @@ where
     ///
     /// ```rust
     /// use std::str::FromStr;
-    /// use cardpack::decks::standard52::Standard52;
+    /// use cardpack::decks::french::French;
     /// use cardpack::types::card::Card;
     ///
-    /// let jack_of_diamonds = Card::<Standard52, Standard52>::from_str("jd").unwrap();
+    /// let jack_of_diamonds = Card::<French, French>::from_str("jd").unwrap();
     ///
     /// assert_eq!(jack_of_diamonds.index, "JD");
     /// assert_eq!(jack_of_diamonds.to_string(), "J♦");
@@ -239,22 +239,22 @@ impl<RankType: Ranked + Clone, SuitType: Suited + Clone> FromStr for Card<RankTy
 #[allow(non_snake_case)]
 mod types__card__tests {
     use super::*;
-    use crate::decks::standard52::Standard52;
+    use crate::card;
+    use crate::decks::french::French;
     use crate::localization::FluentName;
-    use crate::s52card;
 
     #[test]
     fn new() {
-        let expected: Card<Standard52, Standard52> = Card {
+        let expected: Card<French, French> = Card {
             weight: 4012,
             index: "AS".to_string(),
-            rank: Rank::<Standard52>::from('A'),
-            suit: Suit::<Standard52>::from('S'),
+            rank: Rank::<French>::from('A'),
+            suit: Suit::<French>::from('S'),
         };
 
-        let ace = Rank::<Standard52>::from('A');
-        let spades = Suit::<Standard52>::from('S');
-        let card: Card<Standard52, Standard52> = Card::new(ace, spades);
+        let ace = Rank::<French>::from('A');
+        let spades = Suit::<French>::from('S');
+        let card: Card<French, French> = Card::new(ace, spades);
 
         assert_eq!(card, expected);
     }
@@ -262,13 +262,13 @@ mod types__card__tests {
     #[test]
     fn get_index_suit_char() {
         assert_eq!(
-            Card::<Standard52, Standard52>::from_str("AS")
+            Card::<French, French>::from_str("AS")
                 .unwrap()
                 .get_index_suit_char(),
             'S'
         );
         assert_eq!(
-            Card::<Standard52, Standard52>::from_str("__")
+            Card::<French, French>::from_str("__")
                 .unwrap()
                 .get_index_suit_char(),
             '_'
@@ -280,10 +280,10 @@ mod types__card__tests {
     /// coming first.
     #[test]
     fn test_sort_from_weight() {
-        let ace_of_spades = s52card!("AS");
-        let ace_of_hearts = s52card!("AH");
-        let ace_of_diamonds = s52card!("AD");
-        let ace_of_clubs = s52card!("AC");
+        let ace_of_spades = card!("AS");
+        let ace_of_hearts = card!("AH");
+        let ace_of_diamonds = card!("AD");
+        let ace_of_clubs = card!("AC");
 
         let mut cards = vec![
             ace_of_clubs.clone(),
@@ -302,32 +302,32 @@ mod types__card__tests {
 
     #[test]
     fn to_color_symbol_string__default() {
-        let card = s52card!("AS");
+        let card = card!("AS");
 
         assert_eq!("A♠".to_string(), card.to_color_symbol_string());
     }
 
     #[test]
     fn to_color_symbol_string() {
-        let card = s52card!("AH");
+        let card = card!("AH");
 
         assert_eq!("A♥".red().to_string(), card.to_color_symbol_string());
     }
 
     #[test]
     fn display() {
-        let card = Card::<Standard52, Standard52>::from_str("KD").unwrap();
+        let card = Card::<French, French>::from_str("KD").unwrap();
 
         assert_eq!("K♦", format!("{card}"));
     }
 
     #[test]
     fn from_str() {
-        let ace = Rank::<Standard52>::from('A');
-        let spades = Suit::<Standard52>::from('S');
-        let expected_card: Card<Standard52, Standard52> = Card::new(ace, spades);
+        let ace = Rank::<French>::from('A');
+        let spades = Suit::<French>::from('S');
+        let expected_card: Card<French, French> = Card::new(ace, spades);
 
-        let card = s52card!("AS");
+        let card = card!("AS");
 
         assert_eq!(card, expected_card);
         assert!(!card.is_blank());
@@ -335,17 +335,17 @@ mod types__card__tests {
 
     #[test]
     fn from_str_blank() {
-        let card = s52card!("BW");
+        let card = card!("BW");
 
         assert!(card.is_blank());
     }
 
     #[test]
     fn from_str__symbol() {
-        let card = s52card!("AS");
+        let card = card!("AS");
 
         assert_eq!(card.index, "AS");
-        assert_eq!(card.rank.name, FluentName::new(Standard52::ACE));
-        assert_eq!(card.suit.name, FluentName::new(Standard52::SPADES));
+        assert_eq!(card.rank.name, FluentName::new(French::ACE));
+        assert_eq!(card.suit.name, FluentName::new(French::SPADES));
     }
 }

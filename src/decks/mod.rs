@@ -1,10 +1,10 @@
 pub mod canasta;
 pub mod euchre24;
+pub mod french;
 pub mod hand_and_foot;
 pub mod manila;
 pub mod modern;
 pub mod pinochle;
 pub mod skat;
 pub mod spades;
-pub mod standard52;
 pub mod tarot;

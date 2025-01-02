@@ -1,5 +1,5 @@
+use crate::decks::french::French;
 use crate::decks::modern::Modern;
-use crate::decks::standard52::Standard52;
 use crate::modern_card;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
@@ -70,12 +70,12 @@ impl Decked<Modern, Modern> for Spades {
         let mut deck = Modern::deck();
 
         let two_clubs = Card::new(
-            Rank::<Modern>::new(Standard52::TWO),
-            Suit::<Modern>::new(Standard52::CLUBS),
+            Rank::<Modern>::new(French::TWO),
+            Suit::<Modern>::new(French::CLUBS),
         );
         let two_diamonds = Card::new(
-            Rank::<Modern>::new(Standard52::TWO),
-            Suit::<Modern>::new(Standard52::DIAMONDS),
+            Rank::<Modern>::new(French::TWO),
+            Suit::<Modern>::new(French::DIAMONDS),
         );
 
         deck.remove_card(&two_clubs).unwrap();

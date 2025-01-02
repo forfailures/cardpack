@@ -1,6 +1,6 @@
+use crate::decks::french::French;
 use crate::decks::modern::Modern;
 use crate::decks::skat::Skat;
-use crate::decks::standard52::Standard52;
 use crate::decks::tarot::Tarot;
 use crate::localization::{FluentName, Named};
 use crate::types::traits::Suited;
@@ -154,10 +154,10 @@ impl<SuitType: Suited> From<char> for Suit<SuitType> {
                 _ => Suit::<SuitType>::new(FluentName::BLANK),
             },
             _ => match c {
-                'S' | 's' | '♤' | '♠' => Suit::<SuitType>::new(Standard52::SPADES),
-                'H' | 'h' | '♡' | '♥' => Suit::<SuitType>::new(Standard52::HEARTS),
-                'D' | 'd' | '♢' | '♦' => Suit::<SuitType>::new(Standard52::DIAMONDS),
-                'C' | 'c' | '♧' | '♣' => Suit::<SuitType>::new(Standard52::CLUBS),
+                'S' | 's' | '♤' | '♠' => Suit::<SuitType>::new(French::SPADES),
+                'H' | 'h' | '♡' | '♥' => Suit::<SuitType>::new(French::HEARTS),
+                'D' | 'd' | '♢' | '♦' => Suit::<SuitType>::new(French::DIAMONDS),
+                'C' | 'c' | '♧' | '♣' => Suit::<SuitType>::new(French::CLUBS),
                 '🃟' | 'T' | 't' => Suit::new(Modern::TRUMP),
                 'M' | 'm' => Suit::new(Tarot::MAJOR_ARCANA),
                 _ => Suit::new(FluentName::BLANK),
@@ -174,7 +174,7 @@ mod types__suit__tests {
 
     #[test]
     fn from_str__symbol() {
-        let suit = Suit::<Standard52>::from('♠');
+        let suit = Suit::<French>::from('♠');
 
         assert_eq!(suit.symbol(), "♠");
     }
@@ -183,30 +183,30 @@ mod types__suit__tests {
     fn ckc_number() {
         assert_eq!(
             0b0000_0000_0000_0000_1000_0000_0000_0000,
-            Suit::<Standard52>::from('♠').ckc_number()
+            Suit::<French>::from('♠').ckc_number()
         );
         assert_eq!(
             0b0000_0000_0000_0000_1000_0000_0000_0000,
-            Suit::<Standard52>::from('S').ckc_number()
+            Suit::<French>::from('S').ckc_number()
         );
         assert_eq!(
             0b0000_0000_0000_0000_0100_0000_0000_0000,
-            Suit::<Standard52>::from('H').ckc_number()
+            Suit::<French>::from('H').ckc_number()
         );
         assert_eq!(
             0b0000_0000_0000_0000_0010_0000_0000_0000,
-            Suit::<Standard52>::from('D').ckc_number()
+            Suit::<French>::from('D').ckc_number()
         );
         assert_eq!(
             0b0000_0000_0000_0000_0001_0000_0000_0000,
-            Suit::<Standard52>::from('C').ckc_number()
+            Suit::<French>::from('C').ckc_number()
         );
-        assert_eq!(0, Suit::<Standard52>::from('_').ckc_number());
+        assert_eq!(0, Suit::<French>::from('_').ckc_number());
     }
 
     #[test]
     fn symbol() {
-        let suit = Suit::<Standard52>::new(Standard52::SPADES);
+        let suit = Suit::<French>::new(French::SPADES);
 
         assert_eq!(suit.symbol(), "♠");
         assert_eq!(suit.to_string(), suit.symbol())
@@ -214,47 +214,44 @@ mod types__suit__tests {
 
     #[test]
     fn symbol_blank() {
-        let suit = Suit::<Standard52>::from('_');
+        let suit = Suit::<French>::from('_');
 
         assert_eq!(suit.symbol(), "_");
         assert_eq!(suit.to_string(), suit.symbol())
     }
 
     #[rstest]
-    #[case('♠', Standard52::SPADES)]
-    #[case('♤', Standard52::SPADES)]
-    #[case('S', Standard52::SPADES)]
-    #[case('s', Standard52::SPADES)]
-    #[case('♥', Standard52::HEARTS)]
-    #[case('♡', Standard52::HEARTS)]
-    #[case('H', Standard52::HEARTS)]
-    #[case('h', Standard52::HEARTS)]
-    #[case('♦', Standard52::DIAMONDS)]
-    #[case('♢', Standard52::DIAMONDS)]
-    #[case('D', Standard52::DIAMONDS)]
-    #[case('d', Standard52::DIAMONDS)]
-    #[case('♣', Standard52::CLUBS)]
-    #[case('♧', Standard52::CLUBS)]
-    #[case('C', Standard52::CLUBS)]
-    #[case('c', Standard52::CLUBS)]
+    #[case('♠', French::SPADES)]
+    #[case('♤', French::SPADES)]
+    #[case('S', French::SPADES)]
+    #[case('s', French::SPADES)]
+    #[case('♥', French::HEARTS)]
+    #[case('♡', French::HEARTS)]
+    #[case('H', French::HEARTS)]
+    #[case('h', French::HEARTS)]
+    #[case('♦', French::DIAMONDS)]
+    #[case('♢', French::DIAMONDS)]
+    #[case('D', French::DIAMONDS)]
+    #[case('d', French::DIAMONDS)]
+    #[case('♣', French::CLUBS)]
+    #[case('♧', French::CLUBS)]
+    #[case('C', French::CLUBS)]
+    #[case('c', French::CLUBS)]
     #[case('🃟', FluentName::BLANK)]
     #[case('T', FluentName::BLANK)]
     #[case('t', FluentName::BLANK)]
     #[case(' ', FluentName::BLANK)]
     #[case('F', FluentName::BLANK)]
     fn from__char(#[case] input: char, #[case] expected: &str) {
-        assert_eq!(
-            Suit::<Standard52>::new(expected),
-            Suit::<Standard52>::from(input)
-        );
+        assert_eq!(Suit::<French>::new(expected), Suit::<French>::from(input));
     }
 
     #[test]
     fn named__weighted_vector() {
-        let mut v = Suit::<Standard52>::suit_names();
+        let mut v = Suit::<French>::suit_names();
         v.reverse();
 
-        let suits = Suit::<Standard52>::weighted_vector(&v);
+        let suits = Suit::<French>::weighted_vector(&v);
 
         assert_eq!(suits.len(), 4);
         assert_eq!(suits[0].fluent_name_string(), "clubs");

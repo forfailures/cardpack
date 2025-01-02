@@ -1,5 +1,5 @@
+use crate::decks::french::French;
 use crate::decks::modern::Modern;
-use crate::decks::standard52::Standard52;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
@@ -20,8 +20,8 @@ impl Canasta {
     #[must_use]
     pub fn two_of_spades() -> Card<Modern, Modern> {
         Card::new_weighted(
-            Rank::<Modern>::new(Standard52::TWO),
-            Suit::<Modern>::new(Standard52::SPADES),
+            Rank::<Modern>::new(French::TWO),
+            Suit::<Modern>::new(French::SPADES),
             5000,
         )
     }
@@ -29,8 +29,8 @@ impl Canasta {
     #[must_use]
     pub fn two_of_hearts() -> Card<Modern, Modern> {
         Card::new_weighted(
-            Rank::<Modern>::new(Standard52::TWO),
-            Suit::<Modern>::new(Standard52::HEARTS),
+            Rank::<Modern>::new(French::TWO),
+            Suit::<Modern>::new(French::HEARTS),
             5000,
         )
     }
@@ -38,8 +38,8 @@ impl Canasta {
     #[must_use]
     pub fn two_of_diamonds() -> Card<Modern, Modern> {
         Card::new_weighted(
-            Rank::<Modern>::new(Standard52::TWO),
-            Suit::<Modern>::new(Standard52::DIAMONDS),
+            Rank::<Modern>::new(French::TWO),
+            Suit::<Modern>::new(French::DIAMONDS),
             5000,
         )
     }
@@ -47,8 +47,8 @@ impl Canasta {
     #[must_use]
     pub fn two_of_clubs() -> Card<Modern, Modern> {
         Card::new_weighted(
-            Rank::<Modern>::new(Standard52::TWO),
-            Suit::<Modern>::new(Standard52::CLUBS),
+            Rank::<Modern>::new(French::TWO),
+            Suit::<Modern>::new(French::CLUBS),
             5000,
         )
     }
@@ -56,8 +56,8 @@ impl Canasta {
     #[must_use]
     pub fn three_of_hearts() -> Card<Modern, Modern> {
         Card::new_weighted(
-            Rank::<Modern>::new(Standard52::THREE),
-            Suit::<Modern>::new(Standard52::HEARTS),
+            Rank::<Modern>::new(French::THREE),
+            Suit::<Modern>::new(French::HEARTS),
             6_000,
         )
     }
@@ -65,8 +65,8 @@ impl Canasta {
     #[must_use]
     pub fn three_of_diamonds() -> Card<Modern, Modern> {
         Card::new_weighted(
-            Rank::<Modern>::new(Standard52::THREE),
-            Suit::<Modern>::new(Standard52::DIAMONDS),
+            Rank::<Modern>::new(French::THREE),
+            Suit::<Modern>::new(French::DIAMONDS),
             6_000,
         )
     }
@@ -91,7 +91,7 @@ impl Canasta {
     /// ```rust
     /// use cardpack::decks::canasta::Canasta;
     /// use cardpack::decks::modern::Modern;
-    /// use cardpack::decks::standard52::Standard52;
+    /// use cardpack::decks::french::French;
     /// use cardpack::types::card::Card;
     /// use cardpack::types::rank::Rank;
     /// use cardpack::types::suit::Suit;
@@ -104,9 +104,9 @@ impl Canasta {
     ///         Rank<RankType>: PartialEq<Rank<Modern>>,
     ///         Suit<SuitType>: PartialEq<Suit<Modern>>,
     ///     {
-    ///         card.rank == Rank::<Modern>::new(Standard52::THREE)
-    ///             && (card.suit == Suit::<Modern>::new(Standard52::HEARTS)
-    ///                 || card.suit == Suit::<Modern>::new(Standard52::DIAMONDS))
+    ///         card.rank == Rank::<Modern>::new(French::THREE)
+    ///             && (card.suit == Suit::<Modern>::new(French::HEARTS)
+    ///                 || card.suit == Suit::<Modern>::new(French::DIAMONDS))
     ///     }
     ///
     /// let three_of_hearts = Canasta::three_of_hearts();

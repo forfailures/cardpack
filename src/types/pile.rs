@@ -348,12 +348,12 @@ impl<
 #[allow(non_snake_case)]
 mod types__pile__tests {
     use super::*;
-    use crate::decks::standard52::Standard52;
+    use crate::decks::french::French;
     use crate::types::traits::Decked;
     use std::str::FromStr;
 
-    fn test_pile() -> Pile<Standard52, Standard52> {
-        Pile::<Standard52, Standard52>::new(vec![
+    fn test_pile() -> Pile<French, French> {
+        Pile::<French, French>::new(vec![
             Card::from_str("2S").unwrap(),
             Card::from_str("TD").unwrap(),
             Card::from_str("AH").unwrap(),
@@ -364,7 +364,7 @@ mod types__pile__tests {
     #[test]
     fn as_hashset() {
         assert_eq!(4, test_pile().as_hashset().len());
-        assert_eq!(52, Standard52::deck().as_hashset().len());
+        assert_eq!(52, French::deck().as_hashset().len());
     }
 
     #[test]
@@ -394,7 +394,7 @@ mod types__pile__tests {
     #[test]
     fn extend() {
         let mut pile = test_pile();
-        let pile2 = Pile::<Standard52, Standard52>::from_str("3S 9D").unwrap();
+        let pile2 = Pile::<French, French>::from_str("3S 9D").unwrap();
         pile.extend(&pile2);
 
         assert_eq!(pile.len(), 6);
@@ -415,7 +415,7 @@ mod types__pile__tests {
 
     #[test]
     fn is_empty() {
-        let mut pile = Pile::<Standard52, Standard52>::default();
+        let mut pile = Pile::<French, French>::default();
         assert!(pile.is_empty());
 
         pile.push(Card::from_str("2S").unwrap());
@@ -424,12 +424,12 @@ mod types__pile__tests {
 
     #[test]
     fn map_by_suit() {
-        let pile = Pile::<Standard52, Standard52>::from_str("QS 9S QC QH QD").unwrap();
+        let pile = Pile::<French, French>::from_str("QS 9S QC QH QD").unwrap();
 
         let qs = pile.get(0).unwrap();
         let qc = pile.get(2).unwrap();
-        let spades = Suit::new(Standard52::SPADES);
-        let clubs = Suit::new(Standard52::CLUBS);
+        let spades = Suit::new(French::SPADES);
+        let clubs = Suit::new(French::CLUBS);
 
         let mappie = pile.map_by_suit();
 
@@ -445,13 +445,13 @@ mod types__pile__tests {
 
     #[test]
     fn len() {
-        assert_eq!(Pile::<Standard52, Standard52>::default().len(), 0);
+        assert_eq!(Pile::<French, French>::default().len(), 0);
         assert_eq!(test_pile().len(), 4);
     }
 
     #[test]
     fn position() {
-        let deck = Standard52::deck();
+        let deck = French::deck();
         let pile = test_pile();
         let card = Card::from_str("AH").unwrap();
 
@@ -462,7 +462,7 @@ mod types__pile__tests {
     #[test]
     fn prepend() {
         let mut pile = test_pile();
-        let pile2 = Pile::<Standard52, Standard52>::from_str("3S 9D").unwrap();
+        let pile2 = Pile::<French, French>::from_str("3S 9D").unwrap();
         pile.prepend(&pile2);
 
         assert_eq!(pile.to_string(), "3♠ 9♦ 2♠ T♦ A♥ A♠");
@@ -470,7 +470,7 @@ mod types__pile__tests {
 
     #[test]
     fn push() {
-        let mut pile = Pile::<Standard52, Standard52>::default();
+        let mut pile = Pile::<French, French>::default();
         pile.push(Card::from_str("2S").unwrap());
         pile.push(Card::from_str("TD").unwrap());
         pile.push(Card::from_str("AH").unwrap());
@@ -481,7 +481,7 @@ mod types__pile__tests {
 
     #[test]
     fn remove_card() {
-        let mut deck = Standard52::deck();
+        let mut deck = French::deck();
         let mut pile = test_pile();
         let card = Card::from_str("AH").unwrap();
 
@@ -496,7 +496,7 @@ mod types__pile__tests {
 
     #[test]
     fn same() {
-        let deck = Standard52::deck();
+        let deck = French::deck();
         let alt = deck.shuffle_default();
 
         assert!(deck.same(&alt));
@@ -507,7 +507,7 @@ mod types__pile__tests {
 
     #[test]
     fn same__false() {
-        let deck = Standard52::deck();
+        let deck = French::deck();
         let mut alt = deck.shuffle_default();
         alt.draw_last();
 
@@ -518,18 +518,14 @@ mod types__pile__tests {
     #[test]
     fn to_color_symbol_string() {
         let expected = vec![
-            Card::<Standard52, Standard52>::from_str("2S")
-                .unwrap()
-                .to_string(),
-            Card::<Standard52, Standard52>::from_str("TD")
+            Card::<French, French>::from_str("2S").unwrap().to_string(),
+            Card::<French, French>::from_str("TD")
                 .unwrap()
                 .to_color_symbol_string(),
-            Card::<Standard52, Standard52>::from_str("AH")
+            Card::<French, French>::from_str("AH")
                 .unwrap()
                 .to_color_symbol_string(),
-            Card::<Standard52, Standard52>::from_str("AS")
-                .unwrap()
-                .to_string(),
+            Card::<French, French>::from_str("AS").unwrap().to_string(),
         ]
         .join(" ");
 
@@ -540,14 +536,14 @@ mod types__pile__tests {
 
     #[test]
     fn from_str() {
-        let pile = Pile::<Standard52, Standard52>::from_str("2S TD AH AS").unwrap();
+        let pile = Pile::<French, French>::from_str("2S TD AH AS").unwrap();
 
         assert_eq!(pile, test_pile());
     }
 
     #[test]
     fn from_str_invalid() {
-        assert!(Pile::<Standard52, Standard52>::from_str("2S TD AH AS 2X").is_err());
-        assert!(Pile::<Standard52, Standard52>::from_str("   ").is_err());
+        assert!(Pile::<French, French>::from_str("2S TD AH AS 2X").is_err());
+        assert!(Pile::<French, French>::from_str("   ").is_err());
     }
 }

@@ -1,4 +1,4 @@
-use crate::decks::standard52::Standard52;
+use crate::decks::french::French;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
@@ -9,9 +9,9 @@ use std::str::FromStr;
 /// [Euchre](https://en.wikipedia.org/wiki/Euchre) with
 /// `A K Q J T 9` ranks.
 ///
-/// This means that they are made up of the [`Standard52`]
+/// This means that they are made up of the [`French`]
 /// implementation of the [`Suited`](crate::types::traits::Suited) trait that's declared in the
-/// [`Standard52`] deck and the `Euchre24` implementation of the
+/// [`French`] deck and the `Euchre24` implementation of the
 /// [`Ranked`] trait.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Euchre24 {}
@@ -23,14 +23,14 @@ impl Euchre24 {
     ///
     /// Returns a `CardError` if the index is out of bounds.
     #[allow(clippy::should_implement_trait)]
-    pub fn from_str(index: &str) -> Result<Pile<Euchre24, Standard52>, CardError> {
-        Pile::<Euchre24, Standard52>::from_str(index)
+    pub fn from_str(index: &str) -> Result<Pile<Euchre24, French>, CardError> {
+        Pile::<Euchre24, French>::from_str(index)
     }
 }
 
-impl Decked<Euchre24, Standard52> for Euchre24 {
-    fn blank() -> Card<Euchre24, Standard52> {
-        Card::<Euchre24, Standard52>::default()
+impl Decked<Euchre24, French> for Euchre24 {
+    fn blank() -> Card<Euchre24, French> {
+        Card::<Euchre24, French>::default()
     }
 
     fn guide() -> Option<String> {
@@ -45,12 +45,12 @@ impl Ranked for Euchre24 {
 
     fn rank_names() -> Vec<&'static str> {
         vec![
-            Standard52::ACE,
-            Standard52::KING,
-            Standard52::QUEEN,
-            Standard52::JACK,
-            Standard52::TEN,
-            Standard52::NINE,
+            French::ACE,
+            French::KING,
+            French::QUEEN,
+            French::JACK,
+            French::TEN,
+            French::NINE,
         ]
     }
 
@@ -68,28 +68,28 @@ mod decks__euchre__tests {
 
     #[test]
     fn new() {
-        let rank = Rank::<Euchre24>::new(Standard52::ACE);
+        let rank = Rank::<Euchre24>::new(French::ACE);
 
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.name, FluentName::new(French::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
     }
 
     #[test]
     fn new_with_weight() {
-        let rank = Rank::<Euchre24>::new_with_weight(Standard52::ACE, 13);
+        let rank = Rank::<Euchre24>::new_with_weight(French::ACE, 13);
 
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.name, FluentName::new(French::ACE));
         assert_eq!(rank.weight, 13);
         assert_eq!(rank.prime, 41);
     }
 
     #[test]
     fn update_weight() {
-        let rank = Rank::<Euchre24>::new(Standard52::ACE);
+        let rank = Rank::<Euchre24>::new(French::ACE);
         let updated_rank = rank.update_weight(14);
 
-        assert_eq!(updated_rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(updated_rank.name, FluentName::new(French::ACE));
         assert_eq!(updated_rank.weight, 14);
         assert_eq!(updated_rank.prime, 41);
     }
@@ -104,7 +104,7 @@ mod decks__euchre__tests {
     fn from_char() {
         let rank = Rank::<Euchre24>::from('A');
 
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.name, FluentName::new(French::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
     }
@@ -113,28 +113,28 @@ mod decks__euchre__tests {
     fn from_str() {
         let rank = Rank::<Euchre24>::from_str("A'").unwrap();
 
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.name, FluentName::new(French::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
     }
 
     #[test]
     fn named__fluent_name() {
-        let rank = Rank::<Euchre24>::new(Standard52::KING);
+        let rank = Rank::<Euchre24>::new(French::KING);
 
-        assert_eq!(rank.fluent_name(), &FluentName::new(Standard52::KING));
+        assert_eq!(rank.fluent_name(), &FluentName::new(French::KING));
     }
 
     #[test]
     fn named__fluent_name_string() {
-        let rank = Rank::<Euchre24>::new(Standard52::QUEEN);
+        let rank = Rank::<Euchre24>::new(French::QUEEN);
 
-        assert_eq!(rank.fluent_name_string(), Standard52::QUEEN);
+        assert_eq!(rank.fluent_name_string(), French::QUEEN);
     }
 
     #[test]
     fn named__is_blank() {
-        let rank = Rank::<Euchre24>::new(Standard52::ACE);
+        let rank = Rank::<Euchre24>::new(French::ACE);
 
         assert!(!rank.is_blank());
     }
@@ -144,12 +144,12 @@ mod decks__euchre__tests {
         let names = Rank::<Euchre24>::rank_names();
 
         assert_eq!(names.len(), 6);
-        assert_eq!(names[0], Standard52::ACE);
-        assert_eq!(names[1], Standard52::KING);
-        assert_eq!(names[2], Standard52::QUEEN);
-        assert_eq!(names[3], Standard52::JACK);
-        assert_eq!(names[4], Standard52::TEN);
-        assert_eq!(names[5], Standard52::NINE);
+        assert_eq!(names[0], French::ACE);
+        assert_eq!(names[1], French::KING);
+        assert_eq!(names[2], French::QUEEN);
+        assert_eq!(names[3], French::JACK);
+        assert_eq!(names[4], French::TEN);
+        assert_eq!(names[5], French::NINE);
     }
 
     #[test]

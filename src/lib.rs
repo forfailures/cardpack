@@ -5,8 +5,9 @@
 //! ```rust
 //! use std::collections::HashMap;
 //! use colored::Color;
-//! use cardpack::prelude::{Card, Decked, Ranked, Standard52, Suited};
+//! use cardpack::prelude::{Card, Decked, Rank, Ranked, French, Suit, Suited};
 //!
+//! #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 //! pub struct Tiny {}
 //!
 //! impl Tiny {
@@ -18,10 +19,11 @@
 //!         vec!['A', 'a', 'K', 'k']
 //!     }
 //!
+//!     // Since the rank names are the same as the French deck, we can simply just use those:
 //!     fn rank_names() -> Vec<&'static str> {
 //!         vec![
-//!             Standard52::ACE,
-//!             Standard52::KING,
+//!             French::ACE,
+//!             French::KING,
 //!         ]
 //!     }
 //!
@@ -42,10 +44,11 @@
 //!         vec!['♤', '♠', 'S', 's', '♡', '♥', 'H', 'h',]
 //!     }
 //!
+//!     // And the suit names are the same as the French deck as well:
 //!     fn suit_names() -> Vec<&'static str> {
 //!         vec![
-//!             Standard52::SPADES,
-//!             Standard52::HEARTS,
+//!             French::SPADES,
+//!             French::HEARTS,
 //!         ]
 //!     }
 //!
@@ -63,6 +66,45 @@
 //!         todo!()
 //!     }
 //! }
+//!
+//! macro_rules! tiny {
+//!     (AS) => {
+//!         Card::<Tiny, Tiny>::new(Rank::<Tiny>::new(French::ACE), Suit::<Tiny>::new(French::SPADES))
+//!     };
+//!     (KS) => {
+//!         Card::<Tiny, Tiny>::new(Rank::<Tiny>::new(French::KING), Suit::<Tiny>::new(French::SPADES))
+//!     };
+//!     (AH) => {
+//!         Card::<Tiny, Tiny>::new(Rank::<Tiny>::new(French::ACE), Suit::<Tiny>::new(French::HEARTS))
+//!     };
+//!     (KH) => {
+//!         Card::<Tiny, Tiny>::new(Rank::<Tiny>::new(French::KING), Suit::<Tiny>::new(French::HEARTS))
+//!     };
+//! }
+//!
+//! let mut deck = Tiny::deck();
+//!
+//! assert_eq!(deck.to_string(), "A♠ K♠ A♥ K♥");
+//!
+//! // Deal from the top of the deck:
+//! assert_eq!(deck.draw_first().unwrap(), tiny!(AS));
+//!
+//! // Deal from the bottom of the deck:
+//! assert_eq!(deck.draw_last().unwrap(), tiny!(KH));
+//!
+//! // Should be two cards remaining:
+//! assert_eq!(deck.len(), 2);
+//! assert_eq!(deck.index(), "KS AH");
+//!
+//! // Draw the top card and make sure it's got the right Cactus Kev Card Number for the
+//! // King of Spades:
+//! assert_eq!(deck.draw_first().unwrap().get_ckc_number(), 0b00001000_00000000_10001011_00100101);
+//!
+//! // Draw the last card:
+//! assert_eq!(deck.draw_first().unwrap(), tiny!(AH));
+//!
+//! // And now the deck is empty:
+//! assert!(deck.draw_first().is_none());
 //! ```
 pub mod decks;
 pub mod localization;

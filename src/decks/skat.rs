@@ -235,7 +235,7 @@ mod decks__skat__tests {
 
     /// In trying to get this test to pass I've realized that I need
     /// to give every Rank and Suit its own unique name, that doesn't
-    /// overlap with the Standard52 names, so that I can ensure proper
+    /// overlap with the French names, so that I can ensure proper
     /// sorting.
     #[test]
     fn to_string__from_str() {

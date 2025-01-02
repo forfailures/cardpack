@@ -1,4 +1,4 @@
-use crate::decks::standard52::Standard52;
+use crate::decks::french::French;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
@@ -197,20 +197,20 @@ impl Ranked for Tarot {
 
     fn rank_names() -> Vec<&'static str> {
         vec![
-            Standard52::KING,
-            Standard52::QUEEN,
+            French::KING,
+            French::QUEEN,
             Tarot::KNIGHT,
             Tarot::PAGE,
-            Standard52::TEN,
-            Standard52::NINE,
-            Standard52::EIGHT,
-            Standard52::SEVEN,
-            Standard52::SIX,
-            Standard52::FIVE,
-            Standard52::FOUR,
-            Standard52::THREE,
-            Standard52::TWO,
-            Standard52::ACE,
+            French::TEN,
+            French::NINE,
+            French::EIGHT,
+            French::SEVEN,
+            French::SIX,
+            French::FIVE,
+            French::FOUR,
+            French::THREE,
+            French::TWO,
+            French::ACE,
         ]
     }
 

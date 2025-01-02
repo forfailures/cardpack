@@ -1,4 +1,4 @@
-use crate::decks::standard52::Standard52;
+use crate::decks::french::French;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
@@ -25,7 +25,7 @@ macro_rules! modern {
     };
 }
 
-/// `Standard52` with Jokers.
+/// `French` with Jokers.
 ///
 /// <https://www.pagat.com/rummy/canasta.html#classic-threes>
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -75,7 +75,7 @@ impl Decked<Modern, Modern> for Modern {
         let mut deck = Modern::jokers();
 
         // TODO: HACK
-        let raw52 = Standard52::deck().to_string();
+        let raw52 = French::deck().to_string();
         let base52 = Pile::<Modern, Modern>::from_str(&raw52).unwrap();
 
         deck.extend(&base52);
@@ -104,19 +104,19 @@ impl Ranked for Modern {
         vec![
             Modern::BIG,
             Modern::LITTLE,
-            Standard52::ACE,
-            Standard52::KING,
-            Standard52::QUEEN,
-            Standard52::JACK,
-            Standard52::TEN,
-            Standard52::NINE,
-            Standard52::EIGHT,
-            Standard52::SEVEN,
-            Standard52::SIX,
-            Standard52::FIVE,
-            Standard52::FOUR,
-            Standard52::THREE,
-            Standard52::TWO,
+            French::ACE,
+            French::KING,
+            French::QUEEN,
+            French::JACK,
+            French::TEN,
+            French::NINE,
+            French::EIGHT,
+            French::SEVEN,
+            French::SIX,
+            French::FIVE,
+            French::FOUR,
+            French::THREE,
+            French::TWO,
         ]
     }
 
@@ -146,10 +146,10 @@ impl Suited for Modern {
     fn suit_names() -> Vec<&'static str> {
         vec![
             Modern::TRUMP,
-            Standard52::SPADES,
-            Standard52::HEARTS,
-            Standard52::DIAMONDS,
-            Standard52::CLUBS,
+            French::SPADES,
+            French::HEARTS,
+            French::DIAMONDS,
+            French::CLUBS,
         ]
     }
 
@@ -188,10 +188,10 @@ mod decks__modern__tests {
 
     #[test]
     fn update_weight() {
-        let rank = Rank::<Modern>::new(Standard52::ACE);
+        let rank = Rank::<Modern>::new(French::ACE);
         let updated_rank = rank.update_weight(14);
 
-        assert_eq!(updated_rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(updated_rank.name, FluentName::new(French::ACE));
         assert_eq!(updated_rank.weight, 14);
         assert_eq!(updated_rank.prime, 41);
     }
@@ -219,8 +219,8 @@ mod decks__modern__tests {
         let card = modern_card!("A♠");
 
         assert_eq!(card.index, "AS");
-        assert_eq!(card.rank.name, FluentName::new(Standard52::ACE));
-        assert_eq!(card.suit.name, FluentName::new(Standard52::SPADES));
+        assert_eq!(card.rank.name, FluentName::new(French::ACE));
+        assert_eq!(card.suit.name, FluentName::new(French::SPADES));
     }
 
     #[test]
@@ -244,7 +244,7 @@ mod decks__modern__tests {
     fn rank__from_char() {
         let rank = Rank::<Modern>::from('A');
 
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.name, FluentName::new(French::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
     }
@@ -253,28 +253,28 @@ mod decks__modern__tests {
     fn rank__from_str() {
         let rank = Rank::<Modern>::from_str("A'").unwrap();
 
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.name, FluentName::new(French::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
     }
 
     #[test]
     fn named__fluent_name() {
-        let rank = Rank::<Modern>::new(Standard52::KING);
+        let rank = Rank::<Modern>::new(French::KING);
 
-        assert_eq!(rank.fluent_name(), &FluentName::new(Standard52::KING));
+        assert_eq!(rank.fluent_name(), &FluentName::new(French::KING));
     }
 
     #[test]
     fn named__fluent_name_string() {
-        let rank = Rank::<Modern>::new(Standard52::QUEEN);
+        let rank = Rank::<Modern>::new(French::QUEEN);
 
-        assert_eq!(rank.fluent_name_string(), Standard52::QUEEN);
+        assert_eq!(rank.fluent_name_string(), French::QUEEN);
     }
 
     #[test]
     fn named__is_blank() {
-        let rank = Rank::<Modern>::new(Standard52::ACE);
+        let rank = Rank::<Modern>::new(French::ACE);
 
         assert!(!rank.is_blank());
     }
@@ -286,19 +286,19 @@ mod decks__modern__tests {
         assert_eq!(names.len(), 15);
         assert_eq!(names[0], Modern::BIG);
         assert_eq!(names[1], Modern::LITTLE);
-        assert_eq!(names[2], Standard52::ACE);
-        assert_eq!(names[3], Standard52::KING);
-        assert_eq!(names[4], Standard52::QUEEN);
-        assert_eq!(names[5], Standard52::JACK);
-        assert_eq!(names[6], Standard52::TEN);
-        assert_eq!(names[7], Standard52::NINE);
-        assert_eq!(names[8], Standard52::EIGHT);
-        assert_eq!(names[9], Standard52::SEVEN);
-        assert_eq!(names[10], Standard52::SIX);
-        assert_eq!(names[11], Standard52::FIVE);
-        assert_eq!(names[12], Standard52::FOUR);
-        assert_eq!(names[13], Standard52::THREE);
-        assert_eq!(names[14], Standard52::TWO);
+        assert_eq!(names[2], French::ACE);
+        assert_eq!(names[3], French::KING);
+        assert_eq!(names[4], French::QUEEN);
+        assert_eq!(names[5], French::JACK);
+        assert_eq!(names[6], French::TEN);
+        assert_eq!(names[7], French::NINE);
+        assert_eq!(names[8], French::EIGHT);
+        assert_eq!(names[9], French::SEVEN);
+        assert_eq!(names[10], French::SIX);
+        assert_eq!(names[11], French::FIVE);
+        assert_eq!(names[12], French::FOUR);
+        assert_eq!(names[13], French::THREE);
+        assert_eq!(names[14], French::TWO);
     }
 
     #[test]

@@ -1,4 +1,4 @@
-use crate::decks::standard52::Standard52;
+use crate::decks::french::French;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
@@ -24,33 +24,30 @@ impl Pinochle {
     ///
     /// Returns a `CardError` if the index is out of bounds.
     #[allow(clippy::should_implement_trait)]
-    pub fn from_str(index: &str) -> Result<Pile<Pinochle, Standard52>, CardError> {
-        Pile::<Pinochle, Standard52>::from_str(index)
+    pub fn from_str(index: &str) -> Result<Pile<Pinochle, French>, CardError> {
+        Pile::<Pinochle, French>::from_str(index)
     }
 }
 
-impl Decked<Pinochle, Standard52> for Pinochle {
+impl Decked<Pinochle, French> for Pinochle {
     #[must_use]
-    fn deck() -> Pile<Pinochle, Standard52> {
+    fn deck() -> Pile<Pinochle, French> {
         let ranks = Rank::<Pinochle>::ranks_from_array(&Pinochle::rank_names());
-        let suits = Suit::<Standard52>::suits();
+        let suits = Suit::<French>::suits();
 
-        let mut pile = Pile::<Pinochle, Standard52>::new(Vec::new());
+        let mut pile = Pile::<Pinochle, French>::new(Vec::new());
 
         for suit in &suits {
             for rank in &ranks {
-                pile.push(Card::<Pinochle, Standard52>::new(
-                    rank.clone(),
-                    suit.clone(),
-                ));
+                pile.push(Card::<Pinochle, French>::new(rank.clone(), suit.clone()));
             }
         }
 
         pile
     }
 
-    fn blank() -> Card<Pinochle, Standard52> {
-        Card::<Pinochle, Standard52>::default()
+    fn blank() -> Card<Pinochle, French> {
+        Card::<Pinochle, French>::default()
     }
 
     fn guide() -> Option<String> {

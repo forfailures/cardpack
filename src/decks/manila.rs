@@ -1,4 +1,4 @@
-use crate::decks::standard52::Standard52;
+use crate::decks::french::French;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
@@ -9,9 +9,9 @@ use std::str::FromStr;
 /// is a version of Texas Hold'em where the card Ranks of 2 through 5
 /// are removed from the deck.
 ///
-/// This means that they are made up of the [`Standard52`]
+/// This means that they are made up of the [`French`]
 /// implementation of the [`Suited`](crate::types::traits::Suited) trait that's declared in the
-/// [`Standard52`] deck and the `Manila` implementation of the
+/// [`French`] deck and the `Manila` implementation of the
 /// [`Ranked`] trait.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Manila {}
@@ -23,14 +23,14 @@ impl Manila {
     ///
     /// Returns a `CardError` if the index is out of bounds.
     #[allow(clippy::should_implement_trait)]
-    pub fn from_str(index: &str) -> Result<Pile<Manila, Standard52>, CardError> {
-        Pile::<Manila, Standard52>::from_str(index)
+    pub fn from_str(index: &str) -> Result<Pile<Manila, French>, CardError> {
+        Pile::<Manila, French>::from_str(index)
     }
 }
 
-impl Decked<Manila, Standard52> for Manila {
-    fn blank() -> Card<Manila, Standard52> {
-        Card::<Manila, Standard52>::default()
+impl Decked<Manila, French> for Manila {
+    fn blank() -> Card<Manila, French> {
+        Card::<Manila, French>::default()
     }
 
     fn guide() -> Option<String> {
@@ -47,15 +47,15 @@ impl Ranked for Manila {
 
     fn rank_names() -> Vec<&'static str> {
         vec![
-            Standard52::ACE,
-            Standard52::KING,
-            Standard52::QUEEN,
-            Standard52::JACK,
-            Standard52::TEN,
-            Standard52::NINE,
-            Standard52::EIGHT,
-            Standard52::SEVEN,
-            Standard52::SIX,
+            French::ACE,
+            French::KING,
+            French::QUEEN,
+            French::JACK,
+            French::TEN,
+            French::NINE,
+            French::EIGHT,
+            French::SEVEN,
+            French::SIX,
         ]
     }
 

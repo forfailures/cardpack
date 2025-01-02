@@ -1,7 +1,7 @@
+use crate::decks::french::French;
 use crate::decks::modern::Modern;
 use crate::decks::pinochle::Pinochle;
 use crate::decks::skat::Skat;
-use crate::decks::standard52::Standard52;
 use crate::decks::tarot::Tarot;
 use crate::localization::{FluentName, Named};
 use crate::types::card_error::CardError;
@@ -204,20 +204,20 @@ impl<RankType: Ranked> From<char> for Rank<RankType> {
                 _ => Rank::new(FluentName::BLANK),
             },
             Tarot::DECK_NAME => match c {
-                '2' => Rank::new(Standard52::TWO),
-                '3' => Rank::new(Standard52::THREE),
-                '4' => Rank::new(Standard52::FOUR),
-                '5' => Rank::new(Standard52::FIVE),
-                '6' => Rank::new(Standard52::SIX),
-                '7' => Rank::new(Standard52::SEVEN),
-                '8' => Rank::new(Standard52::EIGHT),
-                '9' => Rank::new(Standard52::NINE),
-                'T' | 't' | '0' => Rank::new(Standard52::TEN),
+                '2' => Rank::new(French::TWO),
+                '3' => Rank::new(French::THREE),
+                '4' => Rank::new(French::FOUR),
+                '5' => Rank::new(French::FIVE),
+                '6' => Rank::new(French::SIX),
+                '7' => Rank::new(French::SEVEN),
+                '8' => Rank::new(French::EIGHT),
+                '9' => Rank::new(French::NINE),
+                'T' | 't' | '0' => Rank::new(French::TEN),
                 'P' | 'p' => Rank::new(Tarot::PAGE),
                 'J' | 'j' => Rank::new(Tarot::KNIGHT),
-                'Q' | 'q' => Rank::new(Standard52::QUEEN),
-                'K' | 'k' => Rank::new(Standard52::KING),
-                'A' | 'a' => Rank::new(Standard52::ACE),
+                'Q' | 'q' => Rank::new(French::QUEEN),
+                'K' | 'k' => Rank::new(French::KING),
+                'A' | 'a' => Rank::new(French::ACE),
                 '🤡' => Rank::new(Tarot::FOOL),
                 '🧙' => Rank::new(Tarot::MAGICIAN),
                 '😇' => Rank::new(Tarot::PRIESTESS),
@@ -243,19 +243,19 @@ impl<RankType: Ranked> From<char> for Rank<RankType> {
                 _ => Rank::new(FluentName::BLANK),
             },
             _ => match c {
-                '2' => Rank::new(Standard52::TWO),
-                '3' => Rank::new(Standard52::THREE),
-                '4' => Rank::new(Standard52::FOUR),
-                '5' => Rank::new(Standard52::FIVE),
-                '6' => Rank::new(Standard52::SIX),
-                '7' => Rank::new(Standard52::SEVEN),
-                '8' => Rank::new(Standard52::EIGHT),
-                '9' => Rank::new(Standard52::NINE),
-                'T' | 't' | '0' => Rank::new(Standard52::TEN),
-                'J' | 'j' => Rank::new(Standard52::JACK),
-                'Q' | 'q' => Rank::new(Standard52::QUEEN),
-                'K' | 'k' => Rank::new(Standard52::KING),
-                'A' | 'a' => Rank::new(Standard52::ACE),
+                '2' => Rank::new(French::TWO),
+                '3' => Rank::new(French::THREE),
+                '4' => Rank::new(French::FOUR),
+                '5' => Rank::new(French::FIVE),
+                '6' => Rank::new(French::SIX),
+                '7' => Rank::new(French::SEVEN),
+                '8' => Rank::new(French::EIGHT),
+                '9' => Rank::new(French::NINE),
+                'T' | 't' | '0' => Rank::new(French::TEN),
+                'J' | 'j' => Rank::new(French::JACK),
+                'Q' | 'q' => Rank::new(French::QUEEN),
+                'K' | 'k' => Rank::new(French::KING),
+                'A' | 'a' => Rank::new(French::ACE),
                 'B' | 'b' => Rank::new(Modern::BIG),
                 'L' | 'l' => Rank::new(Modern::LITTLE),
                 _ => Rank::new(FluentName::BLANK),
@@ -285,14 +285,14 @@ impl<RankType: Ranked> FromStr for Rank<RankType> {
 #[allow(non_snake_case)]
 mod types__rank__tests {
     use super::*;
-    use crate::s52card;
+    use crate::card;
     use crate::types::card::Card;
     use crate::types::utils::Bit;
     use ckc_rs::CardNumber;
 
     #[test]
     fn get_bits() {
-        let card = s52card!("AS");
+        let card = card!("AS");
         let ckc_as = Bit::ckc_bits(CardNumber::ACE_SPADES);
 
         // println!("{:b}", ckc_as);
@@ -303,7 +303,7 @@ mod types__rank__tests {
 
     #[test]
     fn get_shift8() {
-        let card = Card::<Standard52, Standard52>::from_str("3S").unwrap();
+        let card = Card::<French, French>::from_str("3S").unwrap();
 
         assert_eq!(
             card.rank.get_shift8(),
@@ -313,7 +313,7 @@ mod types__rank__tests {
 
     #[test]
     fn prime() {
-        let card = s52card!("AS");
+        let card = card!("AS");
         let ckc_as = Bit::ckc_prime(CardNumber::ACE_SPADES);
 
         // println!("{:b}", ckc_as);
@@ -324,7 +324,7 @@ mod types__rank__tests {
 
     #[test]
     fn ckc_number() {
-        let card = s52card!("AS");
+        let card = card!("AS");
         let ckc_as = Bit::strip_suit_flags(CardNumber::ACE_SPADES);
 
         assert_eq!(card.rank.ckc_number(), ckc_as);
@@ -332,25 +332,25 @@ mod types__rank__tests {
 
     #[test]
     fn from_char() {
-        let rank = Rank::<Standard52>::from('A');
+        let rank = Rank::<French>::from('A');
 
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.name, FluentName::new(French::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
     }
 
     #[test]
     fn from_str() {
-        let rank = Rank::<Standard52>::from_str("A'").unwrap();
+        let rank = Rank::<French>::from_str("A'").unwrap();
 
-        assert_eq!(rank.name, FluentName::new(Standard52::ACE));
+        assert_eq!(rank.name, FluentName::new(French::ACE));
         assert_eq!(rank.weight, 12);
         assert_eq!(rank.prime, 41);
     }
 
     #[test]
     fn from_str__invalid() {
-        let rank = Rank::<Standard52>::from_str("Z'");
+        let rank = Rank::<French>::from_str("Z'");
 
         assert!(rank.is_err());
         if let Err(CardError::InvalidFluentRank(_)) = rank {
