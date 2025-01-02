@@ -1,11 +1,50 @@
 #![warn(clippy::pedantic)]
 
-//! Library to represent various decks of playing cards.
+//! Library to represent various decks of playing cards. The library is designed to support the
+//! following features:
+//!
+//! - Custom [`Rank`](types::rank::Rank) and [`Suit`](types::suit::Suit) types.
+//! - Ability to sort a [`Pile`](types::pile::Pile) of [`Cards`](types::card::Card)  in various ways.
+//! - Localization of card names using [fluent-templates](https://github.com/XAMPPRocky/fluent-templates).
+//!
+//! Currently, the library supports the following decks:
+//!
+//! ## Standard 52 Card French Deck
+//!
+//!
+//!
+//! ```rust
+//! use cardpack::prelude::*;
+//!
+//! let mut french_deck = French::deck();
+//!
+//! assert_eq!(
+//!     french_deck.to_string(),
+//!     "A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠ 5♠ 4♠ 3♠ 2♠ A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥ 5♥ 4♥ 3♥ 2♥ A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦ 5♦ 4♦ 3♦ 2♦ A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣ 5♣ 4♣ 3♣ 2♣"
+//! );
+//! assert!(french_deck.contains(&card!(AS)));
+//!
+//! let shuffled = french_deck.shuffle_default();
+//! let parsed = cards!(shuffled.to_string().as_str()).unwrap();
+//!
+//! // Verify that the cards, in any order, are the same:
+//! assert!(french_deck.same(&parsed));
+//!
+//! // When sorted, they should be exactly the same:
+//! assert_eq!(parsed.sort(), french_deck);
+//!
+//! let royal_flush = french_deck.draw(5);
+//! assert_eq!(royal_flush.to_string(), "A♠ K♠ Q♠ J♠ T♠");
+//! assert_eq!(royal_flush.index(), "AS KS QS JS TS");
+//!
+//! // The original deck should now have five cards less:
+//! assert_eq!(french_deck.len(), 47);
+//! ```
 //!
 //! ```rust
 //! use std::collections::HashMap;
 //! use colored::Color;
-//! use cardpack::prelude::{Card, Decked, Rank, Ranked, French, Suit, Suited};
+//! use cardpack::prelude::*;
 //!
 //! #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 //! pub struct Tiny {}
