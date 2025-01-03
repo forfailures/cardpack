@@ -8,6 +8,7 @@ pub use crate::decks::modern::Modern;
 pub use crate::decks::pinochle::Pinochle;
 pub use crate::decks::skat::Skat;
 pub use crate::decks::tarot::Tarot;
+pub use crate::localization::FluentName;
 pub use crate::localization::Named;
 
 pub use crate::types::card::Card;

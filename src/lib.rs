@@ -39,6 +39,21 @@
 //!
 //! // The original deck should now have five cards less:
 //! assert_eq!(french_deck.len(), 47);
+//!
+//! // Cards can provide a longer description in English and German:
+//! assert_eq!(card!(AS).long(&FluentName::US_ENGLISH), "Ace Spades");
+//! assert_eq!(card!(QH).long(&FluentName::DEUTSCH), "Dame Herzen");
+//! ```
+//!
+//! ## Modern Deck
+//!
+//! A Modern deck is a French deck with two jokers.
+//!
+//! ```rust
+//! use cardpack::prelude::*;
+//!
+//! let mut modern_deck = Modern::deck();
+//!
 //! ```
 //!
 //! ```rust

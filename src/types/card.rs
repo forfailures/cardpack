@@ -157,9 +157,10 @@ where
         self.rank.name.is_blank() || self.suit.name.is_blank()
     }
 
+    /// TODO need to add a connector for each `LanguageIdentifier`.
     #[must_use]
-    pub fn long_name(&self, lid: &LanguageIdentifier) -> String {
-        format!("{} of {}", self.rank.name.long(lid), self.suit.name.long(lid))
+    pub fn long(&self, lid: &LanguageIdentifier) -> String {
+        format!("{} {}", self.rank.name.long(lid), self.suit.name.long(lid))
     }
 
     #[must_use]
