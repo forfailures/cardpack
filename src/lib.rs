@@ -7,11 +7,18 @@
 //! - Ability to sort a [`Pile`](types::pile::Pile) of [`Cards`](types::card::Card)  in various ways.
 //! - Localization of card names using [fluent-templates](https://github.com/XAMPPRocky/fluent-templates).
 //!
-//! Currently, the library supports the following decks:
+//! ## Overview
+//!
+//! The structure of the library is the following: A [`Pile`](types::pile::Pile) is a collection of Cards
+//! that have a [`Rank`](types::rank::Rank) that implements the [`Ranked`](types::traits::Ranked) and
+//! a Suit that implements the [`Suited`](types::traits::Suited) trait.
+//!
+//! The library supports the following decks:
 //!
 //! ## Standard 52 Card French Deck
 //!
 //! The Standard 52 Card [`French`](decks::french::French) deck is the most common deck of playing cards.
+//! It is made up of a [`Pile`](types::pile::Pile) of 52 [`Cards`](types::card::Card) with 13 ranks in each of the four suits.
 //!
 //! ```rust
 //! use cardpack::prelude::*;

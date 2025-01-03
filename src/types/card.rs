@@ -6,8 +6,8 @@ use crate::types::traits::{Ranked, Suited};
 use std::fmt::Display;
 
 use colored::Colorize;
-use std::str::FromStr;
 use fluent_templates::LanguageIdentifier;
+use std::str::FromStr;
 
 /// `Card` is the fundamental struct of this library, being an abstract representation of a playing
 /// card.
