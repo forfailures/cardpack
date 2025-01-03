@@ -11,7 +11,7 @@
 //!
 //! ## Standard 52 Card French Deck
 //!
-//!
+//! The Standard 52 Card [`French`](decks::french::French) deck is the most common deck of playing cards.
 //!
 //! ```rust
 //! use cardpack::prelude::*;
@@ -45,16 +45,41 @@
 //! assert_eq!(card!(QH).long(&FluentName::DEUTSCH), "Dame Herzen");
 //! ```
 //!
+//! An important thing to remember about the decks is that the cards have their weight inside them
+//! to facilitate sorting. If you wanted a deck for Razz poker, where the lowest hand wins, you
+//! would need to create a separate deck file with the card's `Rank` weights adjusted.
+//!
 //! ## Modern Deck
 //!
-//! A Modern deck is a French deck with two jokers.
+//! A [`Modern`](decks::modern::Modern) deck is a French deck with two jokers.
 //!
 //! ```rust
 //! use cardpack::prelude::*;
 //!
 //! let mut modern_deck = Modern::deck();
 //!
+//! assert_eq!(modern_deck.len(), 54);
+//!
+//! // For a joker card's index string, `B` stands for Big Joker and `L` for Little Joker,
+//! // with `🃟` being the symbol character for the trump suit.
+//! assert_eq!(modern_deck.draw(3).to_string(), "B🃟 L🃟 A♠");
 //! ```
+//!
+//! Other decks include:
+//!
+//! - [`Canasta`](decks::canasta::Canasta) - 2 Modern decks with the red 3s made trumps.
+//! - [`Euchre`](decks::euchre24::Euchre24) - A 24 card version of a Euchre deck.
+//! - [`HandAndFoot`](decks::hand_and_foot::HandAndFoot) - 5 Modern decks.
+//! - [`Manila`](decks::manila::Manila) - A 36 card deck with ranks 6 through Ace.
+//! - [`Pinochle`](decks::pinochle::Pinochle) - A 48 card deck with two copies of the 9 through Ace ranks.
+//! - [`Skat`](decks::skat::Skat) - A 32 card German card game with different suits and ranks.
+//! - [`Spades`](decks::spades::Spades) - A Modern deck with the 2 of Clubs and 2 of Diamonds removed.
+//! - [`Tarot`](decks::tarot::Tarot) - A 78 card deck with 22 Major Arcana and 56 Minor Arcana cards.
+//!
+//! ## Custom Deck example:
+//!
+//! Here's a very simple example where we create a tiny deck with only the ace and kink ranks,
+//! and only the spades and hearts suits. Just for fun, we'll include macro for one `Tiny` card.
 //!
 //! ```rust
 //! use std::collections::HashMap;
@@ -80,7 +105,6 @@
 //!             French::KING,
 //!         ]
 //!     }
-//!
 //!
 //!     fn type_name() -> &'static str {
 //!         Tiny::DECK_NAME
