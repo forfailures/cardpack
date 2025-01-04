@@ -135,7 +135,7 @@ impl Canasta {
 
     fn wash(pile: &Pile<Modern, Modern>) -> Pile<Modern, Modern> {
         let washed: Vec<Card<Modern, Modern>> = pile.v().iter().map(Canasta::bump).collect();
-        Pile::new(washed)
+        Pile::from(washed)
     }
 }
 

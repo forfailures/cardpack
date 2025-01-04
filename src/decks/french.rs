@@ -364,7 +364,7 @@ macro_rules! cards {
 /// let ranks = Rank::<French>::ranks();
 /// let suits = Suit::<French>::suits();
 ///
-/// let mut pile = Pile::<French, French>::new(Vec::new());
+/// let mut pile = Pile::<French, French>::from(Vec::new());
 ///
 /// for suit in &suits {
 ///     for rank in &ranks {
@@ -378,7 +378,6 @@ macro_rules! cards {
 ///
 /// assert_eq!(deck, pile);
 /// ```
-///
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct French {}
 

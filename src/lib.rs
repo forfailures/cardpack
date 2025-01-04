@@ -1,6 +1,4 @@
 #![warn(clippy::pedantic)]
-#![allow(clippy::needless_doctest_main)] // want this just for the README.md
-
 //! Library to represent various decks of playing cards. The library is designed to support the
 //! following features:
 //!
@@ -68,9 +66,11 @@
 //!
 //! assert_eq!(modern_deck.len(), 54);
 //!
-//! // For a joker card's index string, `B` stands for Big Joker and `L` for Little Joker,
-//! // with `🃟` being the symbol character for the joker suit.
-//! assert_eq!(modern_deck.draw(3).to_string(), "B🃟 L🃟 A♠");
+//! // For a joker card's index string, `B` stands for the Big or Full-Color Joker and `L` for the
+//! // Little or One-Color Joker, with `🃟` being the symbol character for the joker suit.
+//! assert_eq!(modern_deck.draw_first().unwrap().long(&FluentName::US_ENGLISH), "Full-Color Joker");
+//! assert_eq!(modern_deck.draw_first().unwrap().long(&FluentName::US_ENGLISH), "One-Color Joker");
+//! assert_eq!(modern_deck.draw(3).to_string(), "A♠ K♠ Q♠");
 //! ```
 //!
 //! Other decks include:
@@ -193,7 +193,8 @@
 //! assert!(deck.draw_first().is_none());
 //! ```
 
-// You can test your README code!!!
+#![allow(clippy::needless_doctest_main)] // want this just for the README.md
+                                         // 🤩 You can test your README code!!!
 #[doc = include_str!("../README.md")]
 pub mod decks;
 pub mod localization;

@@ -100,7 +100,7 @@ impl Tarot {
     pub const PAGE_SYMBOL: char = '📜';
 
     fn major_arcana() -> Pile<Tarot, Tarot> {
-        let mut pile = Pile::<Tarot, Tarot>::new(Vec::new());
+        let mut pile = Pile::<Tarot, Tarot>::from(Vec::new());
 
         for rank in Tarot::major_arcana_rank_names() {
             pile.push(Tarot::major_arcana_card_factory(rank));
@@ -147,7 +147,7 @@ impl Tarot {
         let ranks = Rank::<Tarot>::ranks_from_array(&Tarot::rank_names());
         let suits = Suit::<Tarot>::suits();
 
-        let mut pile = Pile::<Tarot, Tarot>::new(Vec::new());
+        let mut pile = Pile::<Tarot, Tarot>::from(Vec::new());
 
         for suit in &suits {
             for rank in &ranks {

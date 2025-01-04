@@ -55,12 +55,6 @@ impl<
         SuitType: Suited + Ord + Clone + Default + Hash,
     > Pile<RankType, SuitType>
 {
-    /// Constructor for a Pile of Cards.
-    #[must_use]
-    pub fn new(cards: Vec<Card<RankType, SuitType>>) -> Self {
-        Self(cards)
-    }
-
     #[must_use]
     pub fn as_hashset(&self) -> HashSet<Card<RankType, SuitType>> {
         let mut hashset = HashSet::new();
@@ -372,7 +366,7 @@ impl<
     > From<Vec<Card<RankType, SuitType>>> for Pile<RankType, SuitType>
 {
     fn from(cards: Vec<Card<RankType, SuitType>>) -> Self {
-        Pile::new(cards)
+        Pile(cards)
     }
 }
 
@@ -413,7 +407,7 @@ mod types__pile__tests {
     use std::str::FromStr;
 
     fn test_pile() -> Pile<French, French> {
-        Pile::<French, French>::new(vec![
+        Pile::<French, French>::from(vec![
             Card::from_str("2S").unwrap(),
             Card::from_str("TD").unwrap(),
             Card::from_str("AH").unwrap(),

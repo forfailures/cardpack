@@ -32,7 +32,7 @@ pub trait Decked<
         let ranks = Rank::<RankType>::ranks();
         let suits = Suit::<SuitType>::suits();
 
-        let mut pile = Pile::<RankType, SuitType>::new(Vec::new());
+        let mut pile = Pile::<RankType, SuitType>::from(Vec::new());
 
         for suit in &suits {
             for rank in &ranks {
@@ -49,7 +49,7 @@ pub trait Decked<
     /// in the v.0.5 cardpack library.
     #[must_use]
     fn decks(n: usize) -> Pile<RankType, SuitType> {
-        let mut pile = Pile::<RankType, SuitType>::new(Vec::new());
+        let mut pile = Pile::<RankType, SuitType>::from(Vec::new());
         for _ in 0..n {
             pile.extend(&Self::deck());
         }

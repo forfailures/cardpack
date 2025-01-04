@@ -35,7 +35,7 @@ impl Decked<Pinochle, French> for Pinochle {
         let ranks = Rank::<Pinochle>::ranks_from_array(&Pinochle::rank_names());
         let suits = Suit::<French>::suits();
 
-        let mut pile = Pile::<Pinochle, French>::new(Vec::new());
+        let mut pile = Pile::<Pinochle, French>::from(Vec::new());
 
         for suit in &suits {
             for rank in &ranks {

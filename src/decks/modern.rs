@@ -53,7 +53,7 @@ impl Modern {
 
     #[must_use]
     pub fn jokers() -> Pile<Modern, Modern> {
-        let mut pile = Pile::<Modern, Modern>::new(Vec::new());
+        let mut pile = Pile::<Modern, Modern>::from(Vec::new());
 
         pile.push(Self::big_joker());
         pile.push(Self::little_joker());
