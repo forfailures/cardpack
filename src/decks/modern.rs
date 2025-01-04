@@ -226,7 +226,7 @@ mod decks__modern__tests {
     #[test]
     fn decked__deck() {
         let deck = Modern::deck();
-        let mut shuffled = deck.shuffle_default();
+        let mut shuffled = deck.shuffle();
         shuffled.sort_in_place();
 
         assert_eq!(54, deck.len());
@@ -304,9 +304,9 @@ mod decks__modern__tests {
     #[test]
     fn pile__sort() {
         let deck = Modern::deck();
-        let mut shuffled = deck.shuffle_default();
+        let mut shuffled = deck.shuffle();
 
-        shuffled.shuffle_in_place_default();
+        shuffled.shuffle_in_place();
         shuffled.sort_in_place();
 
         assert_eq!(deck.to_string(), shuffled.to_string());
@@ -315,7 +315,7 @@ mod decks__modern__tests {
     #[test]
     fn to_string__from_str() {
         let deck = Modern::deck();
-        let shuffled = deck.shuffle_default().to_string();
+        let shuffled = deck.shuffle().to_string();
         let parsed = modern!(&shuffled).unwrap();
 
         assert!(deck.same(&parsed));

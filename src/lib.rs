@@ -31,7 +31,7 @@
 //! );
 //! assert!(french_deck.contains(&card!(AS)));
 //!
-//! let shuffled = french_deck.shuffle_default();
+//! let shuffled = french_deck.shuffle();
 //! let parsed = cards!(shuffled.to_string().as_str()).unwrap();
 //!
 //! // Verify that the cards, in any order, are the same:
@@ -191,6 +191,10 @@
 //! // And now the deck is empty:
 //! assert!(deck.draw_first().is_none());
 //! ```
+
+// You can test your README code!!! 
+#[doc = include_str!("../README.md")]
+
 pub mod decks;
 pub mod localization;
 pub mod prelude;

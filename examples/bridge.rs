@@ -112,7 +112,7 @@ pub struct BridgeBoard {
 
 impl BridgeBoard {
     pub fn deal() -> BridgeBoard {
-        let mut cards = French::deck().shuffle_default();
+        let mut cards = French::deck().shuffle();
         let pack = cards.clone();
 
         let dealer = BridgeDirection::random();

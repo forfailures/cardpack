@@ -58,7 +58,7 @@ pub trait Decked<
 
     fn demo(verbose: bool) {
         let deck = Self::deck();
-        let shuffled = deck.shuffle_default();
+        let shuffled = deck.shuffle();
         let name = Self::name();
 
         println!();

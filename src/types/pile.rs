@@ -238,13 +238,13 @@ impl<
     }
 
     #[must_use]
-    pub fn shuffle_default(&self) -> Self {
+    pub fn shuffle(&self) -> Self {
         let mut pile = self.clone();
-        pile.shuffle_in_place_default();
+        pile.shuffle_in_place();
         pile
     }
 
-    pub fn shuffle_in_place<F>(&mut self, mut rng: F)
+    pub fn shuffle_in_place_custom<F>(&mut self, mut rng: F)
     where
         F: FnMut(usize) -> usize,
     {
@@ -257,7 +257,7 @@ impl<
         self.0 = shuffled;
     }
 
-    pub fn shuffle_in_place_default(&mut self) {
+    pub fn shuffle_in_place(&mut self) {
         let mut rng = thread_rng();
         self.0.shuffle(&mut rng);
     }
@@ -497,7 +497,7 @@ mod types__pile__tests {
     #[test]
     fn same() {
         let deck = French::deck();
-        let alt = deck.shuffle_default();
+        let alt = deck.shuffle();
 
         assert!(deck.same(&alt));
         assert!(alt.same(&deck));
@@ -508,7 +508,7 @@ mod types__pile__tests {
     #[test]
     fn same__false() {
         let deck = French::deck();
-        let mut alt = deck.shuffle_default();
+        let mut alt = deck.shuffle();
         alt.draw_last();
 
         assert!(!deck.same(&alt));

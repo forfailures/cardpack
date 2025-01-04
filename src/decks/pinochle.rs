@@ -107,7 +107,7 @@ mod decks__pinochle__tests {
     #[test]
     fn decked__sort() {
         let deck = Pinochle::deck();
-        let mut shuffled = deck.shuffle_default();
+        let mut shuffled = deck.shuffle();
         shuffled.sort_in_place();
 
         let expected = "A♠ T♠ K♠ Q♠ J♠ 9♠ A♥ T♥ K♥ Q♥ J♥ 9♥ A♦ T♦ K♦ Q♦ J♦ 9♦ A♣ T♣ K♣ Q♣ J♣ 9♣";
@@ -119,9 +119,9 @@ mod decks__pinochle__tests {
     #[test]
     fn pile__sort() {
         let deck = Pinochle::deck();
-        let mut shuffled = deck.shuffle_default();
+        let mut shuffled = deck.shuffle();
 
-        shuffled.shuffle_in_place_default();
+        shuffled.shuffle_in_place();
         shuffled.sort_in_place();
 
         assert_eq!(deck.to_string(), shuffled.to_string());
@@ -130,7 +130,7 @@ mod decks__pinochle__tests {
     #[test]
     fn to_string__from_str() {
         let deck = Pinochle::deck();
-        let shuffled = deck.shuffle_default().to_string();
+        let shuffled = deck.shuffle().to_string();
         let parsed = Pinochle::from_str(&shuffled).unwrap();
 
         assert!(deck.same(&parsed));
