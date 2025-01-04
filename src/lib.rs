@@ -1,4 +1,5 @@
 #![warn(clippy::pedantic)]
+#![allow(clippy::needless_doctest_main)] // want this just for the README.md
 
 //! Library to represent various decks of playing cards. The library is designed to support the
 //! following features:
@@ -54,7 +55,7 @@
 //!
 //! An important thing to remember about the decks is that the cards have their weight inside them
 //! to facilitate sorting. If you wanted a deck for Razz poker, where the lowest hand wins, you
-//! would need to create a separate deck file with the card's `Rank` weights adjusted.
+//! would need to create a separate deck file with the card's `Rank` weights inverted.
 //!
 //! ## Modern Deck
 //!
@@ -68,13 +69,13 @@
 //! assert_eq!(modern_deck.len(), 54);
 //!
 //! // For a joker card's index string, `B` stands for Big Joker and `L` for Little Joker,
-//! // with `🃟` being the symbol character for the trump suit.
+//! // with `🃟` being the symbol character for the joker suit.
 //! assert_eq!(modern_deck.draw(3).to_string(), "B🃟 L🃟 A♠");
 //! ```
 //!
 //! Other decks include:
 //!
-//! - [`Canasta`](decks::canasta::Canasta) - 2 Modern decks with the red 3s made trumps.
+//! - [`Canasta`](decks::canasta::Canasta) - 2 Modern decks with the red 3s made jokers.
 //! - [`Euchre`](decks::euchre24::Euchre24) - A 24 card version of a Euchre deck.
 //! - [`HandAndFoot`](decks::hand_and_foot::HandAndFoot) - 5 Modern decks.
 //! - [`Manila`](decks::manila::Manila) - A 36 card deck with ranks 6 through Ace.
@@ -192,9 +193,8 @@
 //! assert!(deck.draw_first().is_none());
 //! ```
 
-// You can test your README code!!! 
+// You can test your README code!!!
 #[doc = include_str!("../README.md")]
-
 pub mod decks;
 pub mod localization;
 pub mod prelude;

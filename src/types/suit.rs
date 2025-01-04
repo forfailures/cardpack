@@ -43,7 +43,7 @@ where
     /// Revised version that inverts the weight for sorting, making Spades be the highest. Has no
     /// effect on the generated card ranks, but does make sorting easier.
     ///
-    /// TODO: need a way to add trumps suit. Right now this assumes standard 52
+    /// TODO: need a way to add the jokers suit. Right now this assumes standard 52
     #[must_use]
     pub fn ckc_number(&self) -> u32 {
         match self.weight {
@@ -58,6 +58,14 @@ where
             .iter()
             .map(|name| Self::new(name))
             .collect()
+    }
+
+    #[must_use]
+    pub fn index(&self) -> String {
+        self.name.fluent_value(
+            Suit::<SuitType>::FLUENT_INDEX_SECTION,
+            &Suit::<SuitType>::US_ENGLISH,
+        )
     }
 
     #[must_use]
@@ -158,7 +166,7 @@ impl<SuitType: Suited> From<char> for Suit<SuitType> {
                 'H' | 'h' | '♡' | '♥' => Suit::<SuitType>::new(French::HEARTS),
                 'D' | 'd' | '♢' | '♦' => Suit::<SuitType>::new(French::DIAMONDS),
                 'C' | 'c' | '♧' | '♣' => Suit::<SuitType>::new(French::CLUBS),
-                '🃟' | 'T' | 't' => Suit::new(Modern::TRUMP),
+                '🃟' | 'J' | 'j' | 'T' | 't' => Suit::new(Modern::JOKER),
                 'M' | 'm' => Suit::new(Tarot::MAJOR_ARCANA),
                 _ => Suit::new(FluentName::BLANK),
             },

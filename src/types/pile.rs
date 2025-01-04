@@ -11,6 +11,36 @@ use std::fmt::Display;
 use std::hash::Hash;
 use std::str::FromStr;
 
+/// `Pile` is a [generic data type](https://doc.rust-lang.org/book/ch10-01-syntax.html)
+/// whose specific implementations implement the [`Decked`](crate::types::traits::Decked) trait,
+/// which is made of a [`Vec`] of [`Cards`](Card) that implement the [`Ranked`], and [`Suited`] traits.
+/// Implementations of a specific type of `Pile` are stored in the [`decks`](crate::decks) module.
+///
+/// The most common deck is the [`French`](crate::decks::french::French) deck:
+///
+/// ```rust
+/// use cardpack::prelude::{Decked, French, Pile};
+/// let mut french_deck: Pile<French, French> = French::deck();
+///
+/// assert_eq!(french_deck.rank_index(), "A K Q J T 9 8 7 6 5 4 3 2");
+/// assert_eq!(french_deck.suit_symbol_index(), "♠ ♥ ♦ ♣");
+/// assert_eq!(french_deck.suit_index(), "S H D C");
+/// assert_eq!(french_deck.draw(5).to_string(), "A♠ K♠ Q♠ J♠ T♠");
+/// assert_eq!(french_deck.len(), 47);
+/// ```
+///
+/// The [`Modern`](crate::decks::modern::Modern) deck is simply the
+/// [`French`](crate::decks::french::French) deck with the addition of the big and little jokers,
+/// which belong to the joker suit.
+///
+/// ```rust
+/// use cardpack::prelude::{Decked, Modern, Pile};
+/// let modern_deck: Pile<Modern, Modern> = Modern::deck();
+///
+/// assert_eq!(modern_deck.rank_index(), "B L A K Q J T 9 8 7 6 5 4 3 2");
+/// assert_eq!(modern_deck.suit_symbol_index(), "🃟 ♠ ♥ ♦ ♣");
+/// assert_eq!(modern_deck.suit_index(), "J S H D C");
+/// ```
 #[derive(Clone, Debug, Default, Hash, Ord, PartialOrd, Eq, PartialEq)]
 pub struct Pile<
     RankType: Ranked + PartialOrd + Ord + Clone + Default + Hash,
@@ -25,6 +55,7 @@ impl<
         SuitType: Suited + Ord + Clone + Default + Hash,
     > Pile<RankType, SuitType>
 {
+    /// Constructor for a Pile of Cards.
     #[must_use]
     pub fn new(cards: Vec<Card<RankType, SuitType>>) -> Self {
         Self(cards)
@@ -182,7 +213,36 @@ impl<
         self.ranks()
             .iter()
             .map(ToString::to_string)
-            .collect::<String>()
+            .collect::<Vec<String>>()
+            .join(" ")
+    }
+
+    #[must_use]
+    pub fn suits(&self) -> Vec<Suit<SuitType>> {
+        let hashset: HashSet<Suit<SuitType>> = self.0.iter().map(|c| c.suit.clone()).collect();
+        let mut suits: Vec<Suit<SuitType>> = Vec::from_iter(hashset);
+        suits.sort();
+        suits.reverse();
+        suits
+    }
+
+    pub fn suit_index(&self) -> String {
+        self.suit_indexed(Suit::index, " ")
+    }
+
+    pub fn suit_symbol_index(&self) -> String {
+        self.suit_indexed(Suit::symbol, " ")
+    }
+
+    fn suit_indexed<F>(&self, map_fn: F, joiner: &str) -> String
+    where
+        F: Fn(&Suit<SuitType>) -> String,
+    {
+        self.suits()
+            .iter()
+            .map(map_fn)
+            .collect::<Vec<String>>()
+            .join(joiner)
     }
 
     #[must_use]

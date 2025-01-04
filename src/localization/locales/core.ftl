@@ -9,14 +9,14 @@ spades-symbol = ♠
 hearts-symbol = ♥
 diamonds-symbol = ♦
 clubs-symbol = ♣
-trump-symbol = 🃟
+joker-symbol = 🃟
 
 spades-light-symbol = ♤
 hearts-light-symbol = ♡
 diamonds-light-symbol = ♢
 clubs-light-symbol = ♧
 
-trump-weight = 5
+joker-weight = 5
 spades-weight = 4
 hearts-weight = 3
 diamonds-weight = 2

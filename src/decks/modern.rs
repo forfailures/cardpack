@@ -39,16 +39,16 @@ impl Modern {
     pub const LITTLE: &'static str = "little-joker";
 
     // Rank
-    pub const TRUMP: &'static str = "trump";
+    pub const JOKER: &'static str = "joker";
 
     #[must_use]
     pub fn big_joker() -> Card<Modern, Modern> {
-        Card::new(Rank::new(Self::BIG), Suit::new(Self::TRUMP))
+        Card::new(Rank::new(Self::BIG), Suit::new(Self::JOKER))
     }
 
     #[must_use]
     pub fn little_joker() -> Card<Modern, Modern> {
-        Card::new(Rank::new(Self::LITTLE), Suit::new(Self::TRUMP))
+        Card::new(Rank::new(Self::LITTLE), Suit::new(Self::JOKER))
     }
 
     #[must_use]
@@ -139,13 +139,13 @@ impl Suited for Modern {
     fn suit_chars() -> Vec<char> {
         vec![
             '♤', '♠', 'S', 's', '♡', '♥', 'H', 'h', '♢', '♦', 'D', 'd', '♧', '♣', 'C', 'c', '🃟',
-            'T', 't',
+            'T', 't', 'J', 'j',
         ]
     }
 
     fn suit_names() -> Vec<&'static str> {
         vec![
-            Modern::TRUMP,
+            Modern::JOKER,
             French::SPADES,
             French::HEARTS,
             French::DIAMONDS,
@@ -200,18 +200,18 @@ mod decks__modern__tests {
     fn big_joker() {
         let card = Modern::big_joker();
 
-        assert_eq!("BT", card.index);
+        assert_eq!("BJ", card.index);
         assert_eq!(card.rank.name, FluentName::new(Modern::BIG));
-        assert_eq!(card.suit.name, FluentName::new(Modern::TRUMP));
+        assert_eq!(card.suit.name, FluentName::new(Modern::JOKER));
     }
 
     #[test]
     fn little_joker() {
         let card = Modern::little_joker();
 
-        assert_eq!("LT", card.index);
+        assert_eq!("LJ", card.index);
         assert_eq!(card.rank.name, FluentName::new(Modern::LITTLE));
-        assert_eq!(card.suit.name, FluentName::new(Modern::TRUMP));
+        assert_eq!(card.suit.name, FluentName::new(Modern::JOKER));
     }
 
     #[test]

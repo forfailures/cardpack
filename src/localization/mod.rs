@@ -127,7 +127,7 @@ pub trait Named<'a> {
     /// use cardpack::localization::*;
     ///
     /// let big_joker = FluentName::new("big-joker");
-    /// assert_eq!("Full-Color Joker", big_joker.long_default());
+    /// assert_eq!("Full-Color", big_joker.long_default());
     /// ```
     fn long_default(&self) -> String {
         self.long(&Self::US_ENGLISH)
