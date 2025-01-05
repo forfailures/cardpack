@@ -401,18 +401,19 @@ impl<
 ///
 /// ```rust
 /// use cardpack::prelude::*;
-/// let wheel = Pile::<French, French>::from_str("5S 4♠ 3♠ 2s a♠").unwrap();
+/// let wheel = Pile::<French, French>::from_str("5♠ 4♠ 3♠ 2♠ a♠").unwrap();
 ///
-/// assert_eq!(wheel.to_string(), "5♠ 4♠ 3♠ 2♠ A♠");
+/// assert_eq!(wheel.index(), "5S 4S 3S 2S AS");
 /// ```
 ///
 /// It is also possible to mix and match:
 ///
 /// ```rust
 /// use cardpack::prelude::*;
-/// let wheel = Pile::<French, French>::from_str("5♠ 4♠ 2♠ 2♠ a♠").unwrap();
 ///
-/// assert_eq!(wheel.index(), "5S 4S 2S 2S AS");
+/// let wheel = Pile::<French, French>::from_str("5S 4♠ 3♠ 2s A♠").unwrap();
+///
+/// assert_eq!(wheel.to_string(), "5♠ 4♠ 3♠ 2♠ A♠");
 /// ```
 ///
 /// **ASIDE:** This is probably my biggest embarrassment when coding this library the first time. I had no
