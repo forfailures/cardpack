@@ -49,11 +49,7 @@ pub trait Decked<
     /// in the v.0.5 cardpack library.
     #[must_use]
     fn decks(n: usize) -> Pile<RankType, SuitType> {
-        let mut pile = Pile::<RankType, SuitType>::from(Vec::new());
-        for _ in 0..n {
-            pile.extend(&Self::deck());
-        }
-        pile
+        Pile::<RankType, SuitType>::pile_up(n, <Self as Decked<RankType, SuitType>>::deck)
     }
 
     fn demo(verbose: bool) {

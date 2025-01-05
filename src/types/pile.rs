@@ -184,31 +184,43 @@ impl<
     /// let pile2 = FrenchDeck::from_str("5♠ 6♠ 7♠").unwrap();
     /// let piles = vec![pile1, pile2];
     ///
-    /// let pile = FrenchDeck::pile_on(piles);
+    /// let pile = FrenchDeck::pile_on(&piles);
     ///
     /// assert_eq!(pile.to_string(), "2♠ 8♠ 4♠ 5♠ 6♠ 7♠");
     /// ```
     ///
     /// ## ASIDE
     ///
-    /// How cool is it that you can create a type alias that prepopulates the generic types? I
-    /// just figured this out.
+    /// How cool is it that you can create a type alias that prepopulates the generic types?
     #[must_use]
-    pub fn pile_on(piles: Vec<Pile<RankType, SuitType>>) -> Self {
+    pub fn pile_on(piles: &Vec<Pile<RankType, SuitType>>) -> Self {
         let mut pile = Pile::default();
         for p in piles {
-            pile.extend(&p);
+            pile.extend(p);
         }
         pile
     }
 
-    /// TODO: fixme
-    pub fn pile_up(n: usize, f: fn() -> Vec<Card<RankType, SuitType>>) -> Self {
-        let mut cards = Vec::new();
+    /// Returns a `Pile` by calling the passed in function `n` times and consolidating the results
+    /// into a single `Pile`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// fn ak() -> Pile<French, French> {
+    ///     Pile::<French, French>::from_str("A♠ K♠").unwrap()
+    /// }
+    ///
+    /// let pile = Pile::<French, French>::pile_up(3, ak);
+    ///
+    /// assert_eq!(pile.to_string(), "A♠ K♠ A♠ K♠ A♠ K♠");
+    /// ```
+    pub fn pile_up(n: usize, f: fn() -> Pile<RankType, SuitType>) -> Self {
+        let mut cards = Pile::<RankType, SuitType>::default();
         for _ in 0..n {
-            cards.extend(f());
+            cards.extend(&f());
         }
-        Self(cards)
+        cards
     }
 
     /// Returns the zero indexed position of a [`Card`] in the `Pile`.
