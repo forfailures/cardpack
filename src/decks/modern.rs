@@ -31,6 +31,11 @@ macro_rules! modern {
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Modern {}
 
+#[allow(clippy::module_name_repetitions)]
+pub type ModernCard = Card<Modern, Modern>;
+#[allow(clippy::module_name_repetitions)]
+pub type ModernDeck = Pile<Modern, Modern>;
+
 impl Modern {
     pub const DECK_NAME: &'static str = "Modern";
 

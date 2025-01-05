@@ -292,7 +292,7 @@ impl BridgeBoard {
 
         let coll: Vec<Card<French, French>> = v
             .iter()
-            .map(|s| self.pack.card_by_index(s.as_str()).unwrap().clone())
+            .map(|s| self.pack.card_by_index(s).unwrap().clone())
             .collect();
 
         Pile::from(coll)

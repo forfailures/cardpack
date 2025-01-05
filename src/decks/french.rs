@@ -384,6 +384,11 @@ pub struct French {}
 /// `Standard52` type alias for `French` to allow for people to use the old name for the `Deck`.
 pub type Standard52 = French;
 
+#[allow(clippy::module_name_repetitions)]
+pub type FrenchCard = Card<French, French>;
+#[allow(clippy::module_name_repetitions)]
+pub type FrenchDeck = Pile<French, French>;
+
 impl French {
     pub const DECK_NAME: &'static str = "French";
     const GUIDE: &'static str = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp";

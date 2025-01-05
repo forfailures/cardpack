@@ -22,7 +22,7 @@ use std::str::FromStr;
 /// use cardpack::prelude::{Decked, French, Pile};
 /// let mut french_deck: Pile<French, French> = French::deck();
 ///
-/// assert_eq!(french_deck.rank_index(), "A K Q J T 9 8 7 6 5 4 3 2");
+/// assert_eq!(french_deck.rank_index_joined(" "), "A K Q J T 9 8 7 6 5 4 3 2");
 /// assert_eq!(french_deck.suit_symbol_index(), "♠ ♥ ♦ ♣");
 /// assert_eq!(french_deck.suit_index(), "S H D C");
 /// assert_eq!(french_deck.draw(5).to_string(), "A♠ K♠ Q♠ J♠ T♠");
@@ -37,7 +37,7 @@ use std::str::FromStr;
 /// use cardpack::prelude::{Decked, Modern, Pile};
 /// let modern_deck: Pile<Modern, Modern> = Modern::deck();
 ///
-/// assert_eq!(modern_deck.rank_index(), "B L A K Q J T 9 8 7 6 5 4 3 2");
+/// assert_eq!(modern_deck.rank_index(), "BLAKQJT98765432");
 /// assert_eq!(modern_deck.suit_symbol_index(), "🃟 ♠ ♥ ♦ ♣");
 /// assert_eq!(modern_deck.suit_index(), "J S H D C");
 /// ```
@@ -60,6 +60,8 @@ impl<
         self.clone().0.into_iter().collect()
     }
 
+    ///
+    ///
     /// Here's the original code:
     ///
     /// ```txt
@@ -72,8 +74,8 @@ impl<
     /// Why TF not just use `Card::from_str()?` I guess the big difference is that
     /// the card is actually in the Pile in question. Do I need this?
     #[must_use]
-    pub fn card_by_index(&self, index: &str) -> Option<Card<RankType, SuitType>> {
-        match Card::<RankType, SuitType>::from_str(index) {
+    pub fn card_by_index<S: Into<String>>(&self, index: S) -> Option<Card<RankType, SuitType>> {
+        match Card::<RankType, SuitType>::from_str(index.into().as_str()) {
             Ok(c) => {
                 if self.contains(&c) {
                     Some(c)
@@ -173,6 +175,34 @@ impl<
         map
     }
 
+    /// Returns a simple new `Pile` from the consolidated passed in vector of `Piles`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// // `FrenchDeck` is the same as `Pile<French, French>`.
+    /// let pile1 = FrenchDeck::from_str("2♠ 8♠ 4♠").unwrap();
+    /// let pile2 = FrenchDeck::from_str("5♠ 6♠ 7♠").unwrap();
+    /// let piles = vec![pile1, pile2];
+    ///
+    /// let pile = FrenchDeck::pile_on(piles);
+    ///
+    /// assert_eq!(pile.to_string(), "2♠ 8♠ 4♠ 5♠ 6♠ 7♠");
+    /// ```
+    ///
+    /// ## ASIDE
+    ///
+    /// How cool is it that you can create a type alias that prepopulates the generic types? I
+    /// just figured this out.
+    #[must_use]
+    pub fn pile_on(piles: Vec<Pile<RankType, SuitType>>) -> Self {
+        let mut pile = Pile::default();
+        for p in piles {
+            pile.extend(&p);
+        }
+        pile
+    }
+
+    /// TODO: fixme
     pub fn pile_up(n: usize, f: fn() -> Vec<Card<RankType, SuitType>>) -> Self {
         let mut cards = Vec::new();
         for _ in 0..n {
@@ -181,13 +211,33 @@ impl<
         Self(cards)
     }
 
+    /// Returns the zero indexed position of a [`Card`] in the `Pile`.
+    ///
+    /// ```rust
+    /// use cardpack::prelude::*;
+    /// let pile = Modern::deck();
+    ///
+    /// let card = ModernCard::from_str("2♣").unwrap();
+    ///
+    /// assert_eq!(pile.position(&card).unwrap(), 53);
+    /// ```
     #[must_use]
     pub fn position(&self, card: &Card<RankType, SuitType>) -> Option<usize> {
         self.0.iter().position(|c| c.index == card.index)
     }
 
-    // Takes a reference to the prepended entity, clones it, appends the original to the passed in
-    // entity, and replaces the original with the new one.
+    /// Adds a Pile of [`Cards`](Card) to the end of another pile.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// let mut hand = Pile::<French, French>::from_str("K♦ J♦").unwrap();
+    /// let flop = Pile::<French, French>::from_str("A♦ T♦ Q♦").unwrap();
+    /// hand.prepend(&flop);
+    /// hand.sort_in_place();
+    ///
+    /// assert_eq!(hand.to_string(), "A♦ K♦ Q♦ J♦ T♦");
+    /// ```
     pub fn prepend(&mut self, other: &Pile<RankType, SuitType>) {
         let mut product = other.0.clone();
         product.append(&mut self.0);
@@ -195,6 +245,15 @@ impl<
     }
 
     /// Places the Card at the bottom (end) of the Pile.
+    ///
+    /// ```rust
+    /// use cardpack::prelude::*;
+    ///
+    /// let mut hand = Pile::<French, French>::from_str("K♠ A♠").unwrap();
+    /// hand.push(Card::<French, French>::from_str("Q♠").unwrap());
+    ///
+    /// assert_eq!(hand.to_string(), "K♠ A♠ Q♠");
+    /// ```
     pub fn push(&mut self, card: Card<RankType, SuitType>) -> bool {
         if card.is_blank() {
             false
@@ -204,12 +263,31 @@ impl<
         }
     }
 
+    /// String of all the [`Ranks`](Rank) in the `Pile`.
+    ///
+    /// ```rust
+    /// use cardpack::prelude::*;
+    /// let pile = Manila::deck();
+    /// assert_eq!(pile.rank_index(), "AKQJT9876");
+    /// ```
+    #[must_use]
     pub fn rank_index(&self) -> String {
+        self.rank_index_joined("")
+    }
+
+    /// String of all the [`Ranks`](Rank) in the `Pile`, joined by the passed in separator.
+    ///
+    /// ```rust
+    /// use cardpack::prelude::*;
+    /// let pile = Manila::deck();
+    /// assert_eq!(pile.rank_index_joined(" "), "A K Q J T 9 8 7 6");
+    /// ```
+    pub fn rank_index_joined(&self, sep: &str) -> String {
         self.ranks()
             .iter()
             .map(ToString::to_string)
             .collect::<Vec<String>>()
-            .join(" ")
+            .join(sep)
     }
 
     #[must_use]
