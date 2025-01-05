@@ -6,3 +6,4 @@ set -x
 cargo test
 cargo clippy
 cargo fmt
+cargo doc --no-deps
