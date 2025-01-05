@@ -57,11 +57,7 @@ impl<
 {
     #[must_use]
     pub fn as_hashset(&self) -> HashSet<Card<RankType, SuitType>> {
-        let mut hashset = HashSet::new();
-        for card in &self.0 {
-            hashset.insert(card.clone());
-        }
-        hashset
+        self.clone().0.into_iter().collect()
     }
 
     /// Here's the original code:
@@ -154,6 +150,11 @@ impl<
     #[must_use]
     pub fn len(&self) -> usize {
         self.0.len()
+    }
+
+    #[must_use]
+    pub fn iter(&self) -> std::vec::IntoIter<<Pile<RankType, SuitType> as IntoIterator>::Item> {
+        <&Self as IntoIterator>::into_iter(self)
     }
 
     /// # Panics
@@ -395,6 +396,51 @@ impl<
         } else {
             Ok(cards)
         }
+    }
+}
+
+/// ```rust
+/// use cardpack::prelude::*;
+/// let pile = French::deck();
+///
+/// // Need to clone since `Pile` doesn't implement `Copy`.
+/// for card in pile.clone() {
+///    assert!(pile.contains(&card));
+/// }
+/// ```
+impl<
+        RankType: Ranked + Ord + Clone + Default + Hash,
+        SuitType: Suited + Ord + Clone + Default + Hash,
+    > IntoIterator for Pile<RankType, SuitType>
+{
+    type Item = Card<RankType, SuitType>;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter()
+    }
+}
+
+/// For a `Pile` reference, the implementation of the trait will internally `clone()` the `Cards`.
+///
+/// ```rust
+/// use cardpack::prelude::*;
+/// let pile = French::deck();
+///
+/// for card in &pile {
+///    assert!(pile.contains(&card));
+/// }
+/// ```
+impl<
+        RankType: Ranked + Ord + Clone + Default + Hash,
+        SuitType: Suited + Ord + Clone + Default + Hash,
+    > IntoIterator for &Pile<RankType, SuitType>
+{
+    type Item = Card<RankType, SuitType>;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        <Vec<Card<RankType, SuitType>> as Clone>::clone(&self.0).into_iter()
     }
 }
 
