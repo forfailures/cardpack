@@ -149,6 +149,13 @@ impl<
         self.0.is_empty()
     }
 
+    /// Returns the length of the `Pile`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// assert_eq!(French::deck().len(), 52);
+    /// assert_eq!(Modern::deck().len(), 54);
+    /// ```
     #[must_use]
     pub fn len(&self) -> usize {
         self.0.len()
