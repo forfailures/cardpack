@@ -159,6 +159,23 @@ impl<
         <&Self as IntoIterator>::into_iter(self)
     }
 
+    /// Takes the `Pile` and returns a `HashMap` of the cards mapped by their [`Suit`].
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = Manila::deck();
+    ///
+    /// let map = pile.map_by_suit();
+    ///
+    /// assert_eq!(map.len(), 4);
+    /// assert_eq!(map.get(&Suit::<French>::new(French::SPADES)).unwrap().to_string(), "A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠");
+    /// assert_eq!(map.get(&Suit::<French>::new(French::HEARTS)).unwrap().to_string(), "A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥");
+    /// assert_eq!(map.get(&Suit::<French>::new(French::DIAMONDS)).unwrap().to_string(), "A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦");
+    /// assert_eq!(map.get(&Suit::<French>::new(French::CLUBS)).unwrap().to_string(), "A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣");
+    /// ```
+    ///
+    /// A more advanced example of this can be found in the Bridge example in the `examples` directory.
+    ///
     /// # Panics
     ///
     /// No idea how it could. Too lazy to find a cleaner way.
