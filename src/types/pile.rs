@@ -213,34 +213,6 @@ impl<
     }
 
     #[must_use]
-    pub fn suits(&self) -> Vec<Suit<SuitType>> {
-        let hashset: HashSet<Suit<SuitType>> = self.0.iter().map(|c| c.suit.clone()).collect();
-        let mut suits: Vec<Suit<SuitType>> = Vec::from_iter(hashset);
-        suits.sort();
-        suits.reverse();
-        suits
-    }
-
-    pub fn suit_index(&self) -> String {
-        self.suit_indexed(Suit::index, " ")
-    }
-
-    pub fn suit_symbol_index(&self) -> String {
-        self.suit_indexed(Suit::symbol, " ")
-    }
-
-    fn suit_indexed<F>(&self, map_fn: F, joiner: &str) -> String
-    where
-        F: Fn(&Suit<SuitType>) -> String,
-    {
-        self.suits()
-            .iter()
-            .map(map_fn)
-            .collect::<Vec<String>>()
-            .join(joiner)
-    }
-
-    #[must_use]
     pub fn rank_index_by_suit(&self, suit: &Suit<SuitType>, joiner: &str) -> Option<String> {
         self.ranks_by_suit(suit)
             .map(|ranks| Rank::<RankType>::ranks_index(&ranks, joiner))
@@ -331,6 +303,47 @@ impl<
     }
 
     #[must_use]
+    pub fn suits(&self) -> Vec<Suit<SuitType>> {
+        let hashset: HashSet<Suit<SuitType>> = self.0.iter().map(|c| c.suit.clone()).collect();
+        let mut suits: Vec<Suit<SuitType>> = Vec::from_iter(hashset);
+        suits.sort();
+        suits.reverse();
+        suits
+    }
+
+    /// Returns a `String` with all of the [`Suit`] index letters for the `Pile` separated by spaces.
+    ///
+    /// ```rust
+    /// use cardpack::prelude::{Decked, Pile, Skat};
+    /// let skat_deck: Pile<Skat, Skat> = Skat::deck();
+    /// assert_eq!(skat_deck.suit_index(), "E L H S");
+    /// ```
+    pub fn suit_index(&self) -> String {
+        self.suit_indexed(Suit::index, " ")
+    }
+
+    /// Returns a `String` with all of the [`Suit`] symbols for the `Pile` separated by spaces.
+    ///
+    /// ```rust
+    /// use cardpack::prelude::{Decked, Pile, Tarot};
+    /// let tarot_deck: Pile<Tarot, Tarot> = Tarot::deck();
+    /// assert_eq!(tarot_deck.suit_symbol_index(), "M 🪄 🏆 ⚔ ☆");
+    pub fn suit_symbol_index(&self) -> String {
+        self.suit_indexed(Suit::symbol, " ")
+    }
+
+    fn suit_indexed<F>(&self, map_fn: F, joiner: &str) -> String
+    where
+        F: Fn(&Suit<SuitType>) -> String,
+    {
+        self.suits()
+            .iter()
+            .map(map_fn)
+            .collect::<Vec<String>>()
+            .join(joiner)
+    }
+
+    #[must_use]
     pub fn to_color_symbol_string(&self) -> String {
         self.0
             .iter()
@@ -371,7 +384,38 @@ impl<
     }
 }
 
-/// This is probably my biggest embarrassment when coding this library the first time. I had no
+/// Takes an index string or a symbol string and converts it into a `Pile`.
+///
+/// An index string is defined, in terms of this library as letters representing a [`Rank`] and a
+/// [`Suit`] for a specific deck. For example:
+///
+/// ```rust
+/// use cardpack::prelude::*;
+/// let wheel = Pile::<French, French>::from_str("5S 4S 3s 2S AS").unwrap();
+///
+/// assert_eq!(wheel.to_string(), "5♠ 4♠ 3♠ 2♠ A♠");
+/// ```
+///
+/// A symbol string is defined as a string that represents a card using the Unicode symbols for the
+/// [`Suit`] and letters or Unicode symbols for the [`Rank`]. For example:
+///
+/// ```rust
+/// use cardpack::prelude::*;
+/// let wheel = Pile::<French, French>::from_str("5S 4♠ 3♠ 2s a♠").unwrap();
+///
+/// assert_eq!(wheel.to_string(), "5♠ 4♠ 3♠ 2♠ A♠");
+/// ```
+///
+/// It is also possible to mix and match:
+///
+/// ```rust
+/// use cardpack::prelude::*;
+/// let wheel = Pile::<French, French>::from_str("5♠ 4♠ 2♠ 2♠ a♠").unwrap();
+///
+/// assert_eq!(wheel.index(), "5S 4S 2S 2S AS");
+/// ```
+///
+/// **ASIDE:** This is probably my biggest embarrassment when coding this library the first time. I had no
 /// idea that this trait existed, and bent over backwards trying to duplicate its functionality.
 ///
 /// TODO: Add a step that validates that the cards are of the correct number for the type of deck.
