@@ -2,6 +2,9 @@
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square)](LICENSE-APACHE)
 
+WIP Complete rewrite of my [cardpack.rs](https://github.com/ImperialBower/cardpack.rs) 
+library, taking advantages of generics to "simplify" the library. 
+
 ---
 Generic Deck of Cards Library in Rust
 
