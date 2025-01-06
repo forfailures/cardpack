@@ -192,6 +192,8 @@
 //! // And now the deck is empty:
 //! assert!(deck.draw_first().is_none());
 //! ```
+//!
+//! [Foop]
 
 #![allow(clippy::needless_doctest_main)] // want this just for the README.md
                                          // 🤩 You can test your README code!!!
