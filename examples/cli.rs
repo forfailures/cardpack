@@ -2,9 +2,9 @@ use cardpack::decks::canasta::Canasta;
 use cardpack::decks::euchre24::Euchre24;
 use cardpack::decks::french::French;
 use cardpack::decks::hand_and_foot::HandAndFoot;
-use cardpack::decks::manila::Manila;
 use cardpack::decks::modern::Modern;
 use cardpack::decks::pinochle::Pinochle;
+use cardpack::decks::short::Short;
 use cardpack::decks::skat::Skat;
 use cardpack::decks::spades::Spades;
 use cardpack::decks::tarot::Tarot;
@@ -68,7 +68,7 @@ fn main() -> Result<(), CardError> {
     }
 
     if args.manila {
-        Manila::demo(args.verbose);
+        Short::demo(args.verbose);
     }
 
     if args.modern {

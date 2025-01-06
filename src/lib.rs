@@ -78,7 +78,7 @@
 //! - [`Canasta`](decks::canasta::Canasta) - 2 Modern decks with the red 3s made jokers.
 //! - [`Euchre`](decks::euchre24::Euchre24) - A 24 card version of a Euchre deck.
 //! - [`HandAndFoot`](decks::hand_and_foot::HandAndFoot) - 5 Modern decks.
-//! - [`Manila`](decks::manila::Manila) - A 36 card deck with ranks 6 through Ace.
+//! - [`ShortDeck`](decks::short::Short) - A 36 card deck with ranks 6 through Ace.
 //! - [`Pinochle`](decks::pinochle::Pinochle) - A 48 card deck with two copies of the 9 through Ace ranks.
 //! - [`Skat`](decks::skat::Skat) - A 32 card German card game with different suits and ranks.
 //! - [`Spades`](decks::spades::Spades) - A Modern deck with the 2 of Clubs and 2 of Diamonds removed.

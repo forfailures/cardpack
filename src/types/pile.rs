@@ -87,6 +87,17 @@ impl<
         }
     }
 
+    /// Returns true if the card is in the `Pile`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = FrenchDeck::from_str("K♦ K♣ K♠").unwrap();
+    /// let king_of_diamonds = FrenchCard::from_str("K♦").unwrap();
+    /// let king_of_hearts = FrenchCard::from_str("K♥").unwrap();
+    ///
+    /// assert!(pile.contains(&king_of_diamonds));
+    /// assert!(!pile.contains(&king_of_hearts));
+    /// ```
     #[must_use]
     pub fn contains(&self, card: &Card<RankType, SuitType>) -> bool {
         self.0.contains(card)
@@ -134,16 +145,31 @@ impl<
         self.0.get(index)
     }
 
+    /// Returns a string of the index of the cards in the `Pile`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = FrenchDeck::from_str("K♦ K♣ K♠").unwrap();
+    ///
+    /// assert_eq!(pile.index(), "KD KC KS");
+    /// ```
     #[must_use]
     pub fn index(&self) -> String {
-        let mut s = String::new();
-        for card in &self.0 {
-            s.push_str(&card.index);
-            s.push(' ');
-        }
-        s.trim().to_string()
+        self.iter()
+            .map(|c| c.index)
+            .collect::<Vec<String>>()
+            .join(" ")
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// assert!(FrenchDeck::default().is_empty());
+    /// assert!(!French::deck().is_empty());
+    /// assert!(ModernDeck::default().is_empty());
+    /// assert!(!Modern::deck().is_empty());
+    /// assert!(ShortDeck::default().is_empty());
+    /// assert!(!Short::deck().is_empty());
+    /// ```
     #[must_use]
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
@@ -170,7 +196,7 @@ impl<
     ///
     /// ```
     /// use cardpack::prelude::*;
-    /// let pile = Manila::deck();
+    /// let pile = Short::deck();
     ///
     /// let map = pile.map_by_suit();
     ///
@@ -303,7 +329,7 @@ impl<
     ///
     /// ```rust
     /// use cardpack::prelude::*;
-    /// let pile = Manila::deck();
+    /// let pile = Short::deck();
     /// assert_eq!(pile.rank_index(), "AKQJT9876");
     /// ```
     #[must_use]
@@ -315,7 +341,7 @@ impl<
     ///
     /// ```rust
     /// use cardpack::prelude::*;
-    /// let pile = Manila::deck();
+    /// let pile = Short::deck();
     /// assert_eq!(pile.rank_index_joined(" "), "A K Q J T 9 8 7 6");
     /// ```
     pub fn rank_index_joined(&self, sep: &str) -> String {
@@ -370,6 +396,17 @@ impl<
         }
     }
 
+    /// Returns true if the Cards of the passed in `Pile` are identical to the `Pile`, regqrdless
+    /// of order.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = Canasta::deck();
+    /// let other_pile = pile.shuffle();
+    ///
+    /// assert!(pile.same(&pile));
+    /// assert!(pile.same(&other_pile));
+    /// ```
     #[must_use]
     pub fn same(&self, cards: &Pile<RankType, SuitType>) -> bool {
         let left = self.sort();
@@ -416,6 +453,21 @@ impl<
         self.0.reverse();
     }
 
+    /// Returns a vector of all the [`Suits`](Suit) in the `Pile`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = Short::deck();
+    /// assert_eq!(
+    ///     pile.suits(),
+    ///     vec![
+    ///         Suit::<French>::new(French::SPADES),
+    ///         Suit::<French>::new(French::HEARTS),
+    ///         Suit::<French>::new(French::DIAMONDS),
+    ///         Suit::<French>::new(French::CLUBS)
+    ///    ]
+    /// );
+    /// ```
     #[must_use]
     pub fn suits(&self) -> Vec<Suit<SuitType>> {
         let hashset: HashSet<Suit<SuitType>> = self.0.iter().map(|c| c.suit.clone()).collect();
@@ -457,6 +509,14 @@ impl<
             .join(joiner)
     }
 
+    /// Returns a `String` of the cards symbol string, colored by what's defined in the
+    /// [`Suited`] trait.
+    ///
+    /// ```rust
+    /// use cardpack::prelude::*;
+    /// let mut pile = FrenchDeck::from_str("2♠ A♥").unwrap();
+    /// assert_eq!(pile.to_color_symbol_string(), "2♠ A♥");
+    /// ```
     #[must_use]
     pub fn to_color_symbol_string(&self) -> String {
         self.0
@@ -466,6 +526,17 @@ impl<
             .join(" ")
     }
 
+    /// Returns the Pile's internal vector of [`Cards`](Card).
+    ///
+    /// ```rust
+    /// use cardpack::prelude::*;
+    /// let mut pile = French::deck();
+    /// let v: Vec<FrenchCard> = vec![
+    ///     FrenchCard::from_str("A♠").unwrap(),
+    ///     FrenchCard::from_str("K♠").unwrap()
+    /// ];
+    /// assert_eq!(pile.draw(2).v(), &v);
+    /// ```
     #[must_use]
     pub fn v(&self) -> &Vec<Card<RankType, SuitType>> {
         &self.0
