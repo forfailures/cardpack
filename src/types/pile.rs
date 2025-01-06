@@ -450,6 +450,13 @@ impl<
         self.0 = shuffled;
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let mut pile = French::deck();
+    /// pile.shuffle_in_place();
+    ///
+    /// assert!(pile.same(&French::deck()));
+    /// ```
     pub fn shuffle_in_place(&mut self) {
         let mut rng = thread_rng();
         self.0.shuffle(&mut rng);
