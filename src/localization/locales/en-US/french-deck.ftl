@@ -3,17 +3,17 @@ spades-long = Spades
 hearts-long = Hearts
 diamonds-long = Diamonds
 clubs-long = Clubs
-trump-long = trump
+joker-long = Joker
 
 spades-index = S
 hearts-index = H
 diamonds-index = D
 clubs-index = C
-trump-index = T
+joker-index = J
 
 ## Ranks
-big-joker-long = Full-Color Joker
-little-joker-long = One-Color Joker
+big-joker-long = Full-Color
+little-joker-long = One-Color
 ace-long = Ace
 king-long = King
 queen-long = Queen

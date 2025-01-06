@@ -18,12 +18,12 @@ pub trait Decked<
     /// as tarot decks and ones with jokers.
     ///
     /// ```rust
-    /// use cardpack::decks::standard52::Standard52;
+    /// use cardpack::decks::french::French;
     /// use cardpack::types::traits::Decked;
     /// use cardpack::types::pile::Pile;
     ///
     /// assert_eq!(
-    ///     Standard52::deck().to_string(),
+    ///     French::deck().to_string(),
     ///     "A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠ 5♠ 4♠ 3♠ 2♠ A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥ 5♥ 4♥ 3♥ 2♥ A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦ 5♦ 4♦ 3♦ 2♦ A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣ 5♣ 4♣ 3♣ 2♣"
     /// ); // Holy mefer sheit! It frackin' worked.
     /// ```
@@ -32,7 +32,7 @@ pub trait Decked<
         let ranks = Rank::<RankType>::ranks();
         let suits = Suit::<SuitType>::suits();
 
-        let mut pile = Pile::<RankType, SuitType>::new(Vec::new());
+        let mut pile = Pile::<RankType, SuitType>::from(Vec::new());
 
         for suit in &suits {
             for rank in &ranks {
@@ -45,19 +45,16 @@ pub trait Decked<
 
     fn blank() -> Card<RankType, SuitType>;
 
-    /// This function was `Pile::pile_on()` in the v.0 cardpack library.
+    /// This function was [`Pile::pile_on()`](https://github.com/ImperialBower/cardpack.rs/blob/67f2c79fc3f4c038dffda154e6db08608e529a50/src/cards/pile.rs#L39)
+    /// in the v.0.5 cardpack library.
     #[must_use]
     fn decks(n: usize) -> Pile<RankType, SuitType> {
-        let mut pile = Pile::<RankType, SuitType>::new(Vec::new());
-        for _ in 0..n {
-            pile.extend(&Self::deck());
-        }
-        pile
+        Pile::<RankType, SuitType>::pile_up(n, <Self as Decked<RankType, SuitType>>::deck)
     }
 
     fn demo(verbose: bool) {
         let deck = Self::deck();
-        let shuffled = deck.shuffle_default();
+        let shuffled = deck.shuffle();
         let name = Self::name();
 
         println!();
@@ -72,7 +69,7 @@ pub trait Decked<
             println!();
             println!("Long in English and German:");
 
-            for card in deck.cards() {
+            for card in deck {
                 let anzugname = card.suit.name.long(&FluentName::DEUTSCH);
                 let suitname = card.suit.name.long(&FluentName::US_ENGLISH);
                 let rangname = card.rank.name.long(&FluentName::DEUTSCH);
@@ -98,10 +95,17 @@ pub trait Ranked {
         Self::rank_chars().contains(c)
     }
 
+    /// A vector of the allowable chars for the `Rank` of a card. This allows for things like supporting
+    /// upper and lower case characters for a rank, for added flexibility on the input.
     fn rank_chars() -> Vec<char>;
 
+    /// [`FluentName`] vector used by the [`Rank`] struct's `ranks()` function, which in turn is
+    /// called by the [`Decked`] trait's `deck()`.
     fn rank_names() -> Vec<&'static str>;
 
+    /// Used for match statements in the `Rank` struct.
+    ///
+    /// This feels very hacky. It would be great if we could push this down to the deck implementations.
     fn type_name() -> &'static str;
 }
 
@@ -113,10 +117,15 @@ pub trait Suited {
         Self::suit_chars().contains(c)
     }
 
+    /// A vector of the allowable chars for the `Suit` of a card. This allows for things like supporting
+    /// upper and lower case characters for a rank, for added flexibility on the input.
     fn suit_chars() -> Vec<char>;
 
     fn suit_names() -> Vec<&'static str>;
 
+    /// Used for match statements in the `Suit` struct.
+    ///
+    /// This feels very hacky. It would be great if we could push this down to the deck implementations.
     fn type_name() -> &'static str;
 }
 

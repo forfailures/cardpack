@@ -11,6 +11,36 @@ use std::fmt::Display;
 use std::hash::Hash;
 use std::str::FromStr;
 
+/// `Pile` is a [generic data type](https://doc.rust-lang.org/book/ch10-01-syntax.html)
+/// whose specific implementations implement the [`Decked`](crate::types::traits::Decked) trait,
+/// which is made of a [`Vec`] of [`Cards`](Card) that implement the [`Ranked`], and [`Suited`] traits.
+/// Implementations of a specific type of `Pile` are stored in the [`decks`](crate::decks) module.
+///
+/// The most common deck is the [`French`](crate::decks::french::French) deck:
+///
+/// ```rust
+/// use cardpack::prelude::{Decked, French, Pile};
+/// let mut french_deck: Pile<French, French> = French::deck();
+///
+/// assert_eq!(french_deck.rank_index_joined(" "), "A K Q J T 9 8 7 6 5 4 3 2");
+/// assert_eq!(french_deck.suit_symbol_index(), "♠ ♥ ♦ ♣");
+/// assert_eq!(french_deck.suit_index(), "S H D C");
+/// assert_eq!(french_deck.draw(5).to_string(), "A♠ K♠ Q♠ J♠ T♠");
+/// assert_eq!(french_deck.len(), 47);
+/// ```
+///
+/// The [`Modern`](crate::decks::modern::Modern) deck is simply the
+/// [`French`](crate::decks::french::French) deck with the addition of the big and little jokers,
+/// which belong to the joker suit.
+///
+/// ```rust
+/// use cardpack::prelude::{Decked, Modern, Pile};
+/// let modern_deck: Pile<Modern, Modern> = Modern::deck();
+///
+/// assert_eq!(modern_deck.rank_index(), "BLAKQJT98765432");
+/// assert_eq!(modern_deck.suit_symbol_index(), "🃟 ♠ ♥ ♦ ♣");
+/// assert_eq!(modern_deck.suit_index(), "J S H D C");
+/// ```
 #[derive(Clone, Debug, Default, Hash, Ord, PartialOrd, Eq, PartialEq)]
 pub struct Pile<
     RankType: Ranked + PartialOrd + Ord + Clone + Default + Hash,
@@ -26,19 +56,12 @@ impl<
     > Pile<RankType, SuitType>
 {
     #[must_use]
-    pub fn new(cards: Vec<Card<RankType, SuitType>>) -> Self {
-        Self(cards)
-    }
-
-    #[must_use]
     pub fn as_hashset(&self) -> HashSet<Card<RankType, SuitType>> {
-        let mut hashset = HashSet::new();
-        for card in &self.0 {
-            hashset.insert(card.clone());
-        }
-        hashset
+        self.clone().0.into_iter().collect()
     }
 
+    ///
+    ///
     /// Here's the original code:
     ///
     /// ```txt
@@ -51,8 +74,8 @@ impl<
     /// Why TF not just use `Card::from_str()?` I guess the big difference is that
     /// the card is actually in the Pile in question. Do I need this?
     #[must_use]
-    pub fn card_by_index(&self, index: &str) -> Option<Card<RankType, SuitType>> {
-        match Card::<RankType, SuitType>::from_str(index) {
+    pub fn card_by_index<S: Into<String>>(&self, index: S) -> Option<Card<RankType, SuitType>> {
+        match Card::<RankType, SuitType>::from_str(index.into().as_str()) {
             Ok(c) => {
                 if self.contains(&c) {
                     Some(c)
@@ -64,6 +87,17 @@ impl<
         }
     }
 
+    /// Returns true if the card is in the `Pile`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = FrenchDeck::from_str("K♦ K♣ K♠").unwrap();
+    /// let king_of_diamonds = FrenchCard::from_str("K♦").unwrap();
+    /// let king_of_hearts = FrenchCard::from_str("K♥").unwrap();
+    ///
+    /// assert!(pile.contains(&king_of_diamonds));
+    /// assert!(!pile.contains(&king_of_hearts));
+    /// ```
     #[must_use]
     pub fn contains(&self, card: &Card<RankType, SuitType>) -> bool {
         self.0.contains(card)
@@ -95,42 +129,100 @@ impl<
         self.0.remove(index)
     }
 
-    /// A mutable reference to the vector of cards so that they can be shuffled. I am
-    /// torn about
-    #[must_use]
-    pub fn cards(&self) -> Vec<Card<RankType, SuitType>> {
-        self.0.clone()
-    }
-
+    /// Extends the `Pile` with the contents of the passed in `Pile`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// let mut pile = FrenchDeck::from_str("K♦ K♣ K♠").unwrap();
+    /// let other_pile = FrenchDeck::from_str("A♦ A♣ A♠").unwrap();
+    /// pile.extend(&other_pile);
+    ///
+    /// assert_eq!(pile.to_string(), "K♦ K♣ K♠ A♦ A♣ A♠");
+    /// ```
     pub fn extend(&mut self, other: &Self) {
         self.0.extend(other.0.clone());
     }
 
+    /// Returns a Card at the specific passed in position.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let deck = French::deck();
+    ///
+    /// assert_eq!(deck.get(0).unwrap().to_string(), "A♠");
+    /// assert_eq!(deck.get(51).unwrap().to_string(), "2♣");
+    /// assert!(deck.get(52).is_none());
+    /// ```
     #[must_use]
-    pub fn get(&self, index: usize) -> Option<&Card<RankType, SuitType>> {
-        self.0.get(index)
+    pub fn get(&self, position: usize) -> Option<&Card<RankType, SuitType>> {
+        self.0.get(position)
     }
 
+    /// Returns a string of the index of the cards in the `Pile`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = FrenchDeck::from_str("K♦ K♣ K♠").unwrap();
+    ///
+    /// assert_eq!(pile.index(), "KD KC KS");
+    /// ```
     #[must_use]
     pub fn index(&self) -> String {
-        let mut s = String::new();
-        for card in &self.0 {
-            s.push_str(&card.index);
-            s.push(' ');
-        }
-        s.trim().to_string()
+        self.iter()
+            .map(|c| c.index)
+            .collect::<Vec<String>>()
+            .join(" ")
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// assert!(FrenchDeck::default().is_empty());
+    /// assert!(!French::deck().is_empty());
+    /// assert!(ModernDeck::default().is_empty());
+    /// assert!(!Modern::deck().is_empty());
+    /// assert!(ShortDeck::default().is_empty());
+    /// assert!(!Short::deck().is_empty());
+    /// ```
     #[must_use]
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
 
+    /// Returns the length of the `Pile`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// assert_eq!(French::deck().len(), 52);
+    /// assert_eq!(Modern::deck().len(), 54);
+    /// ```
     #[must_use]
     pub fn len(&self) -> usize {
         self.0.len()
     }
 
+    #[must_use]
+    pub fn iter(&self) -> std::vec::IntoIter<<Pile<RankType, SuitType> as IntoIterator>::Item> {
+        <&Self as IntoIterator>::into_iter(self)
+    }
+
+    /// Takes the `Pile` and returns a `HashMap` of the cards mapped by their [`Suit`].
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = Short::deck();
+    ///
+    /// let map = pile.map_by_suit();
+    ///
+    /// assert_eq!(map.len(), 4);
+    /// assert_eq!(map.get(&Suit::<French>::new(French::SPADES)).unwrap().to_string(), "A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠");
+    /// assert_eq!(map.get(&Suit::<French>::new(French::HEARTS)).unwrap().to_string(), "A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥");
+    /// assert_eq!(map.get(&Suit::<French>::new(French::DIAMONDS)).unwrap().to_string(), "A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦");
+    /// assert_eq!(map.get(&Suit::<French>::new(French::CLUBS)).unwrap().to_string(), "A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣");
+    /// ```
+    ///
+    /// A more advanced example of this can be found in the Bridge example in the `examples` directory.
+    ///
     /// # Panics
     ///
     /// No idea how it could. Too lazy to find a cleaner way.
@@ -147,21 +239,81 @@ impl<
         map
     }
 
-    pub fn pile_up(n: usize, f: fn() -> Vec<Card<RankType, SuitType>>) -> Self {
-        let mut cards = Vec::new();
-        for _ in 0..n {
-            cards.extend(f());
+    /// Returns a simple new `Pile` from the consolidated passed in vector of `Piles`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// // `FrenchDeck` is the same as `Pile<French, French>`.
+    /// let pile1 = FrenchDeck::from_str("2♠ 8♠ 4♠").unwrap();
+    /// let pile2 = FrenchDeck::from_str("5♠ 6♠ 7♠").unwrap();
+    /// let piles = vec![pile1, pile2];
+    ///
+    /// let pile = FrenchDeck::pile_on(&piles);
+    ///
+    /// assert_eq!(pile.to_string(), "2♠ 8♠ 4♠ 5♠ 6♠ 7♠");
+    /// ```
+    ///
+    /// ## ASIDE
+    ///
+    /// How cool is it that you can create a type alias that prepopulates the generic types?
+    #[must_use]
+    pub fn pile_on(piles: &Vec<Pile<RankType, SuitType>>) -> Self {
+        let mut pile = Pile::default();
+        for p in piles {
+            pile.extend(p);
         }
-        Self(cards)
+        pile
     }
 
+    /// Returns a `Pile` by calling the passed in function `n` times and consolidating the results
+    /// into a single `Pile`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// fn ak() -> Pile<French, French> {
+    ///     Pile::<French, French>::from_str("A♠ K♠").unwrap()
+    /// }
+    ///
+    /// let pile = Pile::<French, French>::pile_up(3, ak);
+    ///
+    /// assert_eq!(pile.to_string(), "A♠ K♠ A♠ K♠ A♠ K♠");
+    /// ```
+    pub fn pile_up(n: usize, f: fn() -> Pile<RankType, SuitType>) -> Self {
+        let mut cards = Pile::<RankType, SuitType>::default();
+        for _ in 0..n {
+            cards.extend(&f());
+        }
+        cards
+    }
+
+    /// Returns the zero indexed position of a [`Card`] in the `Pile`.
+    ///
+    /// ```rust
+    /// use cardpack::prelude::*;
+    /// let pile = Modern::deck();
+    ///
+    /// let card = ModernCard::from_str("2♣").unwrap();
+    ///
+    /// assert_eq!(pile.position(&card).unwrap(), 53);
+    /// ```
     #[must_use]
     pub fn position(&self, card: &Card<RankType, SuitType>) -> Option<usize> {
         self.0.iter().position(|c| c.index == card.index)
     }
 
-    // Takes a reference to the prepended entity, clones it, appends the original to the passed in
-    // entity, and replaces the original with the new one.
+    /// Adds a Pile of [`Cards`](Card) to the end of another pile.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// let mut hand = Pile::<French, French>::from_str("K♦ J♦").unwrap();
+    /// let flop = Pile::<French, French>::from_str("A♦ T♦ Q♦").unwrap();
+    /// hand.prepend(&flop);
+    /// hand.sort_in_place();
+    ///
+    /// assert_eq!(hand.to_string(), "A♦ K♦ Q♦ J♦ T♦");
+    /// ```
     pub fn prepend(&mut self, other: &Pile<RankType, SuitType>) {
         let mut product = other.0.clone();
         product.append(&mut self.0);
@@ -169,6 +321,15 @@ impl<
     }
 
     /// Places the Card at the bottom (end) of the Pile.
+    ///
+    /// ```rust
+    /// use cardpack::prelude::*;
+    ///
+    /// let mut hand = Pile::<French, French>::from_str("K♠ A♠").unwrap();
+    /// hand.push(Card::<French, French>::from_str("Q♠").unwrap());
+    ///
+    /// assert_eq!(hand.to_string(), "K♠ A♠ Q♠");
+    /// ```
     pub fn push(&mut self, card: Card<RankType, SuitType>) -> bool {
         if card.is_blank() {
             false
@@ -178,11 +339,31 @@ impl<
         }
     }
 
+    /// String of all the [`Ranks`](Rank) in the `Pile`.
+    ///
+    /// ```rust
+    /// use cardpack::prelude::*;
+    /// let pile = Short::deck();
+    /// assert_eq!(pile.rank_index(), "AKQJT9876");
+    /// ```
+    #[must_use]
     pub fn rank_index(&self) -> String {
+        self.rank_index_joined("")
+    }
+
+    /// String of all the [`Ranks`](Rank) in the `Pile`, joined by the passed in separator.
+    ///
+    /// ```rust
+    /// use cardpack::prelude::*;
+    /// let pile = Short::deck();
+    /// assert_eq!(pile.rank_index_joined(" "), "A K Q J T 9 8 7 6");
+    /// ```
+    pub fn rank_index_joined(&self, sep: &str) -> String {
         self.ranks()
             .iter()
             .map(ToString::to_string)
-            .collect::<String>()
+            .collect::<Vec<String>>()
+            .join(sep)
     }
 
     #[must_use]
@@ -229,6 +410,17 @@ impl<
         }
     }
 
+    /// Returns true if the Cards of the passed in `Pile` are identical to the `Pile`, regqrdless
+    /// of order.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = Canasta::deck();
+    /// let other_pile = pile.shuffle();
+    ///
+    /// assert!(pile.same(&pile));
+    /// assert!(pile.same(&other_pile));
+    /// ```
     #[must_use]
     pub fn same(&self, cards: &Pile<RankType, SuitType>) -> bool {
         let left = self.sort();
@@ -238,13 +430,14 @@ impl<
     }
 
     #[must_use]
-    pub fn shuffle_default(&self) -> Self {
+    pub fn shuffle(&self) -> Self {
         let mut pile = self.clone();
-        pile.shuffle_in_place_default();
+        pile.shuffle_in_place();
         pile
     }
 
-    pub fn shuffle_in_place<F>(&mut self, mut rng: F)
+    /// TODO WIP
+    pub fn shuffle_in_place_custom<F>(&mut self, mut rng: F)
     where
         F: FnMut(usize) -> usize,
     {
@@ -257,11 +450,19 @@ impl<
         self.0 = shuffled;
     }
 
-    pub fn shuffle_in_place_default(&mut self) {
+    pub fn shuffle_in_place(&mut self) {
         let mut rng = thread_rng();
         self.0.shuffle(&mut rng);
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// let pile = FrenchDeck::from_str("K♠ A♠").unwrap();
+    /// let sorted = pile.sort();
+    ///
+    /// assert_eq!(sorted.to_string(), "A♠ K♠");
+    /// ```
     #[must_use]
     pub fn sort(&self) -> Self {
         let mut cards: Vec<Card<RankType, SuitType>> = self.0.clone();
@@ -270,11 +471,83 @@ impl<
         Self(cards)
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// let mut pile = FrenchDeck::from_str("K♠ A♠").unwrap();
+    /// pile.sort_in_place();
+    ///
+    /// assert_eq!(pile.to_string(), "A♠ K♠");
+    /// ```
     pub fn sort_in_place(&mut self) {
         self.0.sort();
         self.0.reverse();
     }
 
+    /// Returns a vector of all the [`Suits`](Suit) in the `Pile`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = Short::deck();
+    /// assert_eq!(
+    ///     pile.suits(),
+    ///     vec![
+    ///         Suit::<French>::new(French::SPADES),
+    ///         Suit::<French>::new(French::HEARTS),
+    ///         Suit::<French>::new(French::DIAMONDS),
+    ///         Suit::<French>::new(French::CLUBS)
+    ///    ]
+    /// );
+    /// ```
+    #[must_use]
+    pub fn suits(&self) -> Vec<Suit<SuitType>> {
+        let hashset: HashSet<Suit<SuitType>> = self.0.iter().map(|c| c.suit.clone()).collect();
+        let mut suits: Vec<Suit<SuitType>> = Vec::from_iter(hashset);
+        suits.sort();
+        suits.reverse();
+        suits
+    }
+
+    /// Returns a `String` with all of the [`Suit`] index letters for the `Pile` separated by spaces.
+    ///
+    /// ```rust
+    /// use cardpack::prelude::{Decked, Pile, Skat};
+    /// let skat_deck: Pile<Skat, Skat> = Skat::deck();
+    /// assert_eq!(skat_deck.suit_index(), "E L H S");
+    /// ```
+    pub fn suit_index(&self) -> String {
+        self.suit_indexed(Suit::index, " ")
+    }
+
+    /// Returns a `String` with all of the [`Suit`] symbols for the `Pile` separated by spaces.
+    ///
+    /// ```rust
+    /// use cardpack::prelude::{Decked, Pile, Tarot};
+    /// let tarot_deck: Pile<Tarot, Tarot> = Tarot::deck();
+    /// assert_eq!(tarot_deck.suit_symbol_index(), "M 🪄 🏆 ⚔ ☆");
+    pub fn suit_symbol_index(&self) -> String {
+        self.suit_indexed(Suit::symbol, " ")
+    }
+
+    fn suit_indexed<F>(&self, map_fn: F, joiner: &str) -> String
+    where
+        F: Fn(&Suit<SuitType>) -> String,
+    {
+        self.suits()
+            .iter()
+            .map(map_fn)
+            .collect::<Vec<String>>()
+            .join(joiner)
+    }
+
+    /// Returns a `String` of the cards symbol string, colored by what's defined in the
+    /// [`Suited`] trait.
+    ///
+    /// ```rust
+    /// use cardpack::prelude::*;
+    /// let mut pile = FrenchDeck::from_str("2♠ A♥").unwrap();
+    /// assert_eq!(pile.to_color_symbol_string(), "2♠ A♥");
+    /// ```
     #[must_use]
     pub fn to_color_symbol_string(&self) -> String {
         self.0
@@ -284,6 +557,17 @@ impl<
             .join(" ")
     }
 
+    /// Returns the Pile's internal vector of [`Cards`](Card).
+    ///
+    /// ```rust
+    /// use cardpack::prelude::*;
+    /// let mut pile = French::deck();
+    /// let v: Vec<FrenchCard> = vec![
+    ///     FrenchCard::from_str("A♠").unwrap(),
+    ///     FrenchCard::from_str("K♠").unwrap()
+    /// ];
+    /// assert_eq!(pile.draw(2).v(), &v);
+    /// ```
     #[must_use]
     pub fn v(&self) -> &Vec<Card<RankType, SuitType>> {
         &self.0
@@ -312,11 +596,43 @@ impl<
     > From<Vec<Card<RankType, SuitType>>> for Pile<RankType, SuitType>
 {
     fn from(cards: Vec<Card<RankType, SuitType>>) -> Self {
-        Pile::new(cards)
+        Pile(cards)
     }
 }
 
-/// This is probably my biggest embarrassment when coding this library the first time. I had no
+/// Takes an index string or a symbol string and converts it into a `Pile`.
+///
+/// An index string is defined, in terms of this library as letters representing a [`Rank`] and a
+/// [`Suit`] for a specific deck. For example:
+///
+/// ```rust
+/// use cardpack::prelude::*;
+/// let wheel = Pile::<French, French>::from_str("5S 4S 3s 2S AS").unwrap();
+///
+/// assert_eq!(wheel.to_string(), "5♠ 4♠ 3♠ 2♠ A♠");
+/// ```
+///
+/// A symbol string is defined as a string that represents a card using the Unicode symbols for the
+/// [`Suit`] and letters or Unicode symbols for the [`Rank`]. For example:
+///
+/// ```rust
+/// use cardpack::prelude::*;
+/// let wheel = Pile::<French, French>::from_str("5♠ 4♠ 3♠ 2♠ a♠").unwrap();
+///
+/// assert_eq!(wheel.index(), "5S 4S 3S 2S AS");
+/// ```
+///
+/// It is also possible to mix and match:
+///
+/// ```rust
+/// use cardpack::prelude::*;
+///
+/// let wheel = Pile::<French, French>::from_str("5S 4♠ 3♠ 2s A♠").unwrap();
+///
+/// assert_eq!(wheel.to_string(), "5♠ 4♠ 3♠ 2♠ A♠");
+/// ```
+///
+/// **ASIDE:** This is probably my biggest embarrassment when coding this library the first time. I had no
 /// idea that this trait existed, and bent over backwards trying to duplicate its functionality.
 ///
 /// TODO: Add a step that validates that the cards are of the correct number for the type of deck.
@@ -344,16 +660,71 @@ impl<
     }
 }
 
+/// ```rust
+/// use cardpack::prelude::*;
+/// let pile = French::deck();
+///
+/// // Need to clone since `Pile` doesn't implement `Copy`.
+/// for card in pile.clone() {
+///    assert!(pile.contains(&card));
+/// }
+/// ```
+///
+/// ## ASIDE
+///
+/// Implementing this eliminates the need for this old function in `Pile`:
+///
+/// ```txt
+/// pub fn cards(&self) -> Vec<Card<RankType, SuitType>> {
+///     self.0.clone()
+/// }
+/// ```
+impl<
+        RankType: Ranked + Ord + Clone + Default + Hash,
+        SuitType: Suited + Ord + Clone + Default + Hash,
+    > IntoIterator for Pile<RankType, SuitType>
+{
+    type Item = Card<RankType, SuitType>;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter()
+    }
+}
+
+/// For a `Pile` reference, the implementation of the trait will internally `clone()` the `Cards`.
+///
+/// ```rust
+/// use cardpack::prelude::*;
+/// let pile = French::deck();
+///
+/// for card in &pile {
+///    assert!(pile.contains(&card));
+/// }
+/// ```
+impl<
+        RankType: Ranked + Ord + Clone + Default + Hash,
+        SuitType: Suited + Ord + Clone + Default + Hash,
+    > IntoIterator for &Pile<RankType, SuitType>
+{
+    type Item = Card<RankType, SuitType>;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        <Vec<Card<RankType, SuitType>> as Clone>::clone(&self.0).into_iter()
+    }
+}
+
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod types__pile__tests {
     use super::*;
-    use crate::decks::standard52::Standard52;
+    use crate::decks::french::French;
     use crate::types::traits::Decked;
     use std::str::FromStr;
 
-    fn test_pile() -> Pile<Standard52, Standard52> {
-        Pile::<Standard52, Standard52>::new(vec![
+    fn test_pile() -> Pile<French, French> {
+        Pile::<French, French>::from(vec![
             Card::from_str("2S").unwrap(),
             Card::from_str("TD").unwrap(),
             Card::from_str("AH").unwrap(),
@@ -364,7 +735,7 @@ mod types__pile__tests {
     #[test]
     fn as_hashset() {
         assert_eq!(4, test_pile().as_hashset().len());
-        assert_eq!(52, Standard52::deck().as_hashset().len());
+        assert_eq!(52, French::deck().as_hashset().len());
     }
 
     #[test]
@@ -394,7 +765,7 @@ mod types__pile__tests {
     #[test]
     fn extend() {
         let mut pile = test_pile();
-        let pile2 = Pile::<Standard52, Standard52>::from_str("3S 9D").unwrap();
+        let pile2 = Pile::<French, French>::from_str("3S 9D").unwrap();
         pile.extend(&pile2);
 
         assert_eq!(pile.len(), 6);
@@ -415,7 +786,7 @@ mod types__pile__tests {
 
     #[test]
     fn is_empty() {
-        let mut pile = Pile::<Standard52, Standard52>::default();
+        let mut pile = Pile::<French, French>::default();
         assert!(pile.is_empty());
 
         pile.push(Card::from_str("2S").unwrap());
@@ -424,12 +795,12 @@ mod types__pile__tests {
 
     #[test]
     fn map_by_suit() {
-        let pile = Pile::<Standard52, Standard52>::from_str("QS 9S QC QH QD").unwrap();
+        let pile = Pile::<French, French>::from_str("QS 9S QC QH QD").unwrap();
 
         let qs = pile.get(0).unwrap();
         let qc = pile.get(2).unwrap();
-        let spades = Suit::new(Standard52::SPADES);
-        let clubs = Suit::new(Standard52::CLUBS);
+        let spades = Suit::new(French::SPADES);
+        let clubs = Suit::new(French::CLUBS);
 
         let mappie = pile.map_by_suit();
 
@@ -445,13 +816,13 @@ mod types__pile__tests {
 
     #[test]
     fn len() {
-        assert_eq!(Pile::<Standard52, Standard52>::default().len(), 0);
+        assert_eq!(Pile::<French, French>::default().len(), 0);
         assert_eq!(test_pile().len(), 4);
     }
 
     #[test]
     fn position() {
-        let deck = Standard52::deck();
+        let deck = French::deck();
         let pile = test_pile();
         let card = Card::from_str("AH").unwrap();
 
@@ -462,7 +833,7 @@ mod types__pile__tests {
     #[test]
     fn prepend() {
         let mut pile = test_pile();
-        let pile2 = Pile::<Standard52, Standard52>::from_str("3S 9D").unwrap();
+        let pile2 = Pile::<French, French>::from_str("3S 9D").unwrap();
         pile.prepend(&pile2);
 
         assert_eq!(pile.to_string(), "3♠ 9♦ 2♠ T♦ A♥ A♠");
@@ -470,7 +841,7 @@ mod types__pile__tests {
 
     #[test]
     fn push() {
-        let mut pile = Pile::<Standard52, Standard52>::default();
+        let mut pile = Pile::<French, French>::default();
         pile.push(Card::from_str("2S").unwrap());
         pile.push(Card::from_str("TD").unwrap());
         pile.push(Card::from_str("AH").unwrap());
@@ -481,7 +852,7 @@ mod types__pile__tests {
 
     #[test]
     fn remove_card() {
-        let mut deck = Standard52::deck();
+        let mut deck = French::deck();
         let mut pile = test_pile();
         let card = Card::from_str("AH").unwrap();
 
@@ -496,8 +867,8 @@ mod types__pile__tests {
 
     #[test]
     fn same() {
-        let deck = Standard52::deck();
-        let alt = deck.shuffle_default();
+        let deck = French::deck();
+        let alt = deck.shuffle();
 
         assert!(deck.same(&alt));
         assert!(alt.same(&deck));
@@ -507,8 +878,8 @@ mod types__pile__tests {
 
     #[test]
     fn same__false() {
-        let deck = Standard52::deck();
-        let mut alt = deck.shuffle_default();
+        let deck = French::deck();
+        let mut alt = deck.shuffle();
         alt.draw_last();
 
         assert!(!deck.same(&alt));
@@ -518,18 +889,14 @@ mod types__pile__tests {
     #[test]
     fn to_color_symbol_string() {
         let expected = vec![
-            Card::<Standard52, Standard52>::from_str("2S")
-                .unwrap()
-                .to_string(),
-            Card::<Standard52, Standard52>::from_str("TD")
+            Card::<French, French>::from_str("2S").unwrap().to_string(),
+            Card::<French, French>::from_str("TD")
                 .unwrap()
                 .to_color_symbol_string(),
-            Card::<Standard52, Standard52>::from_str("AH")
+            Card::<French, French>::from_str("AH")
                 .unwrap()
                 .to_color_symbol_string(),
-            Card::<Standard52, Standard52>::from_str("AS")
-                .unwrap()
-                .to_string(),
+            Card::<French, French>::from_str("AS").unwrap().to_string(),
         ]
         .join(" ");
 
@@ -540,14 +907,14 @@ mod types__pile__tests {
 
     #[test]
     fn from_str() {
-        let pile = Pile::<Standard52, Standard52>::from_str("2S TD AH AS").unwrap();
+        let pile = Pile::<French, French>::from_str("2S TD AH AS").unwrap();
 
         assert_eq!(pile, test_pile());
     }
 
     #[test]
     fn from_str_invalid() {
-        assert!(Pile::<Standard52, Standard52>::from_str("2S TD AH AS 2X").is_err());
-        assert!(Pile::<Standard52, Standard52>::from_str("   ").is_err());
+        assert!(Pile::<French, French>::from_str("2S TD AH AS 2X").is_err());
+        assert!(Pile::<French, French>::from_str("   ").is_err());
     }
 }

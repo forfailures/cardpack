@@ -1,12 +1,12 @@
 [package]
 name = "cardpack"
-version = "0.1.0"
+version = "0.6.0"
 edition = "2021"
 rust-version = "1.74"
 
 [dependencies]
-colored = "2.1"
-fluent-templates = "0.11"
+colored = "2.2"
+fluent-templates = "0.12"
 hashbag = { version = "0.1", features = ["serde"] }
 log = "0.4"
 rand = "0.8"

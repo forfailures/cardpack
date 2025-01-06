@@ -1,4 +1,4 @@
-use crate::decks::standard52::Standard52;
+use crate::decks::french::French;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
@@ -100,7 +100,7 @@ impl Tarot {
     pub const PAGE_SYMBOL: char = '📜';
 
     fn major_arcana() -> Pile<Tarot, Tarot> {
-        let mut pile = Pile::<Tarot, Tarot>::new(Vec::new());
+        let mut pile = Pile::<Tarot, Tarot>::from(Vec::new());
 
         for rank in Tarot::major_arcana_rank_names() {
             pile.push(Tarot::major_arcana_card_factory(rank));
@@ -147,7 +147,7 @@ impl Tarot {
         let ranks = Rank::<Tarot>::ranks_from_array(&Tarot::rank_names());
         let suits = Suit::<Tarot>::suits();
 
-        let mut pile = Pile::<Tarot, Tarot>::new(Vec::new());
+        let mut pile = Pile::<Tarot, Tarot>::from(Vec::new());
 
         for suit in &suits {
             for rank in &ranks {
@@ -197,20 +197,20 @@ impl Ranked for Tarot {
 
     fn rank_names() -> Vec<&'static str> {
         vec![
-            Standard52::KING,
-            Standard52::QUEEN,
+            French::KING,
+            French::QUEEN,
             Tarot::KNIGHT,
             Tarot::PAGE,
-            Standard52::TEN,
-            Standard52::NINE,
-            Standard52::EIGHT,
-            Standard52::SEVEN,
-            Standard52::SIX,
-            Standard52::FIVE,
-            Standard52::FOUR,
-            Standard52::THREE,
-            Standard52::TWO,
-            Standard52::ACE,
+            French::TEN,
+            French::NINE,
+            French::EIGHT,
+            French::SEVEN,
+            French::SIX,
+            French::FIVE,
+            French::FOUR,
+            French::THREE,
+            French::TWO,
+            French::ACE,
         ]
     }
 
@@ -289,9 +289,9 @@ mod decks__tarot__tests {
     #[test]
     fn pile__sort() {
         let deck = Tarot::deck();
-        let mut shuffled = deck.shuffle_default();
+        let mut shuffled = deck.shuffle();
 
-        shuffled.shuffle_in_place_default();
+        shuffled.shuffle_in_place();
         shuffled.sort_in_place();
 
         assert_eq!(deck.to_string(), shuffled.to_string());
@@ -326,7 +326,7 @@ mod decks__tarot__tests {
     #[ignore]
     fn to_string__from_str() {
         let deck = Tarot::deck();
-        let shuffled = deck.shuffle_default().to_string();
+        let shuffled = deck.shuffle().to_string();
         let parsed = Tarot::from_str(&shuffled).unwrap();
 
         assert!(deck.same(&parsed));

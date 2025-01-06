@@ -169,9 +169,9 @@ mod decks__skat__tests {
     #[test]
     fn pile__sort() {
         let deck = Skat::deck();
-        let mut shuffled = deck.shuffle_default();
+        let mut shuffled = deck.shuffle();
 
-        shuffled.shuffle_in_place_default();
+        shuffled.shuffle_in_place();
         shuffled.sort_in_place();
 
         assert_eq!(deck.to_string(), shuffled.to_string());
@@ -235,12 +235,12 @@ mod decks__skat__tests {
 
     /// In trying to get this test to pass I've realized that I need
     /// to give every Rank and Suit its own unique name, that doesn't
-    /// overlap with the Standard52 names, so that I can ensure proper
+    /// overlap with the French names, so that I can ensure proper
     /// sorting.
     #[test]
     fn to_string__from_str() {
         let deck = Skat::deck();
-        let shuffled = deck.shuffle_default().to_string();
+        let shuffled = deck.shuffle().to_string();
         let parsed = Skat::from_str(&shuffled).unwrap();
 
         assert!(deck.same(&parsed));
