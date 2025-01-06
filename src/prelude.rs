@@ -18,6 +18,7 @@ pub use crate::localization::FluentName;
 pub use crate::localization::Named;
 
 pub use crate::types::card::Card;
+pub use crate::types::card_error::CardError;
 pub use crate::types::pile::Pile;
 pub use crate::types::rank::Rank;
 pub use crate::types::suit::Suit;

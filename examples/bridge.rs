@@ -1,13 +1,7 @@
-use cardpack::decks::french::French;
-use cardpack::types::card::Card;
-use cardpack::types::card_error::CardError;
-use cardpack::types::pile::Pile;
-use cardpack::types::suit::Suit;
-use cardpack::types::traits::Decked;
+use cardpack::prelude::*;
 use std::collections::HashMap;
 use std::fmt;
 use std::fmt::Display;
-use std::str::FromStr;
 use term_table::row::Row;
 use term_table::table_cell::{Alignment, TableCell};
 use term_table::{Table, TableStyle};
@@ -101,11 +95,11 @@ impl Display for BridgeDirection {
 #[allow(clippy::module_name_repetitions)]
 pub struct BridgeBoard {
     pub dealer: BridgeDirection,
-    pub pack: Pile<French, French>,
-    pub south: Pile<French, French>,
-    pub west: Pile<French, French>,
-    pub north: Pile<French, French>,
-    pub east: Pile<French, French>,
+    pub pack: FrenchDeck,
+    pub south: FrenchDeck,
+    pub west: FrenchDeck,
+    pub north: FrenchDeck,
+    pub east: FrenchDeck,
     pub nw_vulnerable: bool,
     pub ew_vulnerable: bool,
 }
@@ -136,10 +130,10 @@ impl BridgeBoard {
 
     fn calculate_pbn(
         dealer: BridgeDirection,
-        south: &Pile<French, French>,
-        west: &Pile<French, French>,
-        north: &Pile<French, French>,
-        east: &Pile<French, French>,
+        south: &FrenchDeck,
+        west: &FrenchDeck,
+        north: &FrenchDeck,
+        east: &FrenchDeck,
     ) -> String {
         match dealer {
             BridgeDirection::N => {
@@ -202,7 +196,7 @@ impl BridgeBoard {
         board
     }
 
-    pub fn hand_to_pbn_deal_segment(hand: &Pile<French, French>) -> String {
+    pub fn hand_to_pbn_deal_segment(hand: &FrenchDeck) -> String {
         let mappie = hand.map_by_suit();
         let spades = BridgeBoard::get_suit_string(&Suit::new(French::SPADES), &mappie);
         let hearts = BridgeBoard::get_suit_string(&Suit::new(French::HEARTS), &mappie);
@@ -212,10 +206,7 @@ impl BridgeBoard {
         format!("{spades}.{hearts}.{diamonds}.{clubs}")
     }
 
-    fn get_suit_string(
-        suit: &Suit<French>,
-        mappie: &HashMap<Suit<French>, Pile<French, French>>,
-    ) -> String {
+    fn get_suit_string(suit: &Suit<French>, mappie: &HashMap<Suit<French>, FrenchDeck>) -> String {
         let indexes = mappie.get(suit);
         match indexes {
             Some(hand) => hand.rank_index(),
@@ -225,11 +216,11 @@ impl BridgeBoard {
 
     /// NOTE: index string is a really horrible name for something used in code. Index has too
     /// many implications.
-    pub fn pile_by_index(index: &str) -> Result<Pile<French, French>, CardError> {
+    pub fn pile_by_index(index: &str) -> Result<FrenchDeck, CardError> {
         Pile::<French, French>::from_str(index)
     }
 
-    pub fn as_pile(&self) -> Pile<French, French> {
+    pub fn as_pile(&self) -> FrenchDeck {
         let mut pile = Pile::<French, French>::default();
         pile.prepend(&self.south);
         pile.prepend(&self.west);
@@ -239,7 +230,7 @@ impl BridgeBoard {
         pile
     }
 
-    fn fold_in(&mut self, direction: &BridgeDirection, hand: Pile<French, French>) {
+    fn fold_in(&mut self, direction: &BridgeDirection, hand: FrenchDeck) {
         match direction {
             BridgeDirection::S => self.south = hand.sort(),
             BridgeDirection::W => self.west = hand.sort(),
@@ -269,7 +260,7 @@ impl BridgeBoard {
         (direction, remainder)
     }
 
-    fn to_pile(&self, s: &str) -> Pile<French, French> {
+    fn to_pile(&self, s: &str) -> FrenchDeck {
         let rawsuits: Vec<&str> = s.split('.').collect();
 
         let mut v: Vec<String> = Vec::new();
@@ -347,7 +338,7 @@ impl BridgeCompass {
         )
     }
 
-    fn cell_string(cards: Pile<French, French>) -> String {
+    fn cell_string(cards: FrenchDeck) -> String {
         let mut v = Vec::<String>::new();
 
         match cards.rank_index_by_suit(&Suit::<French>::new(French::SPADES), " ") {
