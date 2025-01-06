@@ -404,6 +404,15 @@ impl<
         Some(self.0.remove(index))
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// let mut pile = French::deck();
+    /// let ak = pile.draw(2);
+    ///
+    /// 
+    ///
+    /// ```
     pub fn remove_cards(&mut self, cards: &Pile<RankType, SuitType>) {
         for card in &cards.0 {
             self.remove_card(card);
@@ -429,6 +438,13 @@ impl<
         left == right
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = French::deck();
+    /// let shuffled = pile.shuffle();
+    ///
+    /// assert!(pile.same(&shuffled));
+    /// ```
     #[must_use]
     pub fn shuffle(&self) -> Self {
         let mut pile = self.clone();
