@@ -129,20 +129,34 @@ impl<
         self.0.remove(index)
     }
 
-    /// A mutable reference to the vector of cards so that they can be shuffled. I am
-    /// torn about
-    #[must_use]
-    pub fn cards(&self) -> Vec<Card<RankType, SuitType>> {
-        self.0.clone()
-    }
-
+    /// Extends the `Pile` with the contents of the passed in `Pile`.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// let mut pile = FrenchDeck::from_str("K♦ K♣ K♠").unwrap();
+    /// let other_pile = FrenchDeck::from_str("A♦ A♣ A♠").unwrap();
+    /// pile.extend(&other_pile);
+    ///
+    /// assert_eq!(pile.to_string(), "K♦ K♣ K♠ A♦ A♣ A♠");
+    /// ```
     pub fn extend(&mut self, other: &Self) {
         self.0.extend(other.0.clone());
     }
 
+    /// Returns a Card at the specific passed in position.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let deck = French::deck();
+    ///
+    /// assert_eq!(deck.get(0).unwrap().to_string(), "A♠");
+    /// assert_eq!(deck.get(51).unwrap().to_string(), "2♣");
+    /// assert!(deck.get(52).is_none());
+    /// ```
     #[must_use]
-    pub fn get(&self, index: usize) -> Option<&Card<RankType, SuitType>> {
-        self.0.get(index)
+    pub fn get(&self, position: usize) -> Option<&Card<RankType, SuitType>> {
+        self.0.get(position)
     }
 
     /// Returns a string of the index of the cards in the `Pile`.
@@ -422,6 +436,7 @@ impl<
         pile
     }
 
+    /// TODO WIP
     pub fn shuffle_in_place_custom<F>(&mut self, mut rng: F)
     where
         F: FnMut(usize) -> usize,
@@ -440,6 +455,14 @@ impl<
         self.0.shuffle(&mut rng);
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// let pile = FrenchDeck::from_str("K♠ A♠").unwrap();
+    /// let sorted = pile.sort();
+    ///
+    /// assert_eq!(sorted.to_string(), "A♠ K♠");
+    /// ```
     #[must_use]
     pub fn sort(&self) -> Self {
         let mut cards: Vec<Card<RankType, SuitType>> = self.0.clone();
@@ -448,6 +471,14 @@ impl<
         Self(cards)
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// let mut pile = FrenchDeck::from_str("K♠ A♠").unwrap();
+    /// pile.sort_in_place();
+    ///
+    /// assert_eq!(pile.to_string(), "A♠ K♠");
+    /// ```
     pub fn sort_in_place(&mut self) {
         self.0.sort();
         self.0.reverse();
@@ -636,6 +667,16 @@ impl<
 /// // Need to clone since `Pile` doesn't implement `Copy`.
 /// for card in pile.clone() {
 ///    assert!(pile.contains(&card));
+/// }
+/// ```
+///
+/// ## ASIDE
+///
+/// Implementing this eliminates the need for this old function in `Pile`:
+///
+/// ```txt
+/// pub fn cards(&self) -> Vec<Card<RankType, SuitType>> {
+///     self.0.clone()
 /// }
 /// ```
 impl<

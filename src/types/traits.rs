@@ -69,7 +69,7 @@ pub trait Decked<
             println!();
             println!("Long in English and German:");
 
-            for card in deck.cards() {
+            for card in deck {
                 let anzugname = card.suit.name.long(&FluentName::DEUTSCH);
                 let suitname = card.suit.name.long(&FluentName::US_ENGLISH);
                 let rangname = card.rank.name.long(&FluentName::DEUTSCH);
