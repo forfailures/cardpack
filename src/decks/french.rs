@@ -7,7 +7,56 @@ use colored::Color;
 use std::collections::HashMap;
 use std::str::FromStr;
 
-/// These macros make me very happy. They wallpaper over a lot of headaches from the generics.
+/// These macros make me very happy. They plaster over a lot of headaches
+/// from the generics.
+///
+/// ```
+/// use cardpack::prelude::*;
+///
+/// assert_eq!(card!(AS), Card::<French, French>::from_str("A♠").unwrap());
+/// assert_eq!(card!(KS), Card::<French, French>::from_str("K♠").unwrap());
+/// assert_eq!(card!(QS), Card::<French, French>::from_str("Q♠").unwrap());
+/// assert_eq!(card!(JS), Card::<French, French>::from_str("J♠").unwrap());
+/// assert_eq!(card!(TS), Card::<French, French>::from_str("T♠").unwrap());
+/// assert_eq!(card!(9S), Card::<French, French>::from_str("9♠").unwrap());
+/// assert_eq!(card!(8S), Card::<French, French>::from_str("8♠").unwrap());
+/// assert_eq!(card!(7S), Card::<French, French>::from_str("7♠").unwrap());
+/// assert_eq!(card!(6S), Card::<French, French>::from_str("6♠").unwrap());
+/// assert_eq!(card!(5S), Card::<French, French>::from_str("5♠").unwrap());
+/// assert_eq!(card!(4S), Card::<French, French>::from_str("4♠").unwrap());
+/// assert_eq!(card!(3S), Card::<French, French>::from_str("3♠").unwrap());
+/// assert_eq!(card!(2S), Card::<French, French>::from_str("2♠").unwrap());
+/// assert_eq!(card!(AH), Card::<French, French>::from_str("A♥").unwrap());
+/// assert_eq!(card!(KH), Card::<French, French>::from_str("K♥").unwrap());
+/// assert_eq!(card!(QH), Card::<French, French>::from_str("Q♥").unwrap());
+/// assert_eq!(card!(JH), Card::<French, French>::from_str("J♥").unwrap());
+/// assert_eq!(card!(TH), Card::<French, French>::from_str("T♥").unwrap());
+/// assert_eq!(card!(9H), Card::<French, French>::from_str("9♥").unwrap());
+/// assert_eq!(card!(8H), Card::<French, French>::from_str("8♥").unwrap());
+/// assert_eq!(card!(7H), Card::<French, French>::from_str("7♥").unwrap());
+/// assert_eq!(card!(6H), Card::<French, French>::from_str("6♥").unwrap());
+/// assert_eq!(card!(5H), Card::<French, French>::from_str("5♥").unwrap());
+/// assert_eq!(card!(4H), Card::<French, French>::from_str("4♥").unwrap());
+/// assert_eq!(card!(3H), Card::<French, French>::from_str("3♥").unwrap());
+/// assert_eq!(card!(2H), Card::<French, French>::from_str("2♥").unwrap());
+/// assert_eq!(card!(AD), Card::<French, French>::from_str("A♦").unwrap());
+/// assert_eq!(card!(KD), Card::<French, French>::from_str("K♦").unwrap());
+/// assert_eq!(card!(QD), Card::<French, French>::from_str("Q♦").unwrap());
+/// assert_eq!(card!(JD), Card::<French, French>::from_str("J♦").unwrap());
+/// assert_eq!(card!(JD), Card::<French, French>::from_str("J♦").unwrap());
+/// assert_eq!(card!(TD), Card::<French, French>::from_str("T♦").unwrap());
+/// assert_eq!(card!(9D), Card::<French, French>::from_str("9♦").unwrap());
+/// assert_eq!(card!(8D), Card::<French, French>::from_str("8♦").unwrap());
+/// assert_eq!(card!(7D), Card::<French, French>::from_str("7♦").unwrap());
+/// assert_eq!(card!(6D), Card::<French, French>::from_str("6♦").unwrap());
+/// assert_eq!(card!(5D), Card::<French, French>::from_str("5♦").unwrap());
+/// assert_eq!(card!(4D), Card::<French, French>::from_str("4♦").unwrap());
+/// assert_eq!(card!(3D), Card::<French, French>::from_str("3♦").unwrap());
+/// assert_eq!(card!(2D), Card::<French, French>::from_str("2♦").unwrap());
+///
+///
+///
+/// ```
 #[macro_export]
 macro_rules! card {
     (AS) => {
@@ -348,7 +397,7 @@ macro_rules! cards {
 /// [`Suited`] trait while creating their own variation of [`Ranked`].
 ///
 /// Here's how we instantiate a `French` deck from its base structs and traits. These are
-/// used to create a `Pile` of `Cards`. It is functionally same as [Decked's](crate::types::traits::Decked) `deck()`
+/// used to create a `Pile` of `Cards`. It is functionally same as [Decked's](Decked) `deck()`
 /// trait method.
 ///
 /// ```
