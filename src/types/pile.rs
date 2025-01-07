@@ -241,10 +241,10 @@ impl<
     /// let map = pile.map_by_suit();
     ///
     /// assert_eq!(map.len(), 4);
-    /// assert_eq!(map.get(&Suit::<French>::new(French::SPADES)).unwrap().to_string(), "A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠");
-    /// assert_eq!(map.get(&Suit::<French>::new(French::HEARTS)).unwrap().to_string(), "A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥");
-    /// assert_eq!(map.get(&Suit::<French>::new(French::DIAMONDS)).unwrap().to_string(), "A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦");
-    /// assert_eq!(map.get(&Suit::<French>::new(French::CLUBS)).unwrap().to_string(), "A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣");
+    /// assert_eq!(map.get(&suit!(S)).unwrap().to_string(), "A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠");
+    /// assert_eq!(map.get(&suit!(H)).unwrap().to_string(), "A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥");
+    /// assert_eq!(map.get(&suit!(D)).unwrap().to_string(), "A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦");
+    /// assert_eq!(map.get(&suit!(C)).unwrap().to_string(), "A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣");
     /// ```
     ///
     /// A more advanced example of this can be found in the Bridge example in the `examples` directory.
@@ -396,10 +396,10 @@ impl<
     /// use cardpack::prelude::*;
     /// let pile = cards!("A♠ K♠ A♣ Q♣ K♥").unwrap();
     ///
-    /// assert_eq!(pile.rank_index_by_suit(&Suit::<French>::new(French::SPADES), "-"), Some("A-K".to_string()));
-    /// assert_eq!(pile.rank_index_by_suit(&Suit::<French>::new(French::HEARTS), "-"), Some("K".to_string()));
-    /// assert_eq!(pile.rank_index_by_suit(&Suit::<French>::new(French::CLUBS), "-"), Some("A-Q".to_string()));
-    /// assert_eq!(pile.rank_index_by_suit(&Suit::<French>::new(French::DIAMONDS), "-"), None);
+    /// assert_eq!(pile.rank_index_by_suit(&suit!(S), "-"), Some("A-K".to_string()));
+    /// assert_eq!(pile.rank_index_by_suit(&suit!(H), "-"), Some("K".to_string()));
+    /// assert_eq!(pile.rank_index_by_suit(&suit!(C), "-"), Some("A-Q".to_string()));
+    /// assert_eq!(pile.rank_index_by_suit(&suit!(D), "-"), None);
     /// ```
     #[must_use]
     pub fn rank_index_by_suit(&self, suit: &Suit<SuitType>, joiner: &str) -> Option<String> {

@@ -33,5 +33,6 @@ pub use crate::skat;
 pub use crate::skat_card;
 pub use crate::spades;
 pub use crate::spades_card;
+pub use crate::suit;
 
 pub use std::str::FromStr;

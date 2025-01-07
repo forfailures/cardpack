@@ -10,6 +10,22 @@ use std::collections::HashMap;
 use std::fmt::Display;
 use std::marker::PhantomData;
 
+#[macro_export]
+macro_rules! suit {
+    (S) => {
+        Suit::<French>::new(French::SPADES)
+    };
+    (H) => {
+        Suit::<French>::new(French::HEARTS)
+    };
+    (D) => {
+        Suit::<French>::new(French::DIAMONDS)
+    };
+    (C) => {
+        Suit::<French>::new(French::CLUBS)
+    };
+}
+
 /// TODO: Create a five suited deck to test the boundaries.
 /// <https://cards.fandom.com/wiki/Suit_(cards)#Five_Suit_Decks/>
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
