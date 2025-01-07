@@ -570,7 +570,8 @@ impl<
     }
 
     /// TODO WIP
-    pub fn shuffle_in_place_custom<F>(&mut self, mut rng: F)
+    #[allow(dead_code)]
+    fn shuffle_in_place_custom<F>(&mut self, mut rng: F)
     where
         F: FnMut(usize) -> usize,
     {

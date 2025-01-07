@@ -7,8 +7,16 @@ use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked};
 use std::str::FromStr;
 
+/// The Pinochle deck is made up of French deck suites, with custom ranks, based on the French,
+/// that go from nine to ace, and where the ten is the second-highest card in the deck. Each card
+/// is included twice, creating a deck of 48 cards.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Pinochle {}
+
+#[allow(clippy::module_name_repetitions)]
+pub type PinochleCard = Card<Pinochle, French>;
+#[allow(clippy::module_name_repetitions)]
+pub type PinochleDeck = Pile<Pinochle, French>;
 
 impl Pinochle {
     pub const DECK_NAME: &'static str = "Pinochle";
@@ -30,6 +38,18 @@ impl Pinochle {
 }
 
 impl Decked<Pinochle, French> for Pinochle {
+    /// This function creates a deck of cards for the game of Pinochle.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// let deck = Pinochle::deck();
+    /// let expected = "A♠ A♠ T♠ T♠ K♠ K♠ Q♠ Q♠ J♠ J♠ 9♠ 9♠ A♥ A♥ T♥ T♥ K♥ K♥ Q♥ Q♥ J♥ J♥ 9♥ 9♥ A♦ A♦ T♦ T♦ K♦ K♦ Q♦ Q♦ J♦ J♦ 9♦ 9♦ A♣ A♣ T♣ T♣ K♣ K♣ Q♣ Q♣ J♣ J♣ 9♣ 9♣";
+    ///
+    /// assert_eq!(deck.len(), 48);
+    /// assert_eq!(deck.to_string(), expected);
+    /// assert!(deck.same(&deck.shuffle()));
+    /// ```
     #[must_use]
     fn deck() -> Pile<Pinochle, French> {
         let ranks = Rank::<Pinochle>::ranks_from_array(&Pinochle::rank_names());
@@ -39,7 +59,9 @@ impl Decked<Pinochle, French> for Pinochle {
 
         for suit in &suits {
             for rank in &ranks {
-                pile.push(Card::<Pinochle, French>::new(rank.clone(), suit.clone()));
+                let card = Card::<Pinochle, French>::new(rank.clone(), suit.clone());
+                pile.push(card.clone());
+                pile.push(card);
             }
         }
 
@@ -110,7 +132,7 @@ mod decks__pinochle__tests {
         let mut shuffled = deck.shuffle();
         shuffled.sort_in_place();
 
-        let expected = "A♠ T♠ K♠ Q♠ J♠ 9♠ A♥ T♥ K♥ Q♥ J♥ 9♥ A♦ T♦ K♦ Q♦ J♦ 9♦ A♣ T♣ K♣ Q♣ J♣ 9♣";
+        let expected = "A♠ A♠ T♠ T♠ K♠ K♠ Q♠ Q♠ J♠ J♠ 9♠ 9♠ A♥ A♥ T♥ T♥ K♥ K♥ Q♥ Q♥ J♥ J♥ 9♥ 9♥ A♦ A♦ T♦ T♦ K♦ K♦ Q♦ Q♦ J♦ J♦ 9♦ 9♦ A♣ A♣ T♣ T♣ K♣ K♣ Q♣ Q♣ J♣ J♣ 9♣ 9♣";
 
         assert_eq!(deck.to_string(), expected);
         assert_eq!(shuffled.to_string(), expected);

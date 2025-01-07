@@ -433,6 +433,7 @@ pub struct French {}
 /// `Standard52` type alias for `French` to allow for people to use the old name for the `Deck`.
 pub type Standard52 = French;
 
+/// Type aliass that make it easier to work with the generic types.
 #[allow(clippy::module_name_repetitions)]
 pub type FrenchCard = Card<French, French>;
 #[allow(clippy::module_name_repetitions)]
