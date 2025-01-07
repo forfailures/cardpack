@@ -147,10 +147,25 @@ impl<
         }
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let mut pile = French::deck();
+    /// let card = pile.draw_last().unwrap();
+    ///
+    /// assert_eq!(card.to_string(), "2♣");
+    /// ```
     pub fn draw_last(&mut self) -> Option<Card<RankType, SuitType>> {
         self.0.pop()
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let mut pile = French::deck();
+    /// let card = pile.remove(1);
+    ///
+    /// assert_eq!(card.to_string(), "K♠");
+    /// assert_eq!(pile.draw(2).to_string(), "A♠ Q♠");
+    /// ```
     pub fn remove(&mut self, index: usize) -> Card<RankType, SuitType> {
         self.0.remove(index)
     }
@@ -227,6 +242,14 @@ impl<
         self.0.len()
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = French::deck();
+    ///
+    /// for card in pile.iter() {
+    ///   assert!(pile.contains(&card));
+    /// }
+    /// ```
     #[must_use]
     pub fn iter(&self) -> std::vec::IntoIter<<Pile<RankType, SuitType> as IntoIterator>::Item> {
         <&Self as IntoIterator>::into_iter(self)
@@ -485,6 +508,14 @@ impl<
         }
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let ak = cards!("A♠ K♠").unwrap();
+    /// let ka = cards!("K♠ A♠").unwrap();
+    ///
+    /// assert_eq!(ak.reverse(), ka);
+    /// assert_eq!(ka.reverse(), ak);
+    /// ```
     #[must_use]
     pub fn reverse(&self) -> Self {
         let mut pile = self.clone();
@@ -492,6 +523,15 @@ impl<
         pile
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let mut ak = cards!("A♠ K♠").unwrap();
+    /// let ka = cards!("K♠ A♠").unwrap();
+    ///
+    /// ak.reverse_in_place();
+    ///
+    /// assert_eq!(ak, ka);
+    /// ```
     pub fn reverse_in_place(&mut self) {
         self.0.reverse();
     }
