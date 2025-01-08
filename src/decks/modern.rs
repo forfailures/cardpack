@@ -48,12 +48,12 @@ impl Modern {
 
     #[must_use]
     pub fn big_joker() -> Card<Modern, Modern> {
-        Card::new(Rank::new(Self::BIG), Suit::new(Self::JOKER))
+        Card::new(&Rank::new(Self::BIG), &Suit::new(Self::JOKER))
     }
 
     #[must_use]
     pub fn little_joker() -> Card<Modern, Modern> {
-        Card::new(Rank::new(Self::LITTLE), Suit::new(Self::JOKER))
+        Card::new(&Rank::new(Self::LITTLE), &Suit::new(Self::JOKER))
     }
 
     #[must_use]

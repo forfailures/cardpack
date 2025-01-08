@@ -111,8 +111,8 @@ impl Tarot {
 
     fn major_arcana_card_factory(raw: &str) -> Card<Tarot, Tarot> {
         Card::<Tarot, Tarot>::new(
-            Rank::<Tarot>::new(raw),
-            Suit::<Tarot>::new(Tarot::MAJOR_ARCANA),
+            &Rank::<Tarot>::new(raw),
+            &Suit::<Tarot>::new(Tarot::MAJOR_ARCANA),
         )
     }
 
@@ -151,7 +151,7 @@ impl Tarot {
 
         for suit in &suits {
             for rank in &ranks {
-                pile.push(Card::<Tarot, Tarot>::new(rank.clone(), suit.clone()));
+                pile.push(Card::<Tarot, Tarot>::new(&rank.clone(), &suit.clone()));
             }
         }
 

@@ -12,146 +12,146 @@ use std::str::FromStr;
 macro_rules! pinochle_card {
     (AS) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::ACE),
-            Suit::<French>::new(French::SPADES),
+            &Rank::<Pinochle>::new(Pinochle::ACE),
+            &Suit::<French>::new(French::SPADES),
         )
     };
     (TS) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::TEN),
-            Suit::<French>::new(French::SPADES),
+            &Rank::<Pinochle>::new(Pinochle::TEN),
+            &Suit::<French>::new(French::SPADES),
         )
     };
     (KS) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::KING),
-            Suit::<French>::new(French::SPADES),
+            &Rank::<Pinochle>::new(Pinochle::KING),
+            &Suit::<French>::new(French::SPADES),
         )
     };
     (QS) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::QUEEN),
-            Suit::<French>::new(French::SPADES),
+            &Rank::<Pinochle>::new(Pinochle::QUEEN),
+            &Suit::<French>::new(French::SPADES),
         )
     };
     (JS) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::JACK),
-            Suit::<French>::new(French::SPADES),
+            &Rank::<Pinochle>::new(Pinochle::JACK),
+            &Suit::<French>::new(French::SPADES),
         )
     };
     (9S) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::NINE),
-            Suit::<French>::new(French::SPADES),
+            &Rank::<Pinochle>::new(Pinochle::NINE),
+            &Suit::<French>::new(French::SPADES),
         )
     };
     (AH) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::ACE),
-            Suit::<French>::new(French::HEARTS),
+            &Rank::<Pinochle>::new(Pinochle::ACE),
+            &Suit::<French>::new(French::HEARTS),
         )
     };
     (TH) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::TEN),
-            Suit::<French>::new(French::HEARTS),
+            &Rank::<Pinochle>::new(Pinochle::TEN),
+            &Suit::<French>::new(French::HEARTS),
         )
     };
     (KH) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::KING),
-            Suit::<French>::new(French::HEARTS),
+            &Rank::<Pinochle>::new(Pinochle::KING),
+            &Suit::<French>::new(French::HEARTS),
         )
     };
     (QH) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::QUEEN),
-            Suit::<French>::new(French::HEARTS),
+            &Rank::<Pinochle>::new(Pinochle::QUEEN),
+            &Suit::<French>::new(French::HEARTS),
         )
     };
     (JH) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::JACK),
-            Suit::<French>::new(French::HEARTS),
+            &Rank::<Pinochle>::new(Pinochle::JACK),
+            &Suit::<French>::new(French::HEARTS),
         )
     };
     (9H) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::NINE),
-            Suit::<French>::new(French::HEARTS),
+            &Rank::<Pinochle>::new(Pinochle::NINE),
+            &Suit::<French>::new(French::HEARTS),
         )
     };
     (AD) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::ACE),
-            Suit::<French>::new(French::DIAMONDS),
+            &Rank::<Pinochle>::new(Pinochle::ACE),
+            &Suit::<French>::new(French::DIAMONDS),
         )
     };
     (TD) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::TEN),
-            Suit::<French>::new(French::DIAMONDS),
+            &Rank::<Pinochle>::new(Pinochle::TEN),
+            &Suit::<French>::new(French::DIAMONDS),
         )
     };
     (KD) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::KING),
-            Suit::<French>::new(French::DIAMONDS),
+            &Rank::<Pinochle>::new(Pinochle::KING),
+            &Suit::<French>::new(French::DIAMONDS),
         )
     };
     (QD) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::QUEEN),
-            Suit::<French>::new(French::DIAMONDS),
+            &Rank::<Pinochle>::new(Pinochle::QUEEN),
+            &Suit::<French>::new(French::DIAMONDS),
         )
     };
     (JD) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::JACK),
-            Suit::<French>::new(French::DIAMONDS),
+            &Rank::<Pinochle>::new(Pinochle::JACK),
+            &Suit::<French>::new(French::DIAMONDS),
         )
     };
     (9D) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::NINE),
-            Suit::<French>::new(French::DIAMONDS),
+            &Rank::<Pinochle>::new(Pinochle::NINE),
+            &Suit::<French>::new(French::DIAMONDS),
         )
     };
     (AC) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::ACE),
-            Suit::<French>::new(French::CLUBS),
+            &Rank::<Pinochle>::new(Pinochle::ACE),
+            &Suit::<French>::new(French::CLUBS),
         )
     };
     (TC) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::TEN),
-            Suit::<French>::new(French::CLUBS),
+            &Rank::<Pinochle>::new(Pinochle::TEN),
+            &Suit::<French>::new(French::CLUBS),
         )
     };
     (KC) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::KING),
-            Suit::<French>::new(French::CLUBS),
+            &Rank::<Pinochle>::new(Pinochle::KING),
+            &Suit::<French>::new(French::CLUBS),
         )
     };
     (QC) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::QUEEN),
-            Suit::<French>::new(French::CLUBS),
+            &Rank::<Pinochle>::new(Pinochle::QUEEN),
+            &Suit::<French>::new(French::CLUBS),
         )
     };
     (JC) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::JACK),
-            Suit::<French>::new(French::CLUBS),
+            &Rank::<Pinochle>::new(Pinochle::JACK),
+            &Suit::<French>::new(French::CLUBS),
         )
     };
     (9C) => {
         Card::<Pinochle, French>::new(
-            Rank::<Pinochle>::new(Pinochle::NINE),
-            Suit::<French>::new(French::CLUBS),
+            &Rank::<Pinochle>::new(Pinochle::NINE),
+            &Suit::<French>::new(French::CLUBS),
         )
     };
     (__) => {
@@ -168,8 +168,8 @@ pub struct Pinochle {}
 /// ```
 /// use cardpack::prelude::*;
 ///
-/// let card1 = PinochleCard::new(Rank::<Pinochle>::new(Pinochle::ACE), Suit::<French>::new(French::SPADES));
-/// let card2 = Card::<Pinochle, French>::new(Rank::<Pinochle>::new(Pinochle::ACE), Suit::<French>::new(French::SPADES));
+/// let card1 = PinochleCard::new(&Rank::<Pinochle>::new(Pinochle::ACE), &Suit::<French>::new(French::SPADES));
+/// let card2 = Card::<Pinochle, French>::new(&Rank::<Pinochle>::new(Pinochle::ACE), &Suit::<French>::new(French::SPADES));
 ///
 /// assert_eq!(card1, card2);
 /// assert_eq!(card1, pinochle_card!(AS));
@@ -234,7 +234,7 @@ impl Decked<Pinochle, French> for Pinochle {
 
         for suit in &suits {
             for rank in &ranks {
-                let card = Card::<Pinochle, French>::new(rank.clone(), suit.clone());
+                let card = Card::<Pinochle, French>::new(&rank.clone(), &suit.clone());
                 pile.push(card.clone());
                 pile.push(card);
             }

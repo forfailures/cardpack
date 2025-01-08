@@ -155,16 +155,16 @@
 //!
 //! macro_rules! tiny {
 //!     (AS) => {
-//!         Card::<Tiny, Tiny>::new(Rank::<Tiny>::new(French::ACE), Suit::<Tiny>::new(French::SPADES))
+//!         Card::<Tiny, Tiny>::new(&Rank::<Tiny>::new(French::ACE), &Suit::<Tiny>::new(French::SPADES))
 //!     };
 //!     (KS) => {
-//!         Card::<Tiny, Tiny>::new(Rank::<Tiny>::new(French::KING), Suit::<Tiny>::new(French::SPADES))
+//!         Card::<Tiny, Tiny>::new(&Rank::<Tiny>::new(French::KING), &Suit::<Tiny>::new(French::SPADES))
 //!     };
 //!     (AH) => {
-//!         Card::<Tiny, Tiny>::new(Rank::<Tiny>::new(French::ACE), Suit::<Tiny>::new(French::HEARTS))
+//!         Card::<Tiny, Tiny>::new(&Rank::<Tiny>::new(French::ACE), &Suit::<Tiny>::new(French::HEARTS))
 //!     };
 //!     (KH) => {
-//!         Card::<Tiny, Tiny>::new(Rank::<Tiny>::new(French::KING), Suit::<Tiny>::new(French::HEARTS))
+//!         Card::<Tiny, Tiny>::new(&Rank::<Tiny>::new(French::KING), &Suit::<Tiny>::new(French::HEARTS))
 //!     };
 //! }
 //!
