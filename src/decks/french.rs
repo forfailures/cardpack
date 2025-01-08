@@ -58,314 +58,314 @@ use std::str::FromStr;
 macro_rules! card {
     (AS) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::ACE),
-            &Suit::<French>::new(French::SPADES),
+            Rank::<French>::new(French::ACE),
+            Suit::<French>::new(French::SPADES),
         )
     };
     (KS) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::KING),
-            &Suit::<French>::new(French::SPADES),
+            Rank::<French>::new(French::KING),
+            Suit::<French>::new(French::SPADES),
         )
     };
     (QS) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::QUEEN),
-            &Suit::<French>::new(French::SPADES),
+            Rank::<French>::new(French::QUEEN),
+            Suit::<French>::new(French::SPADES),
         )
     };
     (JS) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::JACK),
-            &Suit::<French>::new(French::SPADES),
+            Rank::<French>::new(French::JACK),
+            Suit::<French>::new(French::SPADES),
         )
     };
     (TS) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::TEN),
-            &Suit::<French>::new(French::SPADES),
+            Rank::<French>::new(French::TEN),
+            Suit::<French>::new(French::SPADES),
         )
     };
     (9S) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::NINE),
-            &Suit::<French>::new(French::SPADES),
+            Rank::<French>::new(French::NINE),
+            Suit::<French>::new(French::SPADES),
         )
     };
     (8S) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::EIGHT),
-            &Suit::<French>::new(French::SPADES),
+            Rank::<French>::new(French::EIGHT),
+            Suit::<French>::new(French::SPADES),
         )
     };
     (7S) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::SEVEN),
-            &Suit::<French>::new(French::SPADES),
+            Rank::<French>::new(French::SEVEN),
+            Suit::<French>::new(French::SPADES),
         )
     };
     (6S) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::SIX),
-            &Suit::<French>::new(French::SPADES),
+            Rank::<French>::new(French::SIX),
+            Suit::<French>::new(French::SPADES),
         )
     };
     (5S) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::FIVE),
-            &Suit::<French>::new(French::SPADES),
+            Rank::<French>::new(French::FIVE),
+            Suit::<French>::new(French::SPADES),
         )
     };
     (4S) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::FOUR),
-            &Suit::<French>::new(French::SPADES),
+            Rank::<French>::new(French::FOUR),
+            Suit::<French>::new(French::SPADES),
         )
     };
     (3S) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::THREE),
-            &Suit::<French>::new(French::SPADES),
+            Rank::<French>::new(French::THREE),
+            Suit::<French>::new(French::SPADES),
         )
     };
     (2S) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::TWO),
-            &Suit::<French>::new(French::SPADES),
+            Rank::<French>::new(French::TWO),
+            Suit::<French>::new(French::SPADES),
         )
     };
     (AH) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::ACE),
-            &Suit::<French>::new(French::HEARTS),
+            Rank::<French>::new(French::ACE),
+            Suit::<French>::new(French::HEARTS),
         )
     };
     (KH) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::KING),
-            &Suit::<French>::new(French::HEARTS),
+            Rank::<French>::new(French::KING),
+            Suit::<French>::new(French::HEARTS),
         )
     };
     (QH) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::QUEEN),
-            &Suit::<French>::new(French::HEARTS),
+            Rank::<French>::new(French::QUEEN),
+            Suit::<French>::new(French::HEARTS),
         )
     };
     (JH) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::JACK),
-            &Suit::<French>::new(French::HEARTS),
+            Rank::<French>::new(French::JACK),
+            Suit::<French>::new(French::HEARTS),
         )
     };
     (TH) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::TEN),
-            &Suit::<French>::new(French::HEARTS),
+            Rank::<French>::new(French::TEN),
+            Suit::<French>::new(French::HEARTS),
         )
     };
     (9H) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::NINE),
-            &Suit::<French>::new(French::HEARTS),
+            Rank::<French>::new(French::NINE),
+            Suit::<French>::new(French::HEARTS),
         )
     };
     (8H) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::EIGHT),
-            &Suit::<French>::new(French::HEARTS),
+            Rank::<French>::new(French::EIGHT),
+            Suit::<French>::new(French::HEARTS),
         )
     };
     (7H) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::SEVEN),
-            &Suit::<French>::new(French::HEARTS),
+            Rank::<French>::new(French::SEVEN),
+            Suit::<French>::new(French::HEARTS),
         )
     };
     (6H) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::SIX),
-            &Suit::<French>::new(French::HEARTS),
+            Rank::<French>::new(French::SIX),
+            Suit::<French>::new(French::HEARTS),
         )
     };
     (5H) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::FIVE),
-            &Suit::<French>::new(French::HEARTS),
+            Rank::<French>::new(French::FIVE),
+            Suit::<French>::new(French::HEARTS),
         )
     };
     (4H) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::FOUR),
-            &Suit::<French>::new(French::HEARTS),
+            Rank::<French>::new(French::FOUR),
+            Suit::<French>::new(French::HEARTS),
         )
     };
     (3H) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::THREE),
-            &Suit::<French>::new(French::HEARTS),
+            Rank::<French>::new(French::THREE),
+            Suit::<French>::new(French::HEARTS),
         )
     };
     (2H) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::TWO),
-            &Suit::<French>::new(French::HEARTS),
+            Rank::<French>::new(French::TWO),
+            Suit::<French>::new(French::HEARTS),
         )
     };
     (AD) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::ACE),
-            &Suit::<French>::new(French::DIAMONDS),
+            Rank::<French>::new(French::ACE),
+            Suit::<French>::new(French::DIAMONDS),
         )
     };
     (KD) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::KING),
-            &Suit::<French>::new(French::DIAMONDS),
+            Rank::<French>::new(French::KING),
+            Suit::<French>::new(French::DIAMONDS),
         )
     };
     (QD) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::QUEEN),
-            &Suit::<French>::new(French::DIAMONDS),
+            Rank::<French>::new(French::QUEEN),
+            Suit::<French>::new(French::DIAMONDS),
         )
     };
     (JD) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::JACK),
-            &Suit::<French>::new(French::DIAMONDS),
+            Rank::<French>::new(French::JACK),
+            Suit::<French>::new(French::DIAMONDS),
         )
     };
     (TD) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::TEN),
-            &Suit::<French>::new(French::DIAMONDS),
+            Rank::<French>::new(French::TEN),
+            Suit::<French>::new(French::DIAMONDS),
         )
     };
     (9D) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::NINE),
-            &Suit::<French>::new(French::DIAMONDS),
+            Rank::<French>::new(French::NINE),
+            Suit::<French>::new(French::DIAMONDS),
         )
     };
     (8D) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::EIGHT),
-            &Suit::<French>::new(French::DIAMONDS),
+            Rank::<French>::new(French::EIGHT),
+            Suit::<French>::new(French::DIAMONDS),
         )
     };
     (7D) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::SEVEN),
-            &Suit::<French>::new(French::DIAMONDS),
+            Rank::<French>::new(French::SEVEN),
+            Suit::<French>::new(French::DIAMONDS),
         )
     };
     (6D) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::SIX),
-            &Suit::<French>::new(French::DIAMONDS),
+            Rank::<French>::new(French::SIX),
+            Suit::<French>::new(French::DIAMONDS),
         )
     };
     (5D) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::FIVE),
-            &Suit::<French>::new(French::DIAMONDS),
+            Rank::<French>::new(French::FIVE),
+            Suit::<French>::new(French::DIAMONDS),
         )
     };
     (4D) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::FOUR),
-            &Suit::<French>::new(French::DIAMONDS),
+            Rank::<French>::new(French::FOUR),
+            Suit::<French>::new(French::DIAMONDS),
         )
     };
     (3D) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::THREE),
-            &Suit::<French>::new(French::DIAMONDS),
+            Rank::<French>::new(French::THREE),
+            Suit::<French>::new(French::DIAMONDS),
         )
     };
     (2D) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::TWO),
-            &Suit::<French>::new(French::DIAMONDS),
+            Rank::<French>::new(French::TWO),
+            Suit::<French>::new(French::DIAMONDS),
         )
     };
     (AC) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::ACE),
-            &Suit::<French>::new(French::CLUBS),
+            Rank::<French>::new(French::ACE),
+            Suit::<French>::new(French::CLUBS),
         )
     };
     (KC) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::KING),
-            &Suit::<French>::new(French::CLUBS),
+            Rank::<French>::new(French::KING),
+            Suit::<French>::new(French::CLUBS),
         )
     };
     (QC) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::QUEEN),
-            &Suit::<French>::new(French::CLUBS),
+            Rank::<French>::new(French::QUEEN),
+            Suit::<French>::new(French::CLUBS),
         )
     };
     (JC) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::JACK),
-            &Suit::<French>::new(French::CLUBS),
+            Rank::<French>::new(French::JACK),
+            Suit::<French>::new(French::CLUBS),
         )
     };
     (TC) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::TEN),
-            &Suit::<French>::new(French::CLUBS),
+            Rank::<French>::new(French::TEN),
+            Suit::<French>::new(French::CLUBS),
         )
     };
     (9C) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::NINE),
-            &Suit::<French>::new(French::CLUBS),
+            Rank::<French>::new(French::NINE),
+            Suit::<French>::new(French::CLUBS),
         )
     };
     (8C) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::EIGHT),
-            &Suit::<French>::new(French::CLUBS),
+            Rank::<French>::new(French::EIGHT),
+            Suit::<French>::new(French::CLUBS),
         )
     };
     (7C) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::SEVEN),
-            &Suit::<French>::new(French::CLUBS),
+            Rank::<French>::new(French::SEVEN),
+            Suit::<French>::new(French::CLUBS),
         )
     };
     (6C) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::SIX),
-            &Suit::<French>::new(French::CLUBS),
+            Rank::<French>::new(French::SIX),
+            Suit::<French>::new(French::CLUBS),
         )
     };
     (5C) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::FIVE),
-            &Suit::<French>::new(French::CLUBS),
+            Rank::<French>::new(French::FIVE),
+            Suit::<French>::new(French::CLUBS),
         )
     };
     (4C) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::FOUR),
-            &Suit::<French>::new(French::CLUBS),
+            Rank::<French>::new(French::FOUR),
+            Suit::<French>::new(French::CLUBS),
         )
     };
     (3C) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::THREE),
-            &Suit::<French>::new(French::CLUBS),
+            Rank::<French>::new(French::THREE),
+            Suit::<French>::new(French::CLUBS),
         )
     };
     (2C) => {
         Card::<French, French>::new(
-            &Rank::<French>::new(French::TWO),
-            &Suit::<French>::new(French::CLUBS),
+            Rank::<French>::new(French::TWO),
+            Suit::<French>::new(French::CLUBS),
         )
     };
     (__) => {
@@ -414,7 +414,7 @@ macro_rules! cards {
 ///
 /// for suit in &suits {
 ///     for rank in &ranks {
-///         let card = Card::<French, French>::new(rank, suit);
+///         let card = Card::<French, French>::new(rank.clone(), suit.clone());
 ///         assert!(!card.is_blank());
 ///         pile.push(card);
 ///     }

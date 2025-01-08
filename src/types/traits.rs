@@ -36,10 +36,7 @@ pub trait Decked<
 
         for suit in &suits {
             for rank in &ranks {
-                pile.push(Card::<RankType, SuitType>::new(
-                    &rank.clone(),
-                    &suit.clone(),
-                ));
+                pile.push(Card::<RankType, SuitType>::new(rank.clone(), suit.clone()));
             }
         }
 

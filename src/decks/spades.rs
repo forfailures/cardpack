@@ -70,12 +70,12 @@ impl Decked<Modern, Modern> for Spades {
         let mut deck = Modern::deck();
 
         let two_clubs = Card::new(
-            &Rank::<Modern>::new(French::TWO),
-            &Suit::<Modern>::new(French::CLUBS),
+            Rank::<Modern>::new(French::TWO),
+            Suit::<Modern>::new(French::CLUBS),
         );
         let two_diamonds = Card::new(
-            &Rank::<Modern>::new(French::TWO),
-            &Suit::<Modern>::new(French::DIAMONDS),
+            Rank::<Modern>::new(French::TWO),
+            Suit::<Modern>::new(French::DIAMONDS),
         );
 
         deck.remove_card(&two_clubs).unwrap();

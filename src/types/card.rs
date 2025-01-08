@@ -29,8 +29,8 @@ use std::str::FromStr;
 /// ```
 /// use cardpack::prelude::*;
 ///
-/// let rank = &Rank::<French>::new(French::JACK);
-/// let suit = &Suit::<French>::new(French::CLUBS);
+/// let rank = Rank::<French>::new(French::JACK);
+/// let suit = Suit::<French>::new(French::CLUBS);
 /// let card = Card::<French, French>::new(rank, suit);
 ///
 /// assert_eq!(card.to_string(), "J♣");
@@ -80,19 +80,19 @@ where
     ///     suit: Suit::<French>::from('S'),
     /// };
     ///
-    /// let ace = &Rank::<French>::from('A');
-    /// let spades = &Suit::<French>::from('S');
+    /// let ace = Rank::<French>::from('A');
+    /// let spades = Suit::<French>::from('S');
     /// let card: Card<French, French> = Card::new(ace, spades);
     ///
     /// assert_eq!(card, expected);
     /// ```
     #[must_use]
-    pub fn new(rank: &Rank<RankType>, suit: &Suit<SuitType>) -> Self {
+    pub fn new(rank: Rank<RankType>, suit: Suit<SuitType>) -> Self {
         Self {
-            weight: Self::determine_weight(suit, rank),
-            index: Card::determine_default_index(suit, rank),
-            suit: suit.clone(),
-            rank: rank.clone(),
+            weight: Self::determine_weight(&suit, &rank),
+            index: Card::determine_default_index(&suit, &rank),
+            suit,
+            rank,
         }
     }
 
@@ -103,8 +103,8 @@ where
     /// ```
     /// use cardpack::prelude::*;
     ///
-    /// let ace = &Rank::<French>::from('A');
-    /// let spades = &Suit::<French>::from('S');
+    /// let ace = Rank::<French>::from('A');
+    /// let spades = Suit::<French>::from('S');
     /// let ace_of_spades: Card<French, French> = Card::new(ace, spades);
     ///
     /// let deuce = Rank::<French>::from('2');
@@ -253,7 +253,7 @@ impl<RankType: Ranked + Clone, SuitType: Suited + Clone> FromStr for Card<RankTy
             let rank = Rank::<RankType>::from(c);
             if let Some(c) = s.chars().last() {
                 let suit = Suit::<SuitType>::from(c);
-                return Ok(Card::new(&rank, &suit));
+                return Ok(Card::new(rank, suit));
             }
         }
 
@@ -278,9 +278,9 @@ mod types__card__tests {
             suit: Suit::<French>::from('S'),
         };
 
-        let ace = &Rank::<French>::from('A');
-        let spades = &Suit::<French>::from('S');
-        let card: Card<French, French> = Card::new(ace, &spades);
+        let ace = Rank::<French>::from('A');
+        let spades = Suit::<French>::from('S');
+        let card: Card<French, French> = Card::new(ace, spades);
 
         assert_eq!(card, expected);
     }
@@ -349,8 +349,8 @@ mod types__card__tests {
 
     #[test]
     fn from_str() {
-        let ace = &Rank::<French>::from('A');
-        let spades = &Suit::<French>::from('S');
+        let ace = Rank::<French>::from('A');
+        let spades = Suit::<French>::from('S');
         let expected_card: Card<French, French> = Card::new(ace, spades);
 
         let card = card!("AS");

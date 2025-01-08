@@ -141,8 +141,8 @@ mod decks__skat__tests {
         let card_default = Card::<Skat, Skat>::default();
 
         let expected = Card::<Skat, Skat>::new(
-            &Rank::<Skat>::new(FluentName::BLANK),
-            &Suit::<Skat>::new(FluentName::BLANK),
+            Rank::<Skat>::new(FluentName::BLANK),
+            Suit::<Skat>::new(FluentName::BLANK),
         );
 
         assert_eq!(expected, skat_blank);
