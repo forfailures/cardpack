@@ -1,4 +1,5 @@
 use crate::decks::FluentName;
+use std::fmt::{Display, Formatter};
 use std::marker::PhantomData;
 
 pub trait Ranked {
@@ -20,12 +21,97 @@ where
     RankType: Ranked,
 {
     pub const BLANK: char = '_';
+
+    #[must_use]
+    pub fn get_name(&self) -> FluentName {
+        RankType::name(self.index)
+    }
+}
+
+impl<RankType> Display for Rank<RankType>
+where
+    RankType: Ranked,
+{
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// assert_eq!(French::ACE.get_name().fluent_name_string(), French::FLUENT_KEY_ACE);
+    /// ```
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.index)
+    }
 }
 
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct French {}
 
 impl French {
+    pub const ACE: Rank<French> = Rank {
+        weight: 12,
+        index: French::ACE_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const KING: Rank<French> = Rank {
+        weight: 11,
+        index: French::KING_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const QUEEN: Rank<French> = Rank {
+        weight: 10,
+        index: French::QUEEN_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const JACK: Rank<French> = Rank {
+        weight: 9,
+        index: French::JACK_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const TEN: Rank<French> = Rank {
+        weight: 8,
+        index: French::TEN_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const NINE: Rank<French> = Rank {
+        weight: 7,
+        index: French::NINE_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const EIGHT: Rank<French> = Rank {
+        weight: 6,
+        index: French::EIGHT_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const SEVEN: Rank<French> = Rank {
+        weight: 5,
+        index: French::SEVEN_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const SIX: Rank<French> = Rank {
+        weight: 4,
+        index: French::SIX_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const FIVE: Rank<French> = Rank {
+        weight: 3,
+        index: French::FIVE_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const FOUR: Rank<French> = Rank {
+        weight: 2,
+        index: French::FOUR_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const TREY: Rank<French> = Rank {
+        weight: 1,
+        index: French::TREY_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const DEUCE: Rank<French> = Rank {
+        weight: 0,
+        index: French::TWO_INDEX,
+        phantom_data: PhantomData,
+    };
+
     pub const ACE_INDEX: char = 'A';
     pub const KING_INDEX: char = 'K';
     pub const QUEEN_INDEX: char = 'Q';
@@ -37,7 +123,7 @@ impl French {
     pub const SIX_INDEX: char = '6';
     pub const FIVE_INDEX: char = '5';
     pub const FOUR_INDEX: char = '4';
-    pub const THREE_INDEX: char = '3';
+    pub const TREY_INDEX: char = '3';
     pub const TWO_INDEX: char = '2';
 
     pub const FLUENT_KEY_ACE: &'static str = "ace";
@@ -56,6 +142,11 @@ impl French {
 }
 
 impl Ranked for French {
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// assert_eq!(French::ACE.get_name().fluent_name_string(), French::FLUENT_KEY_ACE);
+    /// ```
     fn name(index: char) -> FluentName {
         match index {
             French::ACE_INDEX => FluentName::new(French::FLUENT_KEY_ACE),
@@ -69,7 +160,7 @@ impl Ranked for French {
             French::SIX_INDEX => FluentName::new(French::FLUENT_KEY_SIX),
             French::FIVE_INDEX => FluentName::new(French::FLUENT_KEY_FIVE),
             French::FOUR_INDEX => FluentName::new(French::FLUENT_KEY_FOUR),
-            French::THREE_INDEX => FluentName::new(French::FLUENT_KEY_THREE),
+            French::TREY_INDEX => FluentName::new(French::FLUENT_KEY_THREE),
             French::TWO_INDEX => FluentName::new(French::FLUENT_KEY_TWO),
             _ => FluentName::new(FluentName::BLANK),
         }
