@@ -94,6 +94,16 @@ pub trait Named<'a> {
         self.fluent_value(Self::FLUENT_INDEX_SECTION, lid)
     }
 
+    /// ```
+    /// use cardpack::localization::*;
+    ///
+    /// let jack = FluentName::new("jack");
+    /// assert_eq!('B', jack.index_char(&FluentName::DEUTSCH));
+    /// ```
+    fn index_char(&self, lid: &LanguageIdentifier) -> char {
+        self.index(lid).chars().next().unwrap_or('_')
+    }
+
     /// Returns the default, `US_ENGLISH` index value in the fluent templates.
     ///
     /// ## Usage

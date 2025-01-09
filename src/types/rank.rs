@@ -17,6 +17,7 @@ where
     RankType: Ranked,
 {
     pub weight: u32,
+    pub index: char,
     pub prime: u32,
     pub name: FluentName,
     pub phantom_data: PhantomData<RankType>,
@@ -32,6 +33,7 @@ where
 
         Rank::<RankType> {
             weight: name.weight(),
+            index: name.index_char(&FluentName::US_ENGLISH),
             prime: name.prime(),
             name,
             phantom_data: PhantomData,
@@ -44,6 +46,7 @@ where
 
         Rank::<RankType> {
             weight,
+            index: name.index_char(&FluentName::US_ENGLISH),
             prime: name.prime(),
             name,
             phantom_data: PhantomData,
@@ -114,6 +117,7 @@ where
     fn default() -> Self {
         Rank::<RankType> {
             weight: 0,
+            index: '_',
             prime: 0,
             name: FluentName::default(),
             phantom_data: PhantomData,
@@ -139,6 +143,7 @@ where
 
         Rank::<RankType> {
             weight,
+            index: name.index_char(&FluentName::US_ENGLISH),
             prime: name.prime(),
             name,
             phantom_data: PhantomData,
@@ -177,6 +182,7 @@ impl<RankType: Ranked> From<char> for Rank<RankType> {
         if !RankType::is_valid_rank_char(&c) {
             return Rank::<RankType> {
                 weight: 0,
+                index: '_',
                 prime: 0,
                 name: FluentName::default(),
                 phantom_data: PhantomData,
