@@ -7,12 +7,195 @@ use crate::types::suit::Suit;
 use crate::types::traits::{Decked, Ranked};
 use std::str::FromStr;
 
+#[macro_export]
+#[allow(clippy::module_name_repetitions)]
+macro_rules! pinochle_card {
+    (AS) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::ACE),
+            Suit::<French>::new(French::SPADES),
+        )
+    };
+    (TS) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::TEN),
+            Suit::<French>::new(French::SPADES),
+        )
+    };
+    (KS) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::KING),
+            Suit::<French>::new(French::SPADES),
+        )
+    };
+    (QS) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::QUEEN),
+            Suit::<French>::new(French::SPADES),
+        )
+    };
+    (JS) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::JACK),
+            Suit::<French>::new(French::SPADES),
+        )
+    };
+    (9S) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::NINE),
+            Suit::<French>::new(French::SPADES),
+        )
+    };
+    (AH) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::ACE),
+            Suit::<French>::new(French::HEARTS),
+        )
+    };
+    (TH) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::TEN),
+            Suit::<French>::new(French::HEARTS),
+        )
+    };
+    (KH) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::KING),
+            Suit::<French>::new(French::HEARTS),
+        )
+    };
+    (QH) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::QUEEN),
+            Suit::<French>::new(French::HEARTS),
+        )
+    };
+    (JH) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::JACK),
+            Suit::<French>::new(French::HEARTS),
+        )
+    };
+    (9H) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::NINE),
+            Suit::<French>::new(French::HEARTS),
+        )
+    };
+    (AD) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::ACE),
+            Suit::<French>::new(French::DIAMONDS),
+        )
+    };
+    (TD) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::TEN),
+            Suit::<French>::new(French::DIAMONDS),
+        )
+    };
+    (KD) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::KING),
+            Suit::<French>::new(French::DIAMONDS),
+        )
+    };
+    (QD) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::QUEEN),
+            Suit::<French>::new(French::DIAMONDS),
+        )
+    };
+    (JD) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::JACK),
+            Suit::<French>::new(French::DIAMONDS),
+        )
+    };
+    (9D) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::NINE),
+            Suit::<French>::new(French::DIAMONDS),
+        )
+    };
+    (AC) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::ACE),
+            Suit::<French>::new(French::CLUBS),
+        )
+    };
+    (TC) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::TEN),
+            Suit::<French>::new(French::CLUBS),
+        )
+    };
+    (KC) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::KING),
+            Suit::<French>::new(French::CLUBS),
+        )
+    };
+    (QC) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::QUEEN),
+            Suit::<French>::new(French::CLUBS),
+        )
+    };
+    (JC) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::JACK),
+            Suit::<French>::new(French::CLUBS),
+        )
+    };
+    (9C) => {
+        Card::<Pinochle, French>::new(
+            Rank::<Pinochle>::new(Pinochle::NINE),
+            Suit::<French>::new(French::CLUBS),
+        )
+    };
+    (__) => {
+        Card::<Pinochle, French>::default()
+    };
+}
+
+/// The Pinochle deck is made up of French deck suites, with custom ranks, based on the French,
+/// that go from nine to ace, and where the ten is the second-highest card in the deck. Each card
+/// is included twice, creating a deck of 48 cards.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Pinochle {}
+
+/// ```
+/// use cardpack::prelude::*;
+///
+/// let card1 = PinochleCard::new(Rank::<Pinochle>::new(Pinochle::ACE), Suit::<French>::new(French::SPADES));
+/// let card2 = Card::<Pinochle, French>::new(Rank::<Pinochle>::new(Pinochle::ACE), Suit::<French>::new(French::SPADES));
+///
+/// assert_eq!(card1, card2);
+/// assert_eq!(card1, pinochle_card!(AS));
+/// ```
+#[allow(clippy::module_name_repetitions)]
+pub type PinochleCard = Card<Pinochle, French>;
+#[allow(clippy::module_name_repetitions)]
+pub type PinochleDeck = Pile<Pinochle, French>;
 
 impl Pinochle {
     pub const DECK_NAME: &'static str = "Pinochle";
 
+    /// Constants representing the fluid template names for the [`Ranks`](Rank). `Pinochle` has separate ones for the ranks
+    /// because they have a different order than the [`French`] deck.
+    ///
+    /// You can see this in action when we sort the same hands in both decks:
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// let french_hand = French::from_str("AS KS QS JS TS").unwrap().sort();
+    /// let pinochle_hand = Pinochle::from_str("AS KS QS JS TS").unwrap().sort();
+    ///
+    /// assert_eq!("A♠ K♠ Q♠ J♠ T♠", french_hand.to_string());
+    /// assert_eq!("A♠ T♠ K♠ Q♠ J♠", pinochle_hand.to_string());
+    /// ```
     pub const ACE: &'static str = "pinochle-ace";
     pub const TEN: &'static str = "pinochle-ten";
     pub const KING: &'static str = "pinochle-king";
@@ -30,6 +213,18 @@ impl Pinochle {
 }
 
 impl Decked<Pinochle, French> for Pinochle {
+    /// This function creates a deck of cards for the game of Pinochle.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// let deck = Pinochle::deck();
+    /// let expected = "A♠ A♠ T♠ T♠ K♠ K♠ Q♠ Q♠ J♠ J♠ 9♠ 9♠ A♥ A♥ T♥ T♥ K♥ K♥ Q♥ Q♥ J♥ J♥ 9♥ 9♥ A♦ A♦ T♦ T♦ K♦ K♦ Q♦ Q♦ J♦ J♦ 9♦ 9♦ A♣ A♣ T♣ T♣ K♣ K♣ Q♣ Q♣ J♣ J♣ 9♣ 9♣";
+    ///
+    /// assert_eq!(deck.len(), 48);
+    /// assert_eq!(deck.to_string(), expected);
+    /// assert!(deck.same(&deck.shuffle()));
+    /// ```
     #[must_use]
     fn deck() -> Pile<Pinochle, French> {
         let ranks = Rank::<Pinochle>::ranks_from_array(&Pinochle::rank_names());
@@ -39,7 +234,9 @@ impl Decked<Pinochle, French> for Pinochle {
 
         for suit in &suits {
             for rank in &ranks {
-                pile.push(Card::<Pinochle, French>::new(rank.clone(), suit.clone()));
+                let card = Card::<Pinochle, French>::new(rank.clone(), suit.clone());
+                pile.push(card.clone());
+                pile.push(card);
             }
         }
 
@@ -110,7 +307,7 @@ mod decks__pinochle__tests {
         let mut shuffled = deck.shuffle();
         shuffled.sort_in_place();
 
-        let expected = "A♠ T♠ K♠ Q♠ J♠ 9♠ A♥ T♥ K♥ Q♥ J♥ 9♥ A♦ T♦ K♦ Q♦ J♦ 9♦ A♣ T♣ K♣ Q♣ J♣ 9♣";
+        let expected = "A♠ A♠ T♠ T♠ K♠ K♠ Q♠ Q♠ J♠ J♠ 9♠ 9♠ A♥ A♥ T♥ T♥ K♥ K♥ Q♥ Q♥ J♥ J♥ 9♥ 9♥ A♦ A♦ T♦ T♦ K♦ K♦ Q♦ Q♦ J♦ J♦ 9♦ 9♦ A♣ A♣ T♣ T♣ K♣ K♣ Q♣ Q♣ J♣ J♣ 9♣ 9♣";
 
         assert_eq!(deck.to_string(), expected);
         assert_eq!(shuffled.to_string(), expected);

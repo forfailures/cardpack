@@ -96,6 +96,25 @@ where
         }
     }
 
+    /// Allows you to override the weight of the card from what's set in the
+    /// [`FluentName`](crate::localization::FluentName) field. Sorting
+    /// of Cards is done based on the weight field, so this is a way to create custom sorts.
+    ///
+    /// ```
+    /// use cardpack::prelude::*;
+    ///
+    /// let ace = Rank::<French>::from('A');
+    /// let spades = Suit::<French>::from('S');
+    /// let ace_of_spades: Card<French, French> = Card::new(ace, spades);
+    ///
+    /// let deuce = Rank::<French>::from('2');
+    /// let clubs = Suit::<French>::from('C');
+    /// let deuce_of_clubs: Card<French, French> = Card::new_weighted(deuce, clubs, 10_000);
+    ///
+    /// let pile = FrenchDeck::from(vec![ace_of_spades, deuce_of_clubs]);
+    ///
+    /// assert_eq!("2♣ A♠", pile.sort().to_string());
+    /// ```
     #[must_use]
     pub fn new_weighted(rank: Rank<RankType>, suit: Suit<SuitType>, weight: u32) -> Self {
         Self {

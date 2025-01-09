@@ -55,6 +55,17 @@ impl<
         SuitType: Suited + Ord + Clone + Default + Hash,
     > Pile<RankType, SuitType>
 {
+    /// ```
+    /// use std::collections::HashSet;
+    /// use cardpack::prelude::*;
+    /// let five_deck = French::decks(5);
+    ///
+    /// let hashset: HashSet<Card<French, French>> = five_deck.as_hashset();
+    ///
+    /// assert_eq!(five_deck.len(), 260);
+    /// assert_eq!(hashset.len(), 52);
+    /// assert_eq!(FrenchDeck::from(hashset), French::deck());
+    /// ```
     #[must_use]
     pub fn as_hashset(&self) -> HashSet<Card<RankType, SuitType>> {
         self.clone().0.into_iter().collect()
@@ -103,6 +114,14 @@ impl<
         self.0.contains(card)
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let mut pile = French::deck();
+    ///
+    /// let ak = pile.draw(2);
+    ///
+    /// assert_eq!(ak, FrenchDeck::from_str("A♠ K♠").unwrap());
+    /// ```
     #[must_use]
     pub fn draw(&mut self, n: usize) -> Self {
         let mut pile = Pile::<RankType, SuitType>::default();
@@ -114,6 +133,13 @@ impl<
         pile
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let mut pile = French::deck().reverse();
+    /// let card = pile.draw_first().unwrap();
+    ///
+    /// assert_eq!(card.to_string(), "2♣");
+    /// ```
     pub fn draw_first(&mut self) -> Option<Card<RankType, SuitType>> {
         match self.len() {
             0 => None,
@@ -121,10 +147,25 @@ impl<
         }
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let mut pile = French::deck();
+    /// let card = pile.draw_last().unwrap();
+    ///
+    /// assert_eq!(card.to_string(), "2♣");
+    /// ```
     pub fn draw_last(&mut self) -> Option<Card<RankType, SuitType>> {
         self.0.pop()
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let mut pile = French::deck();
+    /// let card = pile.remove(1);
+    ///
+    /// assert_eq!(card.to_string(), "K♠");
+    /// assert_eq!(pile.draw(2).to_string(), "A♠ Q♠");
+    /// ```
     pub fn remove(&mut self, index: usize) -> Card<RankType, SuitType> {
         self.0.remove(index)
     }
@@ -201,6 +242,14 @@ impl<
         self.0.len()
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = French::deck();
+    ///
+    /// for card in pile.iter() {
+    ///   assert!(pile.contains(&card));
+    /// }
+    /// ```
     #[must_use]
     pub fn iter(&self) -> std::vec::IntoIter<<Pile<RankType, SuitType> as IntoIterator>::Item> {
         <&Self as IntoIterator>::into_iter(self)
@@ -215,10 +264,10 @@ impl<
     /// let map = pile.map_by_suit();
     ///
     /// assert_eq!(map.len(), 4);
-    /// assert_eq!(map.get(&Suit::<French>::new(French::SPADES)).unwrap().to_string(), "A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠");
-    /// assert_eq!(map.get(&Suit::<French>::new(French::HEARTS)).unwrap().to_string(), "A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥");
-    /// assert_eq!(map.get(&Suit::<French>::new(French::DIAMONDS)).unwrap().to_string(), "A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦");
-    /// assert_eq!(map.get(&Suit::<French>::new(French::CLUBS)).unwrap().to_string(), "A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣");
+    /// assert_eq!(map.get(&suit!(S)).unwrap().to_string(), "A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠");
+    /// assert_eq!(map.get(&suit!(H)).unwrap().to_string(), "A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥");
+    /// assert_eq!(map.get(&suit!(D)).unwrap().to_string(), "A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦");
+    /// assert_eq!(map.get(&suit!(C)).unwrap().to_string(), "A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣");
     /// ```
     ///
     /// A more advanced example of this can be found in the Bridge example in the `examples` directory.
@@ -366,21 +415,55 @@ impl<
             .join(sep)
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = cards!("A♠ K♠ A♣ Q♣ K♥").unwrap();
+    ///
+    /// assert_eq!(pile.rank_index_by_suit(&suit!(S), "-"), Some("A-K".to_string()));
+    /// assert_eq!(pile.rank_index_by_suit(&suit!(H), "-"), Some("K".to_string()));
+    /// assert_eq!(pile.rank_index_by_suit(&suit!(C), "-"), Some("A-Q".to_string()));
+    /// assert_eq!(pile.rank_index_by_suit(&suit!(D), "-"), None);
+    /// ```
     #[must_use]
     pub fn rank_index_by_suit(&self, suit: &Suit<SuitType>, joiner: &str) -> Option<String> {
         self.ranks_by_suit(suit)
             .map(|ranks| Rank::<RankType>::ranks_index(&ranks, joiner))
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = cards!("A♠ K♠ A♣ Q♣ K♥").unwrap();
+    ///
+    /// let expected = vec![
+    ///     Rank::<French>::new(French::ACE),
+    ///     Rank::<French>::new(French::KING),
+    ///     Rank::<French>::new(French::QUEEN),
+    /// ];
+    ///
+    /// assert_eq!(pile.ranks(), expected);
+    /// ```
     #[must_use]
     pub fn ranks(&self) -> Vec<Rank<RankType>> {
-        let hashset: HashSet<Rank<RankType>> = self.0.iter().map(|c| c.rank.clone()).collect();
+        let hashset: HashSet<Rank<RankType>> = self.iter().map(|c| c.rank.clone()).collect();
         let mut ranks: Vec<Rank<RankType>> = Vec::from_iter(hashset);
         ranks.sort();
         ranks.reverse();
         ranks
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = cards!("A♠ K♠").unwrap();
+    ///
+    /// let expected = vec![
+    ///     Rank::<French>::new(French::ACE),
+    ///     Rank::<French>::new(French::KING),
+    /// ];
+    ///
+    /// // ASIDE: this is so clunky.
+    /// assert_eq!(pile.ranks_by_suit(&Suit::<French>::new(French::SPADES)).unwrap(), expected);
+    /// assert!(pile.ranks_by_suit(&Suit::<French>::new(French::HEARTS)).is_none());
+    /// ```
     #[must_use]
     pub fn ranks_by_suit(&self, suit: &Suit<SuitType>) -> Option<Vec<Rank<RankType>>> {
         let ranks: Vec<Rank<RankType>> = self
@@ -396,6 +479,13 @@ impl<
         }
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let mut pile = French::deck();
+    /// pile.remove_card(&card!(KS));
+    ///
+    /// assert_eq!(pile.draw(2), cards!("AS QS").unwrap());
+    /// ```
     pub fn remove_card(
         &mut self,
         card: &Card<RankType, SuitType>,
@@ -404,10 +494,46 @@ impl<
         Some(self.0.remove(index))
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let mut pile = French::deck();
+    /// pile.remove_cards(&cards!("K♠ A♠").unwrap());
+    ///
+    /// assert_eq!(pile.len(), 50);
+    /// assert_eq!(pile.draw_first().unwrap_or(French::blank()), card!(QS));
+    /// ```
     pub fn remove_cards(&mut self, cards: &Pile<RankType, SuitType>) {
         for card in &cards.0 {
             self.remove_card(card);
         }
+    }
+
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let ak = cards!("A♠ K♠").unwrap();
+    /// let ka = cards!("K♠ A♠").unwrap();
+    ///
+    /// assert_eq!(ak.reverse(), ka);
+    /// assert_eq!(ka.reverse(), ak);
+    /// ```
+    #[must_use]
+    pub fn reverse(&self) -> Self {
+        let mut pile = self.clone();
+        pile.reverse_in_place();
+        pile
+    }
+
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let mut ak = cards!("A♠ K♠").unwrap();
+    /// let ka = cards!("K♠ A♠").unwrap();
+    ///
+    /// ak.reverse_in_place();
+    ///
+    /// assert_eq!(ak, ka);
+    /// ```
+    pub fn reverse_in_place(&mut self) {
+        self.0.reverse();
     }
 
     /// Returns true if the Cards of the passed in `Pile` are identical to the `Pile`, regqrdless
@@ -429,6 +555,13 @@ impl<
         left == right
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let pile = French::deck();
+    /// let shuffled = pile.shuffle();
+    ///
+    /// assert!(pile.same(&shuffled));
+    /// ```
     #[must_use]
     pub fn shuffle(&self) -> Self {
         let mut pile = self.clone();
@@ -437,7 +570,8 @@ impl<
     }
 
     /// TODO WIP
-    pub fn shuffle_in_place_custom<F>(&mut self, mut rng: F)
+    #[allow(dead_code)]
+    fn shuffle_in_place_custom<F>(&mut self, mut rng: F)
     where
         F: FnMut(usize) -> usize,
     {
@@ -450,6 +584,13 @@ impl<
         self.0 = shuffled;
     }
 
+    /// ```
+    /// use cardpack::prelude::*;
+    /// let mut pile = French::deck();
+    /// pile.shuffle_in_place();
+    ///
+    /// assert!(pile.same(&French::deck()));
+    /// ```
     pub fn shuffle_in_place(&mut self) {
         let mut rng = thread_rng();
         self.0.shuffle(&mut rng);
@@ -587,6 +728,16 @@ impl<
             .collect::<Vec<String>>()
             .join(" ");
         write!(f, "{s}")
+    }
+}
+
+impl<
+        RankType: Ranked + Ord + Clone + Default + Hash,
+        SuitType: Suited + Ord + Clone + Default + Hash,
+    > From<HashSet<Card<RankType, SuitType>>> for Pile<RankType, SuitType>
+{
+    fn from(cards: HashSet<Card<RankType, SuitType>>) -> Self {
+        Pile(cards.into_iter().collect()).sort()
     }
 }
 

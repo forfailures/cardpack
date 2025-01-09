@@ -2,8 +2,6 @@
 
 ## Checklist
 
-
-
 | Category | Feature | Status | Entity | Comments |
 |----------|---------|--------|--------|----------|
 | Rank     | Trait   | ✅      | Ranked |          |

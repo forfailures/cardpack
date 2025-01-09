@@ -10,6 +10,76 @@ use std::collections::HashMap;
 use std::fmt::Display;
 use std::marker::PhantomData;
 
+/// A macro to simplify the creation of a `Suit`.
+///
+/// ```
+/// use cardpack::prelude::*;
+///
+/// assert_eq!(suit!(S), Suit::<French>::new(French::SPADES));
+/// assert_eq!(suit!(H), Suit::<French>::new(French::HEARTS));
+/// assert_eq!(suit!(D), Suit::<French>::new(French::DIAMONDS));
+/// assert_eq!(suit!(C), Suit::<French>::new(French::CLUBS));
+/// assert_eq!(suit!(J), Suit::<Modern>::new(Modern::JOKER));
+/// assert_eq!(suit!(M), Suit::<Tarot>::new(Tarot::MAJOR_ARCANA));
+/// assert_eq!(suit!(WANDS), Suit::<Tarot>::new(Tarot::WANDS));
+/// assert_eq!(suit!(CUPS), Suit::<Tarot>::new(Tarot::CUPS));
+/// assert_eq!(suit!(SWORDS), Suit::<Tarot>::new(Tarot::SWORDS));
+/// assert_eq!(suit!(PENTACLES), Suit::<Tarot>::new(Tarot::PENTACLES));
+/// assert_eq!(suit!(EICHEL), Suit::<Skat>::new(Skat::EICHEL));
+/// assert_eq!(suit!(LAUB), Suit::<Skat>::new(Skat::LAUB));
+/// assert_eq!(suit!(HERZ), Suit::<Skat>::new(Skat::HERZ));
+/// assert_eq!(suit!(SHELLEN), Suit::<Skat>::new(Skat::SHELLEN));
+/// assert_eq!(suit!(_), Suit::<French>::new(FluentName::BLANK));
+/// ```
+#[macro_export]
+macro_rules! suit {
+    (S) => {
+        Suit::<French>::new(French::SPADES)
+    };
+    (H) => {
+        Suit::<French>::new(French::HEARTS)
+    };
+    (D) => {
+        Suit::<French>::new(French::DIAMONDS)
+    };
+    (C) => {
+        Suit::<French>::new(French::CLUBS)
+    };
+    (J) => {
+        Suit::<Modern>::new(Modern::JOKER)
+    };
+    (M) => {
+        Suit::<Tarot>::new(Tarot::MAJOR_ARCANA)
+    };
+    (WANDS) => {
+        Suit::<Tarot>::new(Tarot::WANDS)
+    };
+    (CUPS) => {
+        Suit::<Tarot>::new(Tarot::CUPS)
+    };
+    (SWORDS) => {
+        Suit::<Tarot>::new(Tarot::SWORDS)
+    };
+    (PENTACLES) => {
+        Suit::<Tarot>::new(Tarot::PENTACLES)
+    };
+    (EICHEL) => {
+        Suit::<Skat>::new(Skat::EICHEL)
+    };
+    (LAUB) => {
+        Suit::<Skat>::new(Skat::LAUB)
+    };
+    (HERZ) => {
+        Suit::<Skat>::new(Skat::HERZ)
+    };
+    (SHELLEN) => {
+        Suit::<Skat>::new(Skat::SHELLEN)
+    };
+    (_) => {
+        Suit::<French>::new(FluentName::BLANK)
+    };
+}
+
 /// TODO: Create a five suited deck to test the boundaries.
 /// <https://cards.fandom.com/wiki/Suit_(cards)#Five_Suit_Decks/>
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
