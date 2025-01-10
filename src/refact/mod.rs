@@ -1,7 +1,5 @@
 pub mod decks;
-pub use crate::refact::decks::French;
-
-pub use crate::decks::FluentName;
+use crate::localization::FluentName;
 use crate::types::utils::Bit;
 
 use std::fmt::{Display, Formatter};
@@ -127,6 +125,16 @@ where
     }
 }
 
+impl<RankType: Ranked> Default for Rank<RankType> {
+    fn default() -> Self {
+        Rank {
+            weight: 0,
+            index: '_',
+            phantom_data: PhantomData,
+        }
+    }
+}
+
 impl<RankType> Display for Rank<RankType>
 where
     RankType: Ranked,
@@ -144,29 +152,5 @@ where
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod ranks {
-    use super::*;
-
-    #[test]
-    fn get_prime() {
-        assert_eq!(French::DEUCE.get_prime(), 2);
-        assert_eq!(French::TREY.get_prime(), 3);
-        assert_eq!(French::FOUR.get_prime(), 5);
-        assert_eq!(French::FIVE.get_prime(), 7);
-        assert_eq!(French::SIX.get_prime(), 11);
-        assert_eq!(French::SEVEN.get_prime(), 13);
-        assert_eq!(French::EIGHT.get_prime(), 17);
-        assert_eq!(French::NINE.get_prime(), 19);
-        assert_eq!(French::TEN.get_prime(), 23);
-        assert_eq!(French::JACK.get_prime(), 29);
-        assert_eq!(French::QUEEN.get_prime(), 31);
-        assert_eq!(French::KING.get_prime(), 37);
-        assert_eq!(French::ACE.get_prime(), 41);
-    }
-
-    #[test]
-    fn update_weight() {
-        let heavy_card = French::TREY.update_weight(21);
-
-        assert_eq!(heavy_card.get_prime(), 0);
-    }
+    // use super::*;
 }

@@ -102,17 +102,13 @@ impl French {
     pub const FLUENT_KEY_DEUCE: &'static str = "two";
 }
 
-impl<French: Ranked> Default for Rank<French> {
-    fn default() -> Self {
-        Rank {
-            weight: 0,
-            index: '_',
-            phantom_data: PhantomData,
-        }
-    }
-}
-
 /// # REFACTOR WIN
+///
+/// ```
+/// use cardpack::refactored::*;
+///
+/// assert_eq!(Rank::<French>::from('a'), French::ACE);
+/// ```
 impl From<char> for Rank<French> {
     fn from(c: char) -> Self {
         match c {
@@ -138,7 +134,7 @@ impl Ranked for French {
     /// ```
     /// use cardpack::refactored::*;
     ///
-    /// assert_eq!(French::ACE.get_name().fluent_name_string(), French::FLUENT_KEY_ACE);
+    /// assert_eq!(French::name('A'), FluentName::new(French::FLUENT_KEY_ACE));
     /// ```
     fn name(index: char) -> FluentName {
         match index {
@@ -157,5 +153,35 @@ impl Ranked for French {
             French::DEUCE_INDEX => FluentName::new(French::FLUENT_KEY_DEUCE),
             _ => FluentName::new(FluentName::BLANK),
         }
+    }
+}
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod decks {
+    use super::*;
+
+    #[test]
+    fn get_prime() {
+        assert_eq!(French::DEUCE.get_prime(), 2);
+        assert_eq!(French::TREY.get_prime(), 3);
+        assert_eq!(French::FOUR.get_prime(), 5);
+        assert_eq!(French::FIVE.get_prime(), 7);
+        assert_eq!(French::SIX.get_prime(), 11);
+        assert_eq!(French::SEVEN.get_prime(), 13);
+        assert_eq!(French::EIGHT.get_prime(), 17);
+        assert_eq!(French::NINE.get_prime(), 19);
+        assert_eq!(French::TEN.get_prime(), 23);
+        assert_eq!(French::JACK.get_prime(), 29);
+        assert_eq!(French::QUEEN.get_prime(), 31);
+        assert_eq!(French::KING.get_prime(), 37);
+        assert_eq!(French::ACE.get_prime(), 41);
+    }
+
+    #[test]
+    fn update_weight() {
+        let heavy_card = French::TREY.update_weight(21);
+
+        assert_eq!(heavy_card.get_prime(), 0);
     }
 }
