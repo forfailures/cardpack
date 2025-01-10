@@ -22,9 +22,60 @@ where
 {
     pub const BLANK: char = '_';
 
+    const PRIMES: [u32; 20] = [
+        2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
+    ];
+
     #[must_use]
     pub fn get_name(&self) -> FluentName {
         RankType::name(self.index)
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// assert_eq!(French::DEUCE.get_prime(), 2);
+    /// assert_eq!(French::TREY.get_prime(), 3);
+    /// assert_eq!(French::FOUR.get_prime(), 5);
+    /// assert_eq!(French::FIVE.get_prime(), 7);
+    /// assert_eq!(French::SIX.get_prime(), 11);
+    /// assert_eq!(French::SEVEN.get_prime(), 13);
+    /// assert_eq!(French::EIGHT.get_prime(), 17);
+    /// assert_eq!(French::NINE.get_prime(), 19);
+    /// assert_eq!(French::TEN.get_prime(), 23);
+    /// assert_eq!(French::JACK.get_prime(), 29);
+    /// assert_eq!(French::QUEEN.get_prime(), 31);
+    /// assert_eq!(French::KING.get_prime(), 37);
+    /// assert_eq!(French::ACE.get_prime(), 41);
+    /// ```
+    ///
+    /// It only goes up to 20:
+    ///
+    /// ```
+    /// use std::marker::PhantomData;
+    /// use cardpack::refactored::*;
+    ///
+    /// let heavy_card = French::TREY.update_weight(21);
+    ///
+    /// assert_eq!(heavy_card.get_prime(), 0);
+    /// ```
+    /// TODO: Hack
+    #[must_use]
+    pub fn get_prime(&self) -> u32 {
+        if self.weight as usize >= Rank::<RankType>::PRIMES.len() {
+            0
+        } else {
+            Rank::<RankType>::PRIMES[(self.weight) as usize]
+        }
+    }
+
+    #[must_use]
+    pub fn update_weight(&self, weight: u32) -> Rank<RankType> {
+        Rank {
+            weight,
+            index: self.index,
+            phantom_data: PhantomData,
+        }
     }
 }
 
@@ -35,7 +86,7 @@ where
     /// ```
     /// use cardpack::refactored::*;
     ///
-    /// assert_eq!(French::ACE.get_name().fluent_name_string(), French::FLUENT_KEY_ACE);
+    /// assert_eq!(French::DEUCE_INDEX.to_string(), French::DEUCE.to_string());
     /// ```
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.index)
@@ -108,7 +159,7 @@ impl French {
     };
     pub const DEUCE: Rank<French> = Rank {
         weight: 0,
-        index: French::TWO_INDEX,
+        index: French::DEUCE_INDEX,
         phantom_data: PhantomData,
     };
 
@@ -124,7 +175,7 @@ impl French {
     pub const FIVE_INDEX: char = '5';
     pub const FOUR_INDEX: char = '4';
     pub const TREY_INDEX: char = '3';
-    pub const TWO_INDEX: char = '2';
+    pub const DEUCE_INDEX: char = '2';
 
     pub const FLUENT_KEY_ACE: &'static str = "ace";
     pub const FLUENT_KEY_KING: &'static str = "king";
@@ -137,8 +188,8 @@ impl French {
     pub const FLUENT_KEY_SIX: &'static str = "six";
     pub const FLUENT_KEY_FIVE: &'static str = "five";
     pub const FLUENT_KEY_FOUR: &'static str = "four";
-    pub const FLUENT_KEY_THREE: &'static str = "three";
-    pub const FLUENT_KEY_TWO: &'static str = "two";
+    pub const FLUENT_KEY_TREY: &'static str = "three";
+    pub const FLUENT_KEY_DEUCE: &'static str = "two";
 }
 
 impl Ranked for French {
@@ -160,8 +211,8 @@ impl Ranked for French {
             French::SIX_INDEX => FluentName::new(French::FLUENT_KEY_SIX),
             French::FIVE_INDEX => FluentName::new(French::FLUENT_KEY_FIVE),
             French::FOUR_INDEX => FluentName::new(French::FLUENT_KEY_FOUR),
-            French::TREY_INDEX => FluentName::new(French::FLUENT_KEY_THREE),
-            French::TWO_INDEX => FluentName::new(French::FLUENT_KEY_TWO),
+            French::TREY_INDEX => FluentName::new(French::FLUENT_KEY_TREY),
+            French::DEUCE_INDEX => FluentName::new(French::FLUENT_KEY_DEUCE),
             _ => FluentName::new(FluentName::BLANK),
         }
     }
