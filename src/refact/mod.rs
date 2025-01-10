@@ -77,6 +77,10 @@ where
             phantom_data: PhantomData,
         }
     }
+
+    //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+    // CKC Calculations
+
 }
 
 impl<RankType> Display for Rank<RankType>
