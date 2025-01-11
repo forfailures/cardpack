@@ -8,9 +8,9 @@ use std::marker::PhantomData;
 pub const BLANK: char = '_';
 
 pub trait Suited {
-    fn name(index: char) -> FluentName;
+    fn get_suit_fluent_name(index: char) -> FluentName;
 
-    fn rank_indexes() -> Vec<char>;
+    fn suit_indexes() -> Vec<char>;
 }
 
 pub struct Suit<SuitType>
@@ -24,8 +24,18 @@ where
 
 impl<SuitType> Suit<SuitType> where SuitType: Suited {}
 
+impl<SuitType: Suited> Default for Suit<SuitType> {
+    fn default() -> Self {
+        Suit {
+            weight: 0,
+            index: '_',
+            phantom_data: PhantomData,
+        }
+    }
+}
+
 pub trait Ranked {
-    fn name(index: char) -> FluentName;
+    fn get_rank_fluent_name(index: char) -> FluentName;
 
     fn rank_indexes() -> Vec<char>;
 }
@@ -50,7 +60,7 @@ where
 
     #[must_use]
     pub fn get_name(&self) -> FluentName {
-        RankType::name(self.index)
+        RankType::get_rank_fluent_name(self.index)
     }
 
     /// Returns the xth prime number where x is the weight of the rank.
