@@ -7,12 +7,36 @@ use std::marker::PhantomData;
 
 pub const BLANK: char = '_';
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Ord, PartialOrd, Hash)]
+pub struct Card<RankType, SuitType>
+where
+    RankType: Ranked,
+    SuitType: Suited,
+{
+    pub suit: Suit<SuitType>,
+    pub rank: Rank<RankType>,
+}
+
+impl<RankType, SuitType> Card<RankType, SuitType>
+where
+    RankType: Ranked + Copy,
+    SuitType: Suited + Copy,
+{
+    #[must_use]
+    pub fn is_blank(&self) -> bool {
+        self.rank.is_blank() | self.suit.is_blank()
+    }
+}
+
+pub trait Decked {}
+
 pub trait Suited {
     fn get_suit_fluent_name(index: char) -> FluentName;
 
     fn suit_indexes() -> Vec<char>;
 }
 
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Suit<SuitType>
 where
     SuitType: Suited,
@@ -22,7 +46,10 @@ where
     pub phantom_data: PhantomData<SuitType>,
 }
 
-impl<SuitType> Suit<SuitType> where SuitType: Suited {
+impl<SuitType> Suit<SuitType>
+where
+    SuitType: Suited,
+{
     /// ```
     /// use cardpack::refactored::*;
     ///
@@ -35,6 +62,11 @@ impl<SuitType> Suit<SuitType> where SuitType: Suited {
             0 => 0,
             _ => 1 << (Bit::SUIT_FLAG_SHIFT + self.weight),
         }
+    }
+
+    #[must_use]
+    pub fn is_blank(&self) -> bool {
+        self.index == BLANK
     }
 }
 
@@ -194,6 +226,22 @@ where
     /// ```
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.index)
+    }
+}
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod card_tests {
+    use super::*;
+    use crate::refactored::French;
+
+    #[test]
+    fn card__is_blank() {
+        let card = Card::<French, French>::default();
+
+        println!("{:?}", card);
+
+        assert!(card.is_blank());
     }
 }
 

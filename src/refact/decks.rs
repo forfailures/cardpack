@@ -2,7 +2,7 @@ use crate::decks::FluentName;
 use crate::refact::{Rank, Ranked, Suit, Suited};
 use std::marker::PhantomData;
 
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct French {}
 
 impl French {
