@@ -1,17 +1,117 @@
 pub mod decks;
+pub mod traits;
+
 use crate::localization::FluentName;
 use crate::types::utils::Bit;
 
+use crate::refact::traits::{Ranked, Suited};
 use std::fmt::{Display, Formatter};
+use std::hash::Hash;
 use std::marker::PhantomData;
 
 pub const BLANK: char = '_';
 
+#[derive(Clone, Debug, Default, Hash, Ord, PartialOrd, Eq, PartialEq)]
+pub struct Pile<RankType, SuitType>(Vec<Card<RankType, SuitType>>)
+where
+    RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
+    SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash;
+
+impl<
+        RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
+        SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
+    > Pile<RankType, SuitType>
+{
+    #[must_use]
+    pub fn cards(&self) -> Vec<Card<RankType, SuitType>> {
+        self.0.clone()
+    }
+
+    #[must_use]
+    pub fn iter(&self) -> std::vec::IntoIter<Card<RankType, SuitType>> {
+        <&Self as IntoIterator>::into_iter(self)
+    }
+
+    pub fn push(&mut self, card: Card<RankType, SuitType>) -> bool {
+        if card.is_blank() {
+            false
+        } else {
+            self.0.push(card);
+            true
+        }
+    }
+
+    #[must_use]
+    pub fn sort(&self) -> Self {
+        let mut cards: Vec<Card<RankType, SuitType>> = self.0.clone();
+        cards.sort();
+        cards.reverse();
+        Self(cards)
+    }
+}
+
+/// ```
+/// use cardpack::refactored::*;
+///
+/// let pile: Pile<French, French> = Pile::<French, French>::default();
+/// ```
+impl<
+        RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
+        SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
+    > Display for Pile<RankType, SuitType>
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let s = self
+            .0
+            .iter()
+            .map(Card::to_string)
+            .collect::<Vec<String>>()
+            .join(" ");
+        write!(f, "{s}")
+    }
+}
+
+impl<
+        RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
+        SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
+    > From<Vec<Card<RankType, SuitType>>> for Pile<RankType, SuitType>
+{
+    fn from(cards: Vec<Card<RankType, SuitType>>) -> Self {
+        Pile(cards)
+    }
+}
+
+impl<
+        RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
+        SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
+    > IntoIterator for Pile<RankType, SuitType>
+{
+    type Item = Card<RankType, SuitType>;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter()
+    }
+}
+
+impl<
+        RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
+        SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
+    > IntoIterator for &Pile<RankType, SuitType>
+{
+    type Item = Card<RankType, SuitType>;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.clone().into_iter()
+    }
+}
+
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub struct Card<RankType, SuitType>
 where
-    RankType: Ranked,
-    SuitType: Suited,
+    RankType: Ranked + Clone + Copy,
+    SuitType: Suited + Clone + Copy,
 {
     pub suit: Suit<SuitType>,
     pub rank: Rank<RankType>,
@@ -28,12 +128,24 @@ where
     }
 }
 
-pub trait Decked {}
-
-pub trait Suited {
-    fn get_suit_fluent_name(index: char) -> FluentName;
-
-    fn suit_indexes() -> Vec<char>;
+impl<RankType, SuitType> Display for Card<RankType, SuitType>
+where
+    RankType: Ranked + Copy,
+    SuitType: Suited + Copy,
+{
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let card: Card<French, French> = Card {
+    ///     suit: French::CLUBS,
+    ///     rank: French::DEUCE,
+    /// };
+    ///
+    /// assert_eq!(card.to_string(), "2♣");
+    /// ```
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}{}", self.rank, self.suit)
+    }
 }
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -80,10 +192,32 @@ impl<SuitType: Suited> Default for Suit<SuitType> {
     }
 }
 
-pub trait Ranked {
-    fn get_rank_fluent_name(index: char) -> FluentName;
+impl<SuitType> Display for Suit<SuitType>
+where
+    SuitType: Suited,
+{
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// assert_eq!(French::DIAMONDS.to_string(), "♦");
+    /// ```
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", Suit::<SuitType>::get_suit_symbol(self.index))
+    }
+}
 
-    fn rank_indexes() -> Vec<char>;
+impl<SuiteType: Suited> Suited for Suit<SuiteType> {
+    fn get_suit_fluent_name(index: char) -> FluentName {
+        SuiteType::get_suit_fluent_name(index)
+    }
+
+    fn get_suit_symbol(index: char) -> char {
+        SuiteType::get_suit_symbol(index)
+    }
+
+    fn suit_indexes() -> Vec<char> {
+        SuiteType::suit_indexes()
+    }
 }
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -242,6 +376,26 @@ mod card_tests {
         println!("{:?}", card);
 
         assert!(card.is_blank());
+    }
+
+    #[test]
+    fn card__sort() {
+        let mut v: Vec<Card<French, French>> = Vec::new();
+
+        for suit_char in French::suit_indexes() {
+            for rank_char in French::rank_indexes() {
+                let card = Card::<French, French> {
+                    suit: Suit::<French>::from(suit_char),
+                    rank: Rank::<French>::from(rank_char),
+                };
+
+                println!("{}", card);
+                v.push(card);
+            }
+        }
+        v.reverse();
+        v.sort();
+        println!("{:?}", v);
     }
 }
 

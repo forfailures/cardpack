@@ -1,5 +1,5 @@
 use crate::decks::FluentName;
-use crate::refact::{Rank, Ranked, Suit, Suited};
+use crate::refact::{Rank, Ranked, Suit, Suited, BLANK};
 use std::marker::PhantomData;
 
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -100,10 +100,15 @@ impl French {
     pub const DIAMONDS_INDEX: char = 'D';
     pub const CLUBS_INDEX: char = 'C';
 
-    pub const FLUENT_KEY_SPADES: &'static str = "spades";
-    pub const FLUENT_KEY_HEARTS: &'static str = "hearts";
-    pub const FLUENT_KEY_DIAMONDS: &'static str = "diamonds";
-    pub const FLUENT_KEY_CLUBS: &'static str = "clubs";
+    pub const SPADES_SYMBOL: char = '♠';
+    pub const HEARTS_SYMBOL: char = '♥';
+    pub const DIAMONDS_SYMBOL: char = '♦';
+    pub const CLUBS_SYMBOL: char = '♣';
+
+    const FLUENT_KEY_SPADES: &'static str = "spades";
+    const FLUENT_KEY_HEARTS: &'static str = "hearts";
+    const FLUENT_KEY_DIAMONDS: &'static str = "diamonds";
+    const FLUENT_KEY_CLUBS: &'static str = "clubs";
 
     // Ranks
     pub const ACE_INDEX: char = 'A';
@@ -120,19 +125,19 @@ impl French {
     pub const TREY_INDEX: char = '3';
     pub const DEUCE_INDEX: char = '2';
 
-    pub const FLUENT_KEY_ACE: &'static str = "ace";
-    pub const FLUENT_KEY_KING: &'static str = "king";
-    pub const FLUENT_KEY_QUEEN: &'static str = "queen";
-    pub const FLUENT_KEY_JACK: &'static str = "jack";
-    pub const FLUENT_KEY_TEN: &'static str = "ten";
-    pub const FLUENT_KEY_NINE: &'static str = "nine";
-    pub const FLUENT_KEY_EIGHT: &'static str = "eight";
-    pub const FLUENT_KEY_SEVEN: &'static str = "seven";
-    pub const FLUENT_KEY_SIX: &'static str = "six";
-    pub const FLUENT_KEY_FIVE: &'static str = "five";
-    pub const FLUENT_KEY_FOUR: &'static str = "four";
-    pub const FLUENT_KEY_TREY: &'static str = "three";
-    pub const FLUENT_KEY_DEUCE: &'static str = "two";
+    const FLUENT_KEY_ACE: &'static str = "ace";
+    const FLUENT_KEY_KING: &'static str = "king";
+    const FLUENT_KEY_QUEEN: &'static str = "queen";
+    const FLUENT_KEY_JACK: &'static str = "jack";
+    const FLUENT_KEY_TEN: &'static str = "ten";
+    const FLUENT_KEY_NINE: &'static str = "nine";
+    const FLUENT_KEY_EIGHT: &'static str = "eight";
+    const FLUENT_KEY_SEVEN: &'static str = "seven";
+    const FLUENT_KEY_SIX: &'static str = "six";
+    const FLUENT_KEY_FIVE: &'static str = "five";
+    const FLUENT_KEY_FOUR: &'static str = "four";
+    const FLUENT_KEY_TREY: &'static str = "three";
+    const FLUENT_KEY_DEUCE: &'static str = "two";
 }
 
 /// # REFACTOR WIN
@@ -166,10 +171,10 @@ impl From<char> for Rank<French> {
 impl From<char> for Suit<French> {
     fn from(c: char) -> Self {
         match c {
-            French::SPADES_INDEX | 's' => French::SPADES,
-            French::HEARTS_INDEX | 'h' => French::HEARTS,
-            French::DIAMONDS_INDEX | 'd' => French::DIAMONDS,
-            French::CLUBS_INDEX | 'c' => French::CLUBS,
+            French::SPADES_INDEX | French::SPADES_SYMBOL | 's' => French::SPADES,
+            French::HEARTS_INDEX | French::HEARTS_SYMBOL | 'h' => French::HEARTS,
+            French::DIAMONDS_INDEX | French::DIAMONDS_SYMBOL | 'd' => French::DIAMONDS,
+            French::CLUBS_INDEX | French::CLUBS_SYMBOL | 'c' => French::CLUBS,
             _ => Suit::<French>::default(),
         }
     }
@@ -179,7 +184,7 @@ impl Suited for French {
     /// ```
     /// use cardpack::refactored::*;
     ///
-    /// assert_eq!(French::get_suit_fluent_name('S'), FluentName::new(French::FLUENT_KEY_SPADES));
+    /// assert_eq!(French::get_suit_fluent_name('S'), FluentName::new("spades"));
     /// ```
     fn get_suit_fluent_name(index: char) -> FluentName {
         match index {
@@ -188,6 +193,16 @@ impl Suited for French {
             French::DIAMONDS_INDEX => FluentName::new(French::FLUENT_KEY_DIAMONDS),
             French::CLUBS_INDEX => FluentName::new(French::FLUENT_KEY_CLUBS),
             _ => FluentName::new(FluentName::BLANK),
+        }
+    }
+
+    fn get_suit_symbol(index: char) -> char {
+        match index {
+            French::SPADES_INDEX => French::SPADES_SYMBOL,
+            French::HEARTS_INDEX => French::HEARTS_SYMBOL,
+            French::DIAMONDS_INDEX => French::DIAMONDS_SYMBOL,
+            French::CLUBS_INDEX => French::CLUBS_SYMBOL,
+            _ => BLANK,
         }
     }
 
@@ -205,7 +220,7 @@ impl Ranked for French {
     /// ```
     /// use cardpack::refactored::*;
     ///
-    /// assert_eq!(French::get_rank_fluent_name('A'), FluentName::new(French::FLUENT_KEY_ACE));
+    /// assert_eq!(French::get_rank_fluent_name('A'), FluentName::new("ace"));
     /// ```
     fn get_rank_fluent_name(index: char) -> FluentName {
         match index {
