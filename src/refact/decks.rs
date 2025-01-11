@@ -1,5 +1,6 @@
 use crate::decks::FluentName;
-use crate::refact::{Rank, Ranked, Suit, Suited, BLANK};
+use crate::refact::{Rank, Suit, BLANK};
+use crate::refact::traits::{Decked, Ranked, Suited};
 use std::marker::PhantomData;
 
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -139,6 +140,8 @@ impl French {
     const FLUENT_KEY_TREY: &'static str = "three";
     const FLUENT_KEY_DEUCE: &'static str = "two";
 }
+
+impl Decked<French, French> for French {}
 
 /// # REFACTOR WIN
 ///

@@ -110,8 +110,8 @@ impl<
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub struct Card<RankType, SuitType>
 where
-    RankType: Ranked + Clone + Copy,
-    SuitType: Suited + Clone + Copy,
+    RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
+    SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
 {
     pub suit: Suit<SuitType>,
     pub rank: Rank<RankType>,
@@ -119,8 +119,8 @@ where
 
 impl<RankType, SuitType> Card<RankType, SuitType>
 where
-    RankType: Ranked + Copy,
-    SuitType: Suited + Copy,
+    RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
+    SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
 {
     #[must_use]
     pub fn is_blank(&self) -> bool {
@@ -130,8 +130,8 @@ where
 
 impl<RankType, SuitType> Display for Card<RankType, SuitType>
 where
-    RankType: Ranked + Copy,
-    SuitType: Suited + Copy,
+    RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
+    SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
 {
     /// ```
     /// use cardpack::refactored::*;
@@ -205,6 +205,20 @@ where
         write!(f, "{}", Suit::<SuitType>::get_suit_symbol(self.index))
     }
 }
+
+impl<SuitType: Suited> From<char> for Suit<SuitType> {
+    fn from(c: char) -> Self {
+        // Implement the conversion logic from char to Suit<SuitType>
+        // This is a placeholder implementation
+        SuitType::from(c)
+    }
+}
+
+// impl<SuiteType: Suited> From<char> for Suit<SuiteType> {
+//     fn from(index: char) -> Self {
+//         SuiteType::from(index)
+//     }
+// }
 
 impl<SuiteType: Suited> Suited for Suit<SuiteType> {
     fn get_suit_fluent_name(index: char) -> FluentName {
@@ -362,6 +376,12 @@ where
         write!(f, "{}", self.index)
     }
 }
+
+// impl<RankType: Ranked> From<char> for Rank<RankType> {
+//     fn from(index: char) -> Self {
+//         RankType::from(index)
+//     }
+// }
 
 #[cfg(test)]
 #[allow(non_snake_case)]
