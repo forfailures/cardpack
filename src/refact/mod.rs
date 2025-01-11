@@ -22,7 +22,21 @@ where
     pub phantom_data: PhantomData<SuitType>,
 }
 
-impl<SuitType> Suit<SuitType> where SuitType: Suited {}
+impl<SuitType> Suit<SuitType> where SuitType: Suited {
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// assert_eq!(0b00000000_00000000_00010000_00000000, French::CLUBS.ckc_number());
+    ///
+    /// ```
+    #[must_use]
+    pub fn ckc_number(&self) -> u32 {
+        match self.weight {
+            0 => 0,
+            _ => 1 << (Bit::SUIT_FLAG_SHIFT + self.weight),
+        }
+    }
+}
 
 impl<SuitType: Suited> Default for Suit<SuitType> {
     fn default() -> Self {
