@@ -154,12 +154,38 @@ impl Ranked for French {
             _ => FluentName::new(FluentName::BLANK),
         }
     }
+
+    fn rank_indexes() -> Vec<char> {
+        vec![
+            Self::ACE_INDEX,
+            Self::KING_INDEX,
+            Self::QUEEN_INDEX,
+            Self::JACK_INDEX,
+            Self::TEN_INDEX,
+            Self::NINE_INDEX,
+            Self::EIGHT_INDEX,
+            Self::SEVEN_INDEX,
+            Self::SIX_INDEX,
+            Self::FIVE_INDEX,
+            Self::FOUR_INDEX,
+            Self::TREY_INDEX,
+            Self::DEUCE_INDEX,
+        ]
+    }
 }
 
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod decks {
     use super::*;
+
+    #[test]
+    fn ranked__named() {
+        assert_eq!(
+            French::DEUCE.get_name(),
+            FluentName::new(French::FLUENT_KEY_DEUCE)
+        );
+    }
 
     #[test]
     fn get_prime() {

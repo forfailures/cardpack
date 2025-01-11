@@ -5,8 +5,29 @@ use crate::types::utils::Bit;
 use std::fmt::{Display, Formatter};
 use std::marker::PhantomData;
 
+pub const BLANK: char = '_';
+
+pub trait Suited {
+    fn name(index: char) -> FluentName;
+
+    fn rank_indexes() -> Vec<char>;
+}
+
+pub struct Suit<SuitType>
+where
+    SuitType: Suited,
+{
+    pub weight: u32,
+    pub index: char,
+    pub phantom_data: PhantomData<SuitType>,
+}
+
+impl<SuitType> Suit<SuitType> where SuitType: Suited {}
+
 pub trait Ranked {
     fn name(index: char) -> FluentName;
+
+    fn rank_indexes() -> Vec<char>;
 }
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -23,8 +44,6 @@ impl<RankType> Rank<RankType>
 where
     RankType: Ranked,
 {
-    pub const BLANK: char = '_';
-
     const PRIMES: [u32; 20] = [
         2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
     ];
@@ -76,6 +95,11 @@ where
         } else {
             Rank::<RankType>::PRIMES[(self.weight) as usize]
         }
+    }
+
+    #[must_use]
+    pub fn is_blank(&self) -> bool {
+        self.index == BLANK
     }
 
     #[must_use]
