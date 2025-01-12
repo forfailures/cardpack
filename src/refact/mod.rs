@@ -162,6 +162,14 @@ impl<SuitType> Suit<SuitType>
 where
     SuitType: Suited,
 {
+    #[must_use]
+    pub fn new(suit_index: char) -> Suit<SuitType> {
+        Suit {
+            weight: 0,
+            index: suit_index,
+            phantom_data: PhantomData,
+        }
+    }
     /// ```
     /// use cardpack::refactored::*;
     ///
@@ -206,13 +214,13 @@ where
     }
 }
 
-impl<SuitType: Suited> From<char> for Suit<SuitType> {
-    fn from(c: char) -> Self {
-        // Implement the conversion logic from char to Suit<SuitType>
-        // This is a placeholder implementation
-        SuitType::from(c)
-    }
-}
+// impl<SuitType: Suited> From<char> for Suit<SuitType> {
+//     fn from(c: char) -> Self {
+//         // Implement the conversion logic from char to Suit<SuitType>
+//         // This is a placeholder implementation
+//         SuitType::from(c)
+//     }
+// }
 
 // impl<SuiteType: Suited> From<char> for Suit<SuiteType> {
 //     fn from(index: char) -> Self {
