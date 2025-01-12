@@ -1,6 +1,6 @@
 use crate::decks::FluentName;
-use std::hash::Hash;
 use crate::refact::{Card, Pile, Rank, Suit};
+use std::hash::Hash;
 
 pub trait Decked<
     RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
@@ -12,7 +12,6 @@ pub trait Decked<
 
         for suit_char in SuitType::suit_indexes() {
             for rank_char in RankType::rank_indexes() {
-
                 let suit = Suit::<SuitType>::from(suit_char);
 
                 let card = Card::<RankType, SuitType> {

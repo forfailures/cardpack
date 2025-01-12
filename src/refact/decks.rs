@@ -1,6 +1,6 @@
 use crate::decks::FluentName;
-use crate::refact::{Rank, Suit, BLANK};
 use crate::refact::traits::{Decked, Ranked, Suited};
+use crate::refact::{Rank, Suit, BLANK};
 use std::marker::PhantomData;
 
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
