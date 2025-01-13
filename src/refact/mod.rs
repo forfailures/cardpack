@@ -28,6 +28,16 @@ impl<
     }
 
     #[must_use]
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+
+    #[must_use]
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    #[must_use]
     pub fn iter(&self) -> std::vec::IntoIter<Card<RankType, SuitType>> {
         <&Self as IntoIterator>::into_iter(self)
     }
@@ -384,12 +394,6 @@ where
         write!(f, "{}", self.index)
     }
 }
-
-// impl<RankType: Ranked> From<char> for Rank<RankType> {
-//     fn from(index: char) -> Self {
-//         RankType::from(index)
-//     }
-// }
 
 #[cfg(test)]
 #[allow(non_snake_case)]
