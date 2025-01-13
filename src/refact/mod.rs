@@ -183,7 +183,7 @@ where
             if let Some(c) = s.chars().last() {
                 let suit = Suit::<SuitType> {
                     weight: SuitType::get_suit_weight(c),
-                    index: c,
+                    index: SuitType::get_suit_index(c),
                     phantom_data: PhantomData,
                 };
                 let card = Card::<RankType, SuitType> {
@@ -304,21 +304,13 @@ where
     }
 }
 
-// impl<SuitType: Suited> From<char> for Suit<SuitType> {
-//     fn from(c: char) -> Self {
-//         SuitType::from(c)
-//     }
-// }
-
-// impl<SuiteType: Suited> From<char> for Suit<SuiteType> {
-//     fn from(index: char) -> Self {
-//         SuiteType::from(index)
-//     }
-// }
-
 impl<SuiteType: Suited> Suited for Suit<SuiteType> {
     fn get_suit_fluent_name(c: char) -> FluentName {
         SuiteType::get_suit_fluent_name(c)
+    }
+
+    fn get_suit_index(c: char) -> char {
+        SuiteType::get_suit_index(c)
     }
 
     fn get_suit_symbol(c: char) -> char {

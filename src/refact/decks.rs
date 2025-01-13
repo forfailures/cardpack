@@ -139,11 +139,56 @@ impl French {
     const FLUENT_KEY_FOUR: &'static str = "four";
     const FLUENT_KEY_TREY: &'static str = "three";
     const FLUENT_KEY_DEUCE: &'static str = "two";
+
+    #[must_use]
+    pub fn get_suit_fluent_name(c: char) -> FluentName {
+        match c {
+            French::SPADES_INDEX => FluentName::new(French::FLUENT_KEY_SPADES),
+            French::HEARTS_INDEX => FluentName::new(French::FLUENT_KEY_HEARTS),
+            French::DIAMONDS_INDEX => FluentName::new(French::FLUENT_KEY_DIAMONDS),
+            French::CLUBS_INDEX => FluentName::new(French::FLUENT_KEY_CLUBS),
+            _ => FluentName::new(FluentName::BLANK),
+        }
+    }
+
+    #[must_use]
+    pub fn get_suit_index(c: char) -> char {
+        match c {
+            's' | '♤' | French::SPADES_INDEX | French::SPADES_SYMBOL => French::SPADES_INDEX,
+            'h' | '♡' | French::HEARTS_INDEX | French::HEARTS_SYMBOL => French::HEARTS_INDEX,
+            'd' | '♢' | French::DIAMONDS_INDEX | French::DIAMONDS_SYMBOL => French::DIAMONDS_INDEX,
+            'c' | '♧' | French::CLUBS_INDEX | French::CLUBS_SYMBOL => French::CLUBS_INDEX,
+            _ => BLANK,
+        }
+    }
+
+    #[must_use]
+    pub fn get_suit_symbol(c: char) -> char {
+        match c {
+            's' | '♤' | French::SPADES_INDEX | French::SPADES_SYMBOL => French::SPADES_SYMBOL,
+            'h' | '♡' | French::HEARTS_INDEX | French::HEARTS_SYMBOL => French::HEARTS_SYMBOL,
+            'd' | '♢' | French::DIAMONDS_INDEX | French::DIAMONDS_SYMBOL => French::DIAMONDS_SYMBOL,
+            'c' | '♧' | French::CLUBS_INDEX | French::CLUBS_SYMBOL => French::CLUBS_SYMBOL,
+            _ => BLANK,
+        }
+    }
+
+    #[must_use]
+    pub fn get_suit_weight(c: char) -> u32 {
+        match French::get_suit_index(c) {
+            French::SPADES_INDEX => French::SPADES.weight,
+            French::HEARTS_INDEX => French::HEARTS.weight,
+            French::DIAMONDS_INDEX => French::DIAMONDS.weight,
+            French::CLUBS_INDEX => French::CLUBS.weight,
+            _ => 0,
+        }
+    }
+
 }
 
 impl Decked<French, French> for French {
-    fn get_rank(index_char: char) -> Rank<French> {
-        match index_char {
+    fn get_rank(c: char) -> Rank<French> {
+        match c {
             French::ACE_INDEX | 'a' => French::ACE,
             French::KING_INDEX | 'k' => French::KING,
             French::QUEEN_INDEX | 'q' => French::QUEEN,
@@ -161,12 +206,12 @@ impl Decked<French, French> for French {
         }
     }
 
-    fn get_suit(index_char: char) -> Suit<French> {
-        match index_char {
-            French::SPADES_INDEX | French::SPADES_SYMBOL | 's' => French::SPADES,
-            French::HEARTS_INDEX | French::HEARTS_SYMBOL | 'h' => French::HEARTS,
-            French::DIAMONDS_INDEX | French::DIAMONDS_SYMBOL | 'd' => French::DIAMONDS,
-            French::CLUBS_INDEX | French::CLUBS_SYMBOL | 'c' => French::CLUBS,
+    fn get_suit(c: char) -> Suit<French> {
+        match French::get_suit_index(c) {
+            French::SPADES_INDEX => French::SPADES,
+            French::HEARTS_INDEX => French::HEARTS,
+            French::DIAMONDS_INDEX => French::DIAMONDS,
+            French::CLUBS_INDEX => French::CLUBS,
             _ => Suit::<French>::default(),
         }
     }
@@ -202,42 +247,6 @@ impl From<char> for Rank<French> {
     }
 }
 
-// impl<SuitType: Suited> From<char> for Suit<French> {
-//     fn from(c: char) -> Self {
-//         match c {
-//             French::SPADES_INDEX | French::SPADES_SYMBOL | 's' => French::SPADES,
-//             French::HEARTS_INDEX | French::HEARTS_SYMBOL | 'h' => French::HEARTS,
-//             French::DIAMONDS_INDEX | French::DIAMONDS_SYMBOL | 'd' => French::DIAMONDS,
-//             French::CLUBS_INDEX | French::CLUBS_SYMBOL | 'c' => French::CLUBS,
-//             _ => Suit::<French>::default(),
-//         }
-//     }
-// }
-
-// impl From<char> for Suit<French> {
-//     fn from(c: char) -> Self {
-//         match c {
-//             French::SPADES_INDEX | French::SPADES_SYMBOL | 's' => French::SPADES,
-//             French::HEARTS_INDEX | French::HEARTS_SYMBOL | 'h' => French::HEARTS,
-//             French::DIAMONDS_INDEX | French::DIAMONDS_SYMBOL | 'd' => French::DIAMONDS,
-//             French::CLUBS_INDEX | French::CLUBS_SYMBOL | 'c' => French::CLUBS,
-//             _ => Suit::<French>::default(),
-//         }
-//     }
-// }
-
-// impl From<char> for Suit<French> {
-//     fn from(c: char) -> Self {
-//         match c {
-//             's' | 'S' | '♠' => French::SPADES,
-//             'h' | 'H' | '♥' => French::HEARTS,
-//             'd' | 'D' | '♦' => French::DIAMONDS,
-//             'c' | 'C' | '♣' => French::CLUBS,
-//             _ => Suit::<French>::default(),
-//         }
-//     }
-// }
-
 impl Suited for French {
     /// ```
     /// use cardpack::refactored::*;
@@ -245,33 +254,24 @@ impl Suited for French {
     /// assert_eq!(French::get_suit_fluent_name('S'), FluentName::new("spades"));
     /// ```
     fn get_suit_fluent_name(c: char) -> FluentName {
-        match c {
-            French::SPADES_INDEX => FluentName::new(French::FLUENT_KEY_SPADES),
-            French::HEARTS_INDEX => FluentName::new(French::FLUENT_KEY_HEARTS),
-            French::DIAMONDS_INDEX => FluentName::new(French::FLUENT_KEY_DIAMONDS),
-            French::CLUBS_INDEX => FluentName::new(French::FLUENT_KEY_CLUBS),
-            _ => FluentName::new(FluentName::BLANK),
-        }
+        French::get_suit_fluent_name(c)
+    }
+
+    fn get_suit_index(c: char) -> char {
+        French::get_suit_index(c)
     }
 
     fn get_suit_symbol(c: char) -> char {
-        match c {
-            French::SPADES_INDEX => French::SPADES_SYMBOL,
-            French::HEARTS_INDEX => French::HEARTS_SYMBOL,
-            French::DIAMONDS_INDEX => French::DIAMONDS_SYMBOL,
-            French::CLUBS_INDEX => French::CLUBS_SYMBOL,
-            _ => BLANK,
-        }
+        French::get_suit_symbol(c)
     }
 
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// assert_eq!(French::get_suit_weight('S'), 4);
+    /// ```
     fn get_suit_weight(c: char) -> u32 {
-        match c {
-            French::SPADES_INDEX => French::SPADES.weight,
-            French::HEARTS_INDEX => French::HEARTS.weight,
-            French::DIAMONDS_INDEX => French::DIAMONDS.weight,
-            French::CLUBS_INDEX => French::CLUBS.weight,
-            _ => 0,
-        }
+        French::get_suit_weight(c)
     }
 
     fn suit_indexes() -> Vec<char> {
@@ -307,6 +307,10 @@ impl Ranked for French {
             French::DEUCE_INDEX => FluentName::new(French::FLUENT_KEY_DEUCE),
             _ => FluentName::new(FluentName::BLANK),
         }
+    }
+
+    fn get_rank_index(c: char) -> char {
+        todo!()
     }
 
     fn get_rank_weight(c: char) -> u32 {
@@ -358,6 +362,22 @@ mod decks {
             French::DEUCE.get_name(),
             FluentName::new(French::FLUENT_KEY_DEUCE)
         );
+    }
+
+    #[test]
+    fn suited__get_weight() {
+        assert_eq!(French::get_suit_weight('S'), 4);
+        assert_eq!(French::get_suit_weight('s'), 4);
+        assert_eq!(French::get_suit_weight('♠'), 4);
+        assert_eq!(French::get_suit_weight('H'), 3);
+        assert_eq!(French::get_suit_weight('h'), 3);
+        assert_eq!(French::get_suit_weight('♥'), 3);
+        assert_eq!(French::get_suit_weight('D'), 2);
+        assert_eq!(French::get_suit_weight('d'), 2);
+        assert_eq!(French::get_suit_weight('♦'), 2);
+        assert_eq!(French::get_suit_weight('C'), 1);
+        assert_eq!(French::get_suit_weight('c'), 1);
+        assert_eq!(French::get_suit_weight('♣'), 1);
     }
 
     #[test]
