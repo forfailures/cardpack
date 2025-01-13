@@ -1,5 +1,6 @@
 use crate::decks::FluentName;
-use crate::refact::{Rank, Ranked, Suit, Suited, BLANK};
+use crate::refact::traits::{Decked, Ranked, Suited};
+use crate::refact::{Rank, Suit, BLANK};
 use std::marker::PhantomData;
 
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -138,6 +139,37 @@ impl French {
     const FLUENT_KEY_FOUR: &'static str = "four";
     const FLUENT_KEY_TREY: &'static str = "three";
     const FLUENT_KEY_DEUCE: &'static str = "two";
+}
+
+impl Decked<French, French> for French {
+    fn get_rank(index_char: char) -> Rank<French> {
+        match index_char {
+            French::ACE_INDEX | 'a' => French::ACE,
+            French::KING_INDEX | 'k' => French::KING,
+            French::QUEEN_INDEX | 'q' => French::QUEEN,
+            French::JACK_INDEX | 'j' => French::JACK,
+            French::TEN_INDEX | 't' | '0' => French::TEN,
+            French::NINE_INDEX => French::NINE,
+            French::EIGHT_INDEX => French::EIGHT,
+            French::SEVEN_INDEX => French::SEVEN,
+            French::SIX_INDEX => French::SIX,
+            French::FIVE_INDEX => French::FIVE,
+            French::FOUR_INDEX => French::FOUR,
+            French::TREY_INDEX => French::TREY,
+            French::DEUCE_INDEX => French::DEUCE,
+            _ => Rank::<French>::default(),
+        }
+    }
+
+    fn get_suit(index_char: char) -> Suit<French> {
+        match index_char {
+            French::SPADES_INDEX | French::SPADES_SYMBOL | 's' => French::SPADES,
+            French::HEARTS_INDEX | French::HEARTS_SYMBOL | 'h' => French::HEARTS,
+            French::DIAMONDS_INDEX | French::DIAMONDS_SYMBOL | 'd' => French::DIAMONDS,
+            French::CLUBS_INDEX | French::CLUBS_SYMBOL | 'c' => French::CLUBS,
+            _ => Suit::<French>::default(),
+        }
+    }
 }
 
 /// # REFACTOR WIN
@@ -295,5 +327,10 @@ mod decks {
         let heavy_card = French::TREY.update_weight(21);
 
         assert_eq!(heavy_card.get_prime(), 0);
+    }
+
+    #[test]
+    fn decked__deck() {
+        let _deck = French::deck();
     }
 }
