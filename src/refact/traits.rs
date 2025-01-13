@@ -38,15 +38,19 @@ pub trait Decked<
 }
 
 pub trait Ranked {
-    fn get_rank_fluent_name(index: char) -> FluentName;
+    fn get_rank_fluent_name(c: char) -> FluentName;
+
+    fn get_rank_weight(c: char) -> u32;
 
     fn rank_indexes() -> Vec<char>;
 }
 
 pub trait Suited {
-    fn get_suit_fluent_name(index: char) -> FluentName;
+    fn get_suit_fluent_name(c: char) -> FluentName;
 
-    fn get_suit_symbol(index: char) -> char;
+    fn get_suit_symbol(c: char) -> char;
+
+    fn get_suit_weight(c: char) -> u32;
 
     fn suit_indexes() -> Vec<char>;
 }

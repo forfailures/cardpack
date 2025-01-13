@@ -178,6 +178,10 @@ impl<RankType: Ranked> Ranked for Rank<RankType> {
     }
 }
 
+/// # ASIDE
+///
+/// This is horrid. This is the type of horrid hacks that inspired the first refactoring. It feals
+/// like we're just kicking the can down to here.
 impl<RankType: Ranked> From<char> for Rank<RankType> {
     fn from(c: char) -> Self {
         if !RankType::is_valid_rank_char(&c) {

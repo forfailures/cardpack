@@ -4,13 +4,12 @@ pub mod traits;
 use crate::localization::FluentName;
 use crate::types::utils::Bit;
 
+use crate::prelude::CardError;
 use crate::refact::traits::{Ranked, Suited};
 use std::fmt::{Display, Formatter};
 use std::hash::Hash;
 use std::marker::PhantomData;
 use std::str::FromStr;
-use crate::prelude::CardError;
-use crate::refactored::Decked;
 
 pub const BLANK: char = '_';
 
@@ -176,17 +175,28 @@ where
         }
 
         if let Some(c) = s.chars().next() {
-            let rank = <Self as Decked<RankType, SuitType>>::get_rank(c);
+            let rank = Rank::<RankType> {
+                weight: RankType::get_rank_weight(c),
+                index: c,
+                phantom_data: PhantomData,
+            };
             if let Some(c) = s.chars().last() {
-                let suit = <Self as Decked<RankType, SuitType>>::get_suit(c);
-                return Ok(Card { rank, suit });
-            }
+                let suit = Suit::<SuitType> {
+                    weight: SuitType::get_suit_weight(c),
+                    index: c,
+                    phantom_data: PhantomData,
+                };
+                let card = Card::<RankType, SuitType> {
+                    suit,
+                    rank,
+                };
+                return Ok(card);
+            };
         }
 
         Err(CardError::Fubar)
     }
 }
-
 
 #[cfg(test)]
 #[allow(non_snake_case)]
@@ -202,26 +212,26 @@ mod card_tests {
 
         assert!(card.is_blank());
     }
-
-    #[test]
-    fn card__sort() {
-        let mut v: Vec<Card<French, French>> = Vec::new();
-
-        for suit_char in French::suit_indexes() {
-            for rank_char in French::rank_indexes() {
-                let card = Card::<French, French> {
-                    suit: Suit::<French>::from(suit_char),
-                    rank: Rank::<French>::from(rank_char),
-                };
-
-                println!("{}", card);
-                v.push(card);
-            }
-        }
-        v.reverse();
-        v.sort();
-        println!("{:?}", v);
-    }
+    //
+    // #[test]
+    // fn card__sort() {
+    //     let mut v: Vec<Card<French, French>> = Vec::new();
+    //
+    //     for suit_char in French::suit_indexes() {
+    //         for rank_char in French::rank_indexes() {
+    //             let card = Card::<French, French> {
+    //                 suit: Suit::<French>::from(suit_char),
+    //                 rank: Rank::<French>::from(rank_char),
+    //             };
+    //
+    //             println!("{}", card);
+    //             v.push(card);
+    //         }
+    //     }
+    //     v.reverse();
+    //     v.sort();
+    //     println!("{:?}", v);
+    // }
 
     #[test]
     fn from_str() {
@@ -250,14 +260,6 @@ impl<SuitType> Suit<SuitType>
 where
     SuitType: Suited,
 {
-    #[must_use]
-    pub fn new(suit_index: char) -> Suit<SuitType> {
-        Suit {
-            weight: 0,
-            index: suit_index,
-            phantom_data: PhantomData,
-        }
-    }
     /// ```
     /// use cardpack::refactored::*;
     ///
@@ -304,8 +306,6 @@ where
 
 // impl<SuitType: Suited> From<char> for Suit<SuitType> {
 //     fn from(c: char) -> Self {
-//         // Implement the conversion logic from char to Suit<SuitType>
-//         // This is a placeholder implementation
 //         SuitType::from(c)
 //     }
 // }
@@ -317,12 +317,16 @@ where
 // }
 
 impl<SuiteType: Suited> Suited for Suit<SuiteType> {
-    fn get_suit_fluent_name(index: char) -> FluentName {
-        SuiteType::get_suit_fluent_name(index)
+    fn get_suit_fluent_name(c: char) -> FluentName {
+        SuiteType::get_suit_fluent_name(c)
     }
 
-    fn get_suit_symbol(index: char) -> char {
-        SuiteType::get_suit_symbol(index)
+    fn get_suit_symbol(c: char) -> char {
+        SuiteType::get_suit_symbol(c)
+    }
+
+    fn get_suit_weight(c: char) -> u32 {
+        SuiteType::get_suit_weight(c)
     }
 
     fn suit_indexes() -> Vec<char> {
