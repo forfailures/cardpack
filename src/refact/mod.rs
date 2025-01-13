@@ -8,6 +8,9 @@ use crate::refact::traits::{Ranked, Suited};
 use std::fmt::{Display, Formatter};
 use std::hash::Hash;
 use std::marker::PhantomData;
+use std::str::FromStr;
+use crate::prelude::CardError;
+use crate::refactored::Decked;
 
 pub const BLANK: char = '_';
 
@@ -155,6 +158,81 @@ where
     /// ```
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}{}", self.rank, self.suit)
+    }
+}
+
+impl<RankType, SuitType> FromStr for Card<RankType, SuitType>
+where
+    RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
+    SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
+{
+    type Err = CardError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let s = s.trim();
+
+        if s.chars().count() != 2 {
+            return Err(CardError::InvalidIndex(s.to_string()));
+        }
+
+        if let Some(c) = s.chars().next() {
+            let rank = <Self as Decked<RankType, SuitType>>::get_rank(c);
+            if let Some(c) = s.chars().last() {
+                let suit = <Self as Decked<RankType, SuitType>>::get_suit(c);
+                return Ok(Card { rank, suit });
+            }
+        }
+
+        Err(CardError::Fubar)
+    }
+}
+
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod card_tests {
+    use super::*;
+    use crate::refactored::French;
+
+    #[test]
+    fn card__is_blank() {
+        let card = Card::<French, French>::default();
+
+        println!("{:?}", card);
+
+        assert!(card.is_blank());
+    }
+
+    #[test]
+    fn card__sort() {
+        let mut v: Vec<Card<French, French>> = Vec::new();
+
+        for suit_char in French::suit_indexes() {
+            for rank_char in French::rank_indexes() {
+                let card = Card::<French, French> {
+                    suit: Suit::<French>::from(suit_char),
+                    rank: Rank::<French>::from(rank_char),
+                };
+
+                println!("{}", card);
+                v.push(card);
+            }
+        }
+        v.reverse();
+        v.sort();
+        println!("{:?}", v);
+    }
+
+    #[test]
+    fn from_str() {
+        let card = "2♣".parse::<Card<French, French>>().unwrap();
+        assert_eq!(card.rank, French::DEUCE);
+        assert_eq!(card.suit, French::CLUBS);
+    }
+
+    #[test]
+    fn from_str__error() {
+        assert!("2S♣".parse::<Card<French, French>>().is_err());
     }
 }
 
@@ -392,42 +470,6 @@ where
     /// ```
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.index)
-    }
-}
-
-#[cfg(test)]
-#[allow(non_snake_case)]
-mod card_tests {
-    use super::*;
-    use crate::refactored::French;
-
-    #[test]
-    fn card__is_blank() {
-        let card = Card::<French, French>::default();
-
-        println!("{:?}", card);
-
-        assert!(card.is_blank());
-    }
-
-    #[test]
-    fn card__sort() {
-        let mut v: Vec<Card<French, French>> = Vec::new();
-
-        for suit_char in French::suit_indexes() {
-            for rank_char in French::rank_indexes() {
-                let card = Card::<French, French> {
-                    suit: Suit::<French>::from(suit_char),
-                    rank: Rank::<French>::from(rank_char),
-                };
-
-                println!("{}", card);
-                v.push(card);
-            }
-        }
-        v.reverse();
-        v.sort();
-        println!("{:?}", v);
     }
 }
 
