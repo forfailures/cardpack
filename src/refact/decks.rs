@@ -141,6 +141,66 @@ impl French {
     const FLUENT_KEY_DEUCE: &'static str = "two";
 
     #[must_use]
+    pub fn get_rank_fluent_name(c: char) -> FluentName {
+        match c {
+            French::ACE_INDEX => FluentName::new(French::FLUENT_KEY_ACE),
+            French::KING_INDEX => FluentName::new(French::FLUENT_KEY_KING),
+            French::QUEEN_INDEX => FluentName::new(French::FLUENT_KEY_QUEEN),
+            French::JACK_INDEX => FluentName::new(French::FLUENT_KEY_JACK),
+            French::TEN_INDEX => FluentName::new(French::FLUENT_KEY_TEN),
+            French::NINE_INDEX => FluentName::new(French::FLUENT_KEY_NINE),
+            French::EIGHT_INDEX => FluentName::new(French::FLUENT_KEY_EIGHT),
+            French::SEVEN_INDEX => FluentName::new(French::FLUENT_KEY_SEVEN),
+            French::SIX_INDEX => FluentName::new(French::FLUENT_KEY_SIX),
+            French::FIVE_INDEX => FluentName::new(French::FLUENT_KEY_FIVE),
+            French::FOUR_INDEX => FluentName::new(French::FLUENT_KEY_FOUR),
+            French::TREY_INDEX => FluentName::new(French::FLUENT_KEY_TREY),
+            French::DEUCE_INDEX => FluentName::new(French::FLUENT_KEY_DEUCE),
+            _ => FluentName::new(FluentName::BLANK),
+        }
+    }
+
+    #[must_use]
+    pub fn get_rank_index(c: char) -> char {
+        match c {
+            'a' | 'A' => French::ACE_INDEX,
+            'k' | 'K' => French::KING_INDEX,
+            'q' | 'Q' => French::QUEEN_INDEX,
+            'j' | 'J' => French::JACK_INDEX,
+            't' | 'T' | '0' => French::TEN_INDEX,
+            '9' => French::NINE_INDEX,
+            '8' => French::EIGHT_INDEX,
+            '7' => French::SEVEN_INDEX,
+            '6' => French::SIX_INDEX,
+            '5' => French::FIVE_INDEX,
+            '4' => French::FOUR_INDEX,
+            '3' => French::TREY_INDEX,
+            '2' => French::DEUCE_INDEX,
+            _ => BLANK,
+        }
+    }
+
+    #[must_use]
+    pub fn get_rank_weight(c: char) -> u32 {
+        match c {
+            French::ACE_INDEX => French::ACE.weight,
+            French::KING_INDEX => French::KING.weight,
+            French::QUEEN_INDEX => French::QUEEN.weight,
+            French::JACK_INDEX => French::JACK.weight,
+            French::TEN_INDEX => French::TEN.weight,
+            French::NINE_INDEX => French::NINE.weight,
+            French::EIGHT_INDEX => French::EIGHT.weight,
+            French::SEVEN_INDEX => French::SEVEN.weight,
+            French::SIX_INDEX => French::SIX.weight,
+            French::FIVE_INDEX => French::FIVE.weight,
+            French::FOUR_INDEX => French::FOUR.weight,
+            French::TREY_INDEX => French::TREY.weight,
+            French::DEUCE_INDEX => French::DEUCE.weight,
+            _ => 0,
+        }
+    }
+
+    #[must_use]
     pub fn get_suit_fluent_name(c: char) -> FluentName {
         match c {
             French::SPADES_INDEX => FluentName::new(French::FLUENT_KEY_SPADES),
@@ -156,7 +216,9 @@ impl French {
         match c {
             's' | '♤' | French::SPADES_INDEX | French::SPADES_SYMBOL => French::SPADES_INDEX,
             'h' | '♡' | French::HEARTS_INDEX | French::HEARTS_SYMBOL => French::HEARTS_INDEX,
-            'd' | '♢' | French::DIAMONDS_INDEX | French::DIAMONDS_SYMBOL => French::DIAMONDS_INDEX,
+            'd' | '♢' | French::DIAMONDS_INDEX | French::DIAMONDS_SYMBOL => {
+                French::DIAMONDS_INDEX
+            }
             'c' | '♧' | French::CLUBS_INDEX | French::CLUBS_SYMBOL => French::CLUBS_INDEX,
             _ => BLANK,
         }
@@ -167,7 +229,9 @@ impl French {
         match c {
             's' | '♤' | French::SPADES_INDEX | French::SPADES_SYMBOL => French::SPADES_SYMBOL,
             'h' | '♡' | French::HEARTS_INDEX | French::HEARTS_SYMBOL => French::HEARTS_SYMBOL,
-            'd' | '♢' | French::DIAMONDS_INDEX | French::DIAMONDS_SYMBOL => French::DIAMONDS_SYMBOL,
+            'd' | '♢' | French::DIAMONDS_INDEX | French::DIAMONDS_SYMBOL => {
+                French::DIAMONDS_SYMBOL
+            }
             'c' | '♧' | French::CLUBS_INDEX | French::CLUBS_SYMBOL => French::CLUBS_SYMBOL,
             _ => BLANK,
         }
@@ -183,7 +247,6 @@ impl French {
             _ => 0,
         }
     }
-
 }
 
 impl Decked<French, French> for French {
@@ -291,45 +354,15 @@ impl Ranked for French {
     /// assert_eq!(French::get_rank_fluent_name('A'), FluentName::new("ace"));
     /// ```
     fn get_rank_fluent_name(c: char) -> FluentName {
-        match c {
-            French::ACE_INDEX => FluentName::new(French::FLUENT_KEY_ACE),
-            French::KING_INDEX => FluentName::new(French::FLUENT_KEY_KING),
-            French::QUEEN_INDEX => FluentName::new(French::FLUENT_KEY_QUEEN),
-            French::JACK_INDEX => FluentName::new(French::FLUENT_KEY_JACK),
-            French::TEN_INDEX => FluentName::new(French::FLUENT_KEY_TEN),
-            French::NINE_INDEX => FluentName::new(French::FLUENT_KEY_NINE),
-            French::EIGHT_INDEX => FluentName::new(French::FLUENT_KEY_EIGHT),
-            French::SEVEN_INDEX => FluentName::new(French::FLUENT_KEY_SEVEN),
-            French::SIX_INDEX => FluentName::new(French::FLUENT_KEY_SIX),
-            French::FIVE_INDEX => FluentName::new(French::FLUENT_KEY_FIVE),
-            French::FOUR_INDEX => FluentName::new(French::FLUENT_KEY_FOUR),
-            French::TREY_INDEX => FluentName::new(French::FLUENT_KEY_TREY),
-            French::DEUCE_INDEX => FluentName::new(French::FLUENT_KEY_DEUCE),
-            _ => FluentName::new(FluentName::BLANK),
-        }
+        French::get_rank_fluent_name(c)
     }
 
     fn get_rank_index(c: char) -> char {
-        todo!()
+        French::get_rank_index(c)
     }
 
     fn get_rank_weight(c: char) -> u32 {
-        match c {
-            French::ACE_INDEX => French::ACE.weight,
-            French::KING_INDEX => French::KING.weight,
-            French::QUEEN_INDEX => French::QUEEN.weight,
-            French::JACK_INDEX => French::JACK.weight,
-            French::TEN_INDEX => French::TEN.weight,
-            French::NINE_INDEX => French::NINE.weight,
-            French::EIGHT_INDEX => French::EIGHT.weight,
-            French::SEVEN_INDEX => French::SEVEN.weight,
-            French::SIX_INDEX => French::SIX.weight,
-            French::FIVE_INDEX => French::FIVE.weight,
-            French::FOUR_INDEX => French::FOUR.weight,
-            French::TREY_INDEX => French::TREY.weight,
-            French::DEUCE_INDEX => French::DEUCE.weight,
-            _ => 0,
-        }
+        French::get_rank_weight(c)
     }
 
     fn rank_indexes() -> Vec<char> {

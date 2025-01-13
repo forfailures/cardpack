@@ -186,10 +186,7 @@ where
                     index: SuitType::get_suit_index(c),
                     phantom_data: PhantomData,
                 };
-                let card = Card::<RankType, SuitType> {
-                    suit,
-                    rank,
-                };
+                let card = Card::<RankType, SuitType> { suit, rank };
                 return Ok(card);
             };
         }
@@ -466,6 +463,24 @@ where
     /// ```
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.index)
+    }
+}
+
+impl<RankType: Ranked> Ranked for Rank<RankType> {
+    fn get_rank_fluent_name(c: char) -> FluentName {
+        RankType::get_rank_fluent_name(c)
+    }
+
+    fn get_rank_index(c: char) -> char {
+        RankType::get_rank_index(c)
+    }
+
+    fn get_rank_weight(c: char) -> u32 {
+        RankType::get_rank_weight(c)
+    }
+
+    fn rank_indexes() -> Vec<char> {
+        RankType::rank_indexes()
     }
 }
 
