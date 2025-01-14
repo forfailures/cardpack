@@ -11,3 +11,8 @@ GOAL: I want my structs to be copyable. Heavy stuff should come through function
 
 The big lesson I've been learning from doing this refactoring, and more importantly in adding all of the 
 doctests, os that they structs are too clunky. They are a pain in the ass to instantiate. 
+
+Jan 14th 2025
+
+The IDE is so slow with the dupes in code and having added so many doc tests. I need to get to a point where I can
+trim it all down.

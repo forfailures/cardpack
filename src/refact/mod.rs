@@ -140,6 +140,15 @@ where
     RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
     SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
 {
+    /// The original version of the `Card` struct included its own weight field which
+    /// was creating by adding the `Suit.weight` times 1000 with the `Rank.weight`. By simply
+    /// having the `Suit` be before the `Rank` in the `Card` struct, the sorting is handled
+    /// automatically.
+    #[must_use]
+    pub fn new(rank: Rank<RankType>, suit: Suit<SuitType>) -> Card<RankType, SuitType> {
+        Card { suit, rank }
+    }
+
     #[must_use]
     pub fn is_blank(&self) -> bool {
         self.rank.is_blank() | self.suit.is_blank()
@@ -180,19 +189,11 @@ where
             return Err(CardError::InvalidIndex(s.to_string()));
         }
 
-        if let Some(c) = s.chars().next() {
-            let rank = Rank::<RankType> {
-                weight: RankType::get_rank_weight(c),
-                index: c,
-                phantom_data: PhantomData,
-            };
-            if let Some(c) = s.chars().last() {
-                let suit = Suit::<SuitType> {
-                    weight: SuitType::get_suit_weight(c),
-                    index: SuitType::get_suit_index(c),
-                    phantom_data: PhantomData,
-                };
-                let card = Card::<RankType, SuitType> { suit, rank };
+        if let Some(rank_c) = s.chars().next() {
+            let rank = Rank::<RankType>::new(rank_c);
+            if let Some(suit_c) = s.chars().last() {
+                let suit = Suit::<SuitType>::new(suit_c);
+                let card = Card::<RankType, SuitType>::new(rank, suit);
                 return Ok(card);
             };
         }
@@ -238,9 +239,14 @@ mod card_tests {
 
     #[test]
     fn from_str() {
-        let card = "2♣".parse::<Card<French, French>>().unwrap();
-        assert_eq!(card.rank, French::DEUCE);
-        assert_eq!(card.suit, French::CLUBS);
+        assert_eq!(
+            "2♣".parse::<Card<French, French>>().unwrap(),
+            Card::<French, French>::new(French::DEUCE, French::CLUBS)
+        );
+        assert_eq!(
+            "2c".parse::<Card<French, French>>().unwrap(),
+            Card::<French, French>::new(French::DEUCE, French::CLUBS)
+        );
     }
 
     #[test]
@@ -269,6 +275,29 @@ where
     const PRIMES: [u32; 20] = [
         2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
     ];
+
+    /// Instantiates a new Rank struct from the passed in index.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let rank = Rank::<French>::new('2');
+    ///
+    /// assert_eq!(rank, French::DEUCE);
+    /// ```
+    ///
+    /// While this function is not "required" for the `French Deck`, since all of the `ranks` are
+    /// created as constants, it will become very useful for the fast creation of other `decks`.
+    #[must_use]
+    pub fn new(index: char) -> Rank<RankType> {
+        // Wash the index to make sure it's the correct char.
+        let index = RankType::get_rank_index(index);
+        Rank {
+            weight: RankType::get_rank_weight(index),
+            index,
+            phantom_data: PhantomData,
+        }
+    }
 
     #[must_use]
     pub fn get_name(&self) -> FluentName {
@@ -419,7 +448,6 @@ mod ranks {
     // use super::*;
 }
 
-
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Suit
 
@@ -437,6 +465,16 @@ impl<SuitType> Suit<SuitType>
 where
     SuitType: Suited,
 {
+    #[must_use]
+    pub fn new(index: char) -> Suit<SuitType> {
+        let index = SuitType::get_suit_index(index);
+        Suit {
+            weight: SuitType::get_suit_weight(index),
+            index,
+            phantom_data: PhantomData,
+        }
+    }
+
     /// ```
     /// use cardpack::refactored::*;
     ///
