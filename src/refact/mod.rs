@@ -3,6 +3,7 @@ pub mod traits;
 
 use crate::localization::FluentName;
 use crate::types::utils::Bit;
+use std::collections::HashSet;
 
 use crate::prelude::CardError;
 use crate::refact::traits::{Ranked, Suited};
@@ -27,6 +28,21 @@ impl<
         SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
     > Pile<RankType, SuitType>
 {
+    /// Returns a clone of the `Pile`'s internal `Vec<Card>`.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let pile: Pile<French, French> = Pile::<French, French>::from_str("K♣ Q♣ J♣").unwrap();
+    ///
+    /// let expected = vec![
+    ///     Card::<French, French>::new(French::KING, French::CLUBS),
+    ///     Card::<French, French>::new(French::QUEEN, French::CLUBS),
+    ///     Card::<French, French>::new(French::JACK, French::CLUBS)
+    /// ];
+    ///
+    /// assert_eq!(pile.cards(), expected);
+    /// ```
     #[must_use]
     pub fn cards(&self) -> Vec<Card<RankType, SuitType>> {
         self.0.clone()
@@ -40,6 +56,15 @@ impl<
     #[must_use]
     pub fn len(&self) -> usize {
         self.0.len()
+    }
+
+    #[must_use]
+    pub fn index(&self) -> String {
+        self.0
+            .iter()
+            .map(Card::index)
+            .collect::<Vec<String>>()
+            .join(" ")
     }
 
     #[must_use]
@@ -85,6 +110,16 @@ impl<
             .collect::<Vec<String>>()
             .join(" ");
         write!(f, "{s}")
+    }
+}
+
+impl<
+        RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
+        SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
+    > From<HashSet<Card<RankType, SuitType>>> for Pile<RankType, SuitType>
+{
+    fn from(cards: HashSet<Card<RankType, SuitType>>) -> Self {
+        Pile(cards.into_iter().collect())
     }
 }
 
@@ -147,7 +182,15 @@ impl<
 #[allow(non_snake_case)]
 mod pile_tests {
     use super::*;
+    use crate::refact::traits::Decked;
     use crate::refactored::French;
+
+    #[test]
+    fn pile__index() {
+        let pile: Pile<French, French> = French::deck();
+
+        assert_eq!(pile.index(), "AS KS QS JS TS 9S 8S 7S 6S 5S 4S 3S 2S AH KH QH JH TH 9H 8H 7H 6H 5H 4H 3H 2H AD KD QD JD TD 9D 8D 7D 6D 5D 4D 3D 2D AC KC QC JC TC 9C 8C 7C 6C 5C 4C 3C 2C");
+    }
 
     #[test]
     fn pile__is_empty() {
@@ -220,6 +263,11 @@ where
     #[must_use]
     pub fn new(rank: Rank<RankType>, suit: Suit<SuitType>) -> Card<RankType, SuitType> {
         Card { suit, rank }
+    }
+
+    #[must_use]
+    pub fn index(&self) -> String {
+        format!("{}{}", self.rank.index, self.suit.index)
     }
 
     #[must_use]
