@@ -97,6 +97,25 @@ impl<
 }
 
 impl<
+    RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
+    SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
+> FromStr for Pile<RankType, SuitType>
+{
+    type Err = CardError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut pile = Pile::<RankType, SuitType>::default();
+
+        for card_str in s.split_whitespace() {
+            let card = card_str.parse::<Card<RankType, SuitType>>()?;
+            pile.push(card);
+        }
+
+        Ok(pile)
+    }
+}
+
+impl<
         RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
         SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
     > IntoIterator for Pile<RankType, SuitType>
@@ -119,6 +138,58 @@ impl<
 
     fn into_iter(self) -> Self::IntoIter {
         self.0.clone().into_iter()
+    }
+}
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod pile_tests {
+    use crate::refactored::French;
+    use super::*;
+
+    #[test]
+    fn pile__is_empty() {
+        let pile: Pile<French, French> = Pile::<French, French>::default();
+
+        assert!(pile.is_empty());
+    }
+
+    #[test]
+    fn pile__len() {
+        let pile: Pile<French, French> = Pile::<French, French>::default();
+
+        assert_eq!(pile.len(), 0);
+    }
+
+    #[test]
+    fn pile__push() {
+        let mut pile: Pile<French, French> = Pile::<French, French>::default();
+
+        let card = Card::<French, French>::new(French::DEUCE, French::CLUBS);
+
+        assert!(pile.push(card));
+        assert_eq!(pile.len(), 1);
+    }
+
+    #[test]
+    fn pile__sort() {
+        let mut pile: Pile<French, French> = Pile::<French, French>::default();
+
+        let card1 = Card::<French, French>::new(French::DEUCE, French::CLUBS);
+        let card2 = Card::<French, French>::new(French::TREY, French::DIAMONDS);
+        let card3 = Card::<French, French>::new(French::FOUR, French::CLUBS);
+
+        pile.push(card1);
+        pile.push(card2);
+        pile.push(card3);
+
+        let sorted_pile = pile.sort();
+
+        assert_eq!(pile.to_string(), "2♣ 3♦ 4♣");
+        assert_eq!(sorted_pile.to_string(), "3♦ 4♣ 2♣");
+        assert_eq!(sorted_pile.0[0], card2);
+        assert_eq!(sorted_pile.0[1], card3);
+        assert_eq!(sorted_pile.0[2], card1);
     }
 }
 
