@@ -395,6 +395,94 @@ mod decks {
             French::DEUCE.get_name(),
             FluentName::new(French::FLUENT_KEY_DEUCE)
         );
+        assert_eq!(
+            French::TREY.get_name(),
+            FluentName::new(French::FLUENT_KEY_TREY)
+        );
+        assert_eq!(
+            French::FOUR.get_name(),
+            FluentName::new(French::FLUENT_KEY_FOUR)
+        );
+        assert_eq!(
+            French::FIVE.get_name(),
+            FluentName::new(French::FLUENT_KEY_FIVE)
+        );
+        assert_eq!(
+            French::SIX.get_name(),
+            FluentName::new(French::FLUENT_KEY_SIX)
+        );
+        assert_eq!(
+            French::SEVEN.get_name(),
+            FluentName::new(French::FLUENT_KEY_SEVEN)
+        );
+        assert_eq!(
+            French::EIGHT.get_name(),
+            FluentName::new(French::FLUENT_KEY_EIGHT)
+        );
+        assert_eq!(
+            French::NINE.get_name(),
+            FluentName::new(French::FLUENT_KEY_NINE)
+        );
+        assert_eq!(
+            French::TEN.get_name(),
+            FluentName::new(French::FLUENT_KEY_TEN)
+        );
+        assert_eq!(
+            French::JACK.get_name(),
+            FluentName::new(French::FLUENT_KEY_JACK)
+        );
+        assert_eq!(
+            French::QUEEN.get_name(),
+            FluentName::new(French::FLUENT_KEY_QUEEN)
+        );
+        assert_eq!(
+            French::KING.get_name(),
+            FluentName::new(French::FLUENT_KEY_KING)
+        );
+        assert_eq!(
+            French::ACE.get_name(),
+            FluentName::new(French::FLUENT_KEY_ACE)
+        );
+    }
+
+    #[test]
+    fn ranked__get_rank_index() {
+        assert_eq!(French::get_rank_index('A'), French::ACE_INDEX);
+        assert_eq!(French::get_rank_index('a'), French::ACE_INDEX);
+        assert_eq!(French::get_rank_index('K'), French::KING_INDEX);
+        assert_eq!(French::get_rank_index('k'), French::KING_INDEX);
+        assert_eq!(French::get_rank_index('Q'), French::QUEEN_INDEX);
+        assert_eq!(French::get_rank_index('q'), French::QUEEN_INDEX);
+        assert_eq!(French::get_rank_index('J'), French::JACK_INDEX);
+        assert_eq!(French::get_rank_index('j'), French::JACK_INDEX);
+        assert_eq!(French::get_rank_index('T'), French::TEN_INDEX);
+        assert_eq!(French::get_rank_index('t'), French::TEN_INDEX);
+        assert_eq!(French::get_rank_index('0'), French::TEN_INDEX);
+        assert_eq!(French::get_rank_index('9'), French::NINE_INDEX);
+        assert_eq!(French::get_rank_index('8'), French::EIGHT_INDEX);
+        assert_eq!(French::get_rank_index('7'), French::SEVEN_INDEX);
+        assert_eq!(French::get_rank_index('6'), French::SIX_INDEX);
+        assert_eq!(French::get_rank_index('5'), French::FIVE_INDEX);
+        assert_eq!(French::get_rank_index('4'), French::FOUR_INDEX);
+        assert_eq!(French::get_rank_index('3'), French::TREY_INDEX);
+        assert_eq!(French::get_rank_index('2'), French::DEUCE_INDEX);
+    }
+
+    #[test]
+    fn ranked__get_rank_weight() {
+        assert_eq!(French::get_rank_weight('A'), 12);
+        assert_eq!(French::get_rank_weight('K'), 11);
+        assert_eq!(French::get_rank_weight('Q'), 10);
+        assert_eq!(French::get_rank_weight('J'), 9);
+        assert_eq!(French::get_rank_weight('T'), 8);
+        assert_eq!(French::get_rank_weight('9'), 7);
+        assert_eq!(French::get_rank_weight('8'), 6);
+        assert_eq!(French::get_rank_weight('7'), 5);
+        assert_eq!(French::get_rank_weight('6'), 4);
+        assert_eq!(French::get_rank_weight('5'), 3);
+        assert_eq!(French::get_rank_weight('4'), 2);
+        assert_eq!(French::get_rank_weight('3'), 1);
+        assert_eq!(French::get_rank_weight('2'), 0);
     }
 
     #[test]
