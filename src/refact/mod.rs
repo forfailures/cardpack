@@ -13,6 +13,9 @@ use std::str::FromStr;
 
 pub const BLANK: char = '_';
 
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Pile
+
 #[derive(Clone, Debug, Default, Hash, Ord, PartialOrd, Eq, PartialEq)]
 pub struct Pile<RankType, SuitType>(Vec<Card<RankType, SuitType>>)
 where
@@ -118,6 +121,9 @@ impl<
         self.0.clone().into_iter()
     }
 }
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Card
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub struct Card<RankType, SuitType>
@@ -243,85 +249,8 @@ mod card_tests {
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct Suit<SuitType>
-where
-    SuitType: Suited,
-{
-    pub weight: u32,
-    pub index: char,
-    pub phantom_data: PhantomData<SuitType>,
-}
-
-impl<SuitType> Suit<SuitType>
-where
-    SuitType: Suited,
-{
-    /// ```
-    /// use cardpack::refactored::*;
-    ///
-    /// assert_eq!(0b00000000_00000000_00010000_00000000, French::CLUBS.ckc_number());
-    ///
-    /// ```
-    #[must_use]
-    pub fn ckc_number(&self) -> u32 {
-        match self.weight {
-            0 => 0,
-            _ => 1 << (Bit::SUIT_FLAG_SHIFT + self.weight),
-        }
-    }
-
-    #[must_use]
-    pub fn is_blank(&self) -> bool {
-        self.index == BLANK
-    }
-}
-
-impl<SuitType: Suited> Default for Suit<SuitType> {
-    fn default() -> Self {
-        Suit {
-            weight: 0,
-            index: '_',
-            phantom_data: PhantomData,
-        }
-    }
-}
-
-impl<SuitType> Display for Suit<SuitType>
-where
-    SuitType: Suited,
-{
-    /// ```
-    /// use cardpack::refactored::*;
-    ///
-    /// assert_eq!(French::DIAMONDS.to_string(), "♦");
-    /// ```
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", Suit::<SuitType>::get_suit_symbol(self.index))
-    }
-}
-
-impl<SuiteType: Suited> Suited for Suit<SuiteType> {
-    fn get_suit_fluent_name(c: char) -> FluentName {
-        SuiteType::get_suit_fluent_name(c)
-    }
-
-    fn get_suit_index(c: char) -> char {
-        SuiteType::get_suit_index(c)
-    }
-
-    fn get_suit_symbol(c: char) -> char {
-        SuiteType::get_suit_symbol(c)
-    }
-
-    fn get_suit_weight(c: char) -> u32 {
-        SuiteType::get_suit_weight(c)
-    }
-
-    fn suit_indexes() -> Vec<char> {
-        SuiteType::suit_indexes()
-    }
-}
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Rank
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Rank<RankType>
@@ -488,4 +417,88 @@ impl<RankType: Ranked> Ranked for Rank<RankType> {
 #[allow(non_snake_case)]
 mod ranks {
     // use super::*;
+}
+
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Suit
+
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct Suit<SuitType>
+where
+    SuitType: Suited,
+{
+    pub weight: u32,
+    pub index: char,
+    pub phantom_data: PhantomData<SuitType>,
+}
+
+impl<SuitType> Suit<SuitType>
+where
+    SuitType: Suited,
+{
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// assert_eq!(0b00000000_00000000_00010000_00000000, French::CLUBS.ckc_number());
+    ///
+    /// ```
+    #[must_use]
+    pub fn ckc_number(&self) -> u32 {
+        match self.weight {
+            0 => 0,
+            _ => 1 << (Bit::SUIT_FLAG_SHIFT + self.weight),
+        }
+    }
+
+    #[must_use]
+    pub fn is_blank(&self) -> bool {
+        self.index == BLANK
+    }
+}
+
+impl<SuitType: Suited> Default for Suit<SuitType> {
+    fn default() -> Self {
+        Suit {
+            weight: 0,
+            index: '_',
+            phantom_data: PhantomData,
+        }
+    }
+}
+
+impl<SuitType> Display for Suit<SuitType>
+where
+    SuitType: Suited,
+{
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// assert_eq!(French::DIAMONDS.to_string(), "♦");
+    /// ```
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", Suit::<SuitType>::get_suit_symbol(self.index))
+    }
+}
+
+impl<SuiteType: Suited> Suited for Suit<SuiteType> {
+    fn get_suit_fluent_name(c: char) -> FluentName {
+        SuiteType::get_suit_fluent_name(c)
+    }
+
+    fn get_suit_index(c: char) -> char {
+        SuiteType::get_suit_index(c)
+    }
+
+    fn get_suit_symbol(c: char) -> char {
+        SuiteType::get_suit_symbol(c)
+    }
+
+    fn get_suit_weight(c: char) -> u32 {
+        SuiteType::get_suit_weight(c)
+    }
+
+    fn suit_indexes() -> Vec<char> {
+        SuiteType::suit_indexes()
+    }
 }
