@@ -68,7 +68,9 @@ impl<
 /// ```
 /// use cardpack::refactored::*;
 ///
-/// let pile: Pile<French, French> = Pile::<French, French>::default();
+/// let pile: Pile<French, French> = French::deck();
+///
+/// assert_eq!(pile.to_string(), "A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠ 5♠ 4♠ 3♠ 2♠ A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥ 5♥ 4♥ 3♥ 2♥ A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦ 5♦ 4♦ 3♦ 2♦ A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣ 5♣ 4♣ 3♣ 2♣");
 /// ```
 impl<
         RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
@@ -97,9 +99,9 @@ impl<
 }
 
 impl<
-    RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
-    SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
-> FromStr for Pile<RankType, SuitType>
+        RankType: Ranked + Clone + Copy + PartialOrd + Ord + Default + Hash,
+        SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
+    > FromStr for Pile<RankType, SuitType>
 {
     type Err = CardError;
 
@@ -144,8 +146,8 @@ impl<
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod pile_tests {
-    use crate::refactored::French;
     use super::*;
+    use crate::refactored::French;
 
     #[test]
     fn pile__is_empty() {
