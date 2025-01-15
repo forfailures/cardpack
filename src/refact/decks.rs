@@ -96,6 +96,8 @@ impl French {
         index: French::CLUBS_INDEX,
         phantom_data: PhantomData,
     };
+    pub const BLANK_RANK: Rank<French> = Rank::<French>::BLANK;
+    pub const BLANK_SUIT: Suit<French> = Suit::<French>::BLANK;
 
     // Suites
     pub const SPADES_INDEX: char = 'S';
@@ -278,36 +280,6 @@ impl Decked<French, French> for French {
             French::DIAMONDS_INDEX => French::DIAMONDS,
             French::CLUBS_INDEX => French::CLUBS,
             _ => Suit::<French>::default(),
-        }
-    }
-}
-
-/// # REFACTOR WIN
-///
-/// This win endied up being a big W when I tried to wire it into the Card struct.
-///
-/// ```
-/// use cardpack::refactored::*;
-///
-/// assert_eq!(Rank::<French>::from('a'), French::ACE);
-/// ```
-impl From<char> for Rank<French> {
-    fn from(c: char) -> Self {
-        match c {
-            French::ACE_INDEX | 'a' => French::ACE,
-            French::KING_INDEX | 'k' => French::KING,
-            French::QUEEN_INDEX | 'q' => French::QUEEN,
-            French::JACK_INDEX | 'j' => French::JACK,
-            French::TEN_INDEX | 't' | '0' => French::TEN,
-            French::NINE_INDEX => French::NINE,
-            French::EIGHT_INDEX => French::EIGHT,
-            French::SEVEN_INDEX => French::SEVEN,
-            French::SIX_INDEX => French::SIX,
-            French::FIVE_INDEX => French::FIVE,
-            French::FOUR_INDEX => French::FOUR,
-            French::TREY_INDEX => French::TREY,
-            French::DEUCE_INDEX => French::DEUCE,
-            _ => Rank::<French>::default(),
         }
     }
 }

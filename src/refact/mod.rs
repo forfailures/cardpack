@@ -312,7 +312,7 @@ where
         }
 
         if let Some(rank_c) = s.chars().next() {
-            let rank = Rank::<RankType>::new(rank_c);
+            let rank = Rank::<RankType>::from(rank_c);
             if let Some(suit_c) = s.chars().last() {
                 let suit = Suit::<SuitType>::from(suit_c);
                 let card = Card::<RankType, SuitType>::new(rank, suit);
@@ -392,32 +392,15 @@ impl<RankType> Rank<RankType>
 where
     RankType: Ranked,
 {
+    pub const BLANK: Rank<RankType> = Rank {
+        weight: 0,
+        index: BLANK,
+        phantom_data: PhantomData,
+    };
+
     const PRIMES: [u32; 20] = [
         2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
     ];
-
-    /// Instantiates a new Rank struct from the passed in index.
-    ///
-    /// ```
-    /// use cardpack::refactored::*;
-    ///
-    /// let rank = Rank::<French>::new('2');
-    ///
-    /// assert_eq!(rank, French::DEUCE);
-    /// ```
-    ///
-    /// While this function is not "required" for the `French Deck`, since all of the `ranks` are
-    /// created as constants, it will become very useful for the fast creation of other `decks`.
-    #[must_use]
-    pub fn new(index: char) -> Rank<RankType> {
-        // Wash the index to make sure it's the correct char.
-        let index = RankType::get_rank_index(index);
-        Rank {
-            weight: RankType::get_rank_weight(index),
-            index,
-            phantom_data: PhantomData,
-        }
-    }
 
     #[must_use]
     pub fn get_name(&self) -> FluentName {
@@ -520,13 +503,21 @@ where
     }
 }
 
+/// ```
+/// use std::marker::PhantomData;
+/// use cardpack::refactored::*;
+///
+/// let expected = Rank::<French> {
+///     weight: 0,
+///     index: BLANK,
+///     phantom_data: PhantomData,
+/// };
+///
+/// assert_eq!(Rank::<French>::default(), expected);
+/// ```
 impl<RankType: Ranked> Default for Rank<RankType> {
     fn default() -> Self {
-        Rank {
-            weight: 0,
-            index: '_',
-            phantom_data: PhantomData,
-        }
+        Rank::<RankType>::BLANK
     }
 }
 
@@ -541,6 +532,60 @@ where
     /// ```
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.index)
+    }
+}
+
+/// # REFACTOR WIN
+///
+/// This win ended up being a big W when I tried to wire it into the Card struct.
+///
+/// ```
+/// use cardpack::refactored::*;
+///
+/// assert_eq!(Rank::<French>::from('a'), French::ACE);
+/// assert_eq!(Rank::<French>::from('2'), French::DEUCE);
+/// ```
+///
+/// # DOUBLE REFACTOR WIN
+///
+/// We've moved this down from the Deck generic instance to here, making it all-encompasing.
+/// The original version was:
+///
+/// ```txt
+/// impl From<char> for Rank<French> {
+///     fn from(c: char) -> Self {
+///         match c {
+///             French::ACE_INDEX | 'a' => French::ACE,
+///             French::KING_INDEX | 'k' => French::KING,
+///             French::QUEEN_INDEX | 'q' => French::QUEEN,
+///             French::JACK_INDEX | 'j' => French::JACK,
+///             French::TEN_INDEX | 't' | '0' => French::TEN,
+///             French::NINE_INDEX => French::NINE,
+///             French::EIGHT_INDEX => French::EIGHT,
+///             French::SEVEN_INDEX => French::SEVEN,
+///             French::SIX_INDEX => French::SIX,
+///             French::FIVE_INDEX => French::FIVE,
+///             French::FOUR_INDEX => French::FOUR,
+///             French::TREY_INDEX => French::TREY,
+///             French::DEUCE_INDEX => French::DEUCE,
+///             _ => Rank::<French>::default(),
+///         }
+///     }
+/// }
+/// ```
+///
+/// # TRIPLE REFACTOR WIN
+///
+/// We can now remove the `Rank::<RankType>::new() function and just use this instead.`
+impl<RankType: Ranked> From<char> for Rank<RankType> {
+    fn from(index: char) -> Self {
+        // Wash the index to make sure it's the correct char.
+        let index = RankType::get_rank_index(index);
+        Rank {
+            weight: RankType::get_rank_weight(index),
+            index,
+            phantom_data: PhantomData,
+        }
     }
 }
 
@@ -565,7 +610,36 @@ impl<RankType: Ranked> Ranked for Rank<RankType> {
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod ranks {
-    // use super::*;
+    use super::*;
+    use crate::refactored::French;
+    use rstest::rstest;
+
+    /// TODO: Add some rows for other decks when they're added.
+    #[rstest]
+    #[case('A', French::ACE)]
+    #[case('a', French::ACE)]
+    #[case('K', French::KING)]
+    #[case('k', French::KING)]
+    #[case('Q', French::QUEEN)]
+    #[case('q', French::QUEEN)]
+    #[case('J', French::JACK)]
+    #[case('j', French::JACK)]
+    #[case('T', French::TEN)]
+    #[case('t', French::TEN)]
+    #[case('0', French::TEN)]
+    #[case('9', French::NINE)]
+    #[case('8', French::EIGHT)]
+    #[case('7', French::SEVEN)]
+    #[case('6', French::SIX)]
+    #[case('5', French::FIVE)]
+    #[case('4', French::FOUR)]
+    #[case('3', French::TREY)]
+    #[case('2', French::DEUCE)]
+    #[case('1', French::BLANK_RANK)]
+    #[case('F', French::BLANK_RANK)]
+    fn suit__from__char(#[case] input: char, #[case] expected: Rank<French>) {
+        assert_eq!(expected, Rank::<French>::from(input));
+    }
 }
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
@@ -710,14 +784,33 @@ impl<SuiteType: Suited> Suited for Suit<SuiteType> {
 mod suits {
     use super::*;
     use crate::refactored::French;
+    use rstest::rstest;
 
-    #[test]
-    fn suit__from() {
-        assert_eq!(Suit::<French>::from('♠'), French::SPADES);
-        assert_eq!(Suit::<French>::from('S'), French::SPADES);
-        assert_eq!(Suit::<French>::from('s'), French::SPADES);
-        assert_eq!(Suit::<French>::from('♤'), French::SPADES);
-        assert!(Suit::<French>::from(' ').is_blank());
+    /// TODO: Add some rows for other decks when they're added.
+    #[rstest]
+    #[case('♠', French::SPADES)]
+    #[case('♤', French::SPADES)]
+    #[case('S', French::SPADES)]
+    #[case('s', French::SPADES)]
+    #[case('♥', French::HEARTS)]
+    #[case('♡', French::HEARTS)]
+    #[case('H', French::HEARTS)]
+    #[case('h', French::HEARTS)]
+    #[case('♦', French::DIAMONDS)]
+    #[case('♢', French::DIAMONDS)]
+    #[case('D', French::DIAMONDS)]
+    #[case('d', French::DIAMONDS)]
+    #[case('♣', French::CLUBS)]
+    #[case('♧', French::CLUBS)]
+    #[case('C', French::CLUBS)]
+    #[case('c', French::CLUBS)]
+    #[case('🃟', French::BLANK_SUIT)]
+    #[case('T', French::BLANK_SUIT)]
+    #[case('t', French::BLANK_SUIT)]
+    #[case(' ', French::BLANK_SUIT)]
+    #[case('F', French::BLANK_SUIT)]
+    fn suit__from__char(#[case] input: char, #[case] expected: Suit<French>) {
+        assert_eq!(expected, Suit::<French>::from(input));
     }
 
     #[test]

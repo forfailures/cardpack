@@ -8,5 +8,6 @@ pub use crate::refact::Card;
 pub use crate::refact::Pile;
 pub use crate::refact::Rank;
 pub use crate::refact::Suit;
+pub use crate::refact::BLANK;
 
 pub use std::str::FromStr;
