@@ -585,6 +585,12 @@ impl<SuitType> Suit<SuitType>
 where
     SuitType: Suited,
 {
+    pub const BLANK: Suit<SuitType> = Suit {
+        weight: 0,
+        index: BLANK,
+        phantom_data: PhantomData,
+    };
+
     /// Returns the Suit portion of the `CKC Number`.
     /// Used to generate the `Card`'s binary signature, aka [Cactus Kev](https://suffe.cool/poker/evaluator.html)
     /// numbers.
@@ -634,11 +640,7 @@ where
 
 impl<SuitType: Suited> Default for Suit<SuitType> {
     fn default() -> Self {
-        Suit {
-            weight: 0,
-            index: '_',
-            phantom_data: PhantomData,
-        }
+        Suit::<SuitType>::BLANK
     }
 }
 
