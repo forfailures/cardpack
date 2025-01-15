@@ -1,6 +1,8 @@
 use crate::decks::FluentName;
 use crate::refact::traits::{Decked, Ranked, Suited};
 use crate::refact::{Rank, Suit, BLANK};
+use colored::Color;
+use std::collections::HashMap;
 use std::marker::PhantomData;
 
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -311,6 +313,15 @@ impl From<char> for Rank<French> {
 }
 
 impl Suited for French {
+    fn colors() -> HashMap<char, Color> {
+        let mut mappie = HashMap::new();
+
+        mappie.insert('H', Color::Red);
+        mappie.insert('D', Color::Red);
+
+        mappie
+    }
+
     /// ```
     /// use cardpack::refactored::*;
     ///

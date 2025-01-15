@@ -1,5 +1,6 @@
 use crate::decks::FluentName;
 use crate::refact::{Card, Pile, Rank, Suit};
+use std::collections::HashMap;
 use std::hash::Hash;
 
 pub trait Decked<
@@ -48,6 +49,9 @@ pub trait Ranked {
 }
 
 pub trait Suited {
+    /// Color rendering of `Cards` is determined by their suit.
+    fn colors() -> HashMap<char, colored::Color>;
+
     fn get_suit_fluent_name(c: char) -> FluentName;
 
     fn get_suit_index(c: char) -> char;

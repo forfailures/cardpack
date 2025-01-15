@@ -169,6 +169,10 @@ where
     }
 }
 
+/// # NOTE
+///
+/// This trait seems to be made redundant with the 2nd refactoring where it
+/// is simply folded into the `Suited` trait.
 impl<SuitType> Named<'_> for Suit<SuitType>
 where
     SuitType: Suited,

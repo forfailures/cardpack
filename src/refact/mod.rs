@@ -3,10 +3,11 @@ pub mod traits;
 
 use crate::localization::FluentName;
 use crate::types::utils::Bit;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use crate::prelude::CardError;
 use crate::refact::traits::{Ranked, Suited};
+use colored::Color;
 use std::fmt::{Display, Formatter};
 use std::hash::Hash;
 use std::marker::PhantomData;
@@ -313,7 +314,7 @@ where
         if let Some(rank_c) = s.chars().next() {
             let rank = Rank::<RankType>::new(rank_c);
             if let Some(suit_c) = s.chars().last() {
-                let suit = Suit::<SuitType>::new(suit_c);
+                let suit = Suit::<SuitType>::from(suit_c);
                 let card = Card::<RankType, SuitType>::new(rank, suit);
                 return Ok(card);
             };
@@ -332,8 +333,6 @@ mod card_tests {
     #[test]
     fn card__is_blank() {
         let card = Card::<French, French>::default();
-
-        println!("{:?}", card);
 
         assert!(card.is_blank());
     }
@@ -586,19 +585,21 @@ impl<SuitType> Suit<SuitType>
 where
     SuitType: Suited,
 {
-    #[must_use]
-    pub fn new(index: char) -> Suit<SuitType> {
-        let index = SuitType::get_suit_index(index);
-        Suit {
-            weight: SuitType::get_suit_weight(index),
-            index,
-            phantom_data: PhantomData,
-        }
-    }
-
+    /// Returns the Suit portion of the `CKC Number`.
+    /// Used to generate the `Card`'s binary signature, aka [Cactus Kev](https://suffe.cool/poker/evaluator.html)
+    /// numbers.
+    ///
+    /// Revised version that inverts the weight for sorting, making Spades be the highest. Has no
+    /// effect on the generated card ranks, but does make sorting easier.
+    ///
+    /// TODO: need a way to add the jokers suit. Right now this assumes standard 52
+    ///
     /// ```
     /// use cardpack::refactored::*;
     ///
+    /// assert_eq!(0b00000000_00000000_10000000_00000000, French::SPADES.ckc_number());
+    /// assert_eq!(0b00000000_00000000_01000000_00000000, French::HEARTS.ckc_number());
+    /// assert_eq!(0b00000000_00000000_00100000_00000000, French::DIAMONDS.ckc_number());
     /// assert_eq!(0b00000000_00000000_00010000_00000000, French::CLUBS.ckc_number());
     ///
     /// ```
@@ -613,6 +614,21 @@ where
     #[must_use]
     pub fn is_blank(&self) -> bool {
         self.index == BLANK
+    }
+
+    #[must_use]
+    pub fn suits() -> Vec<Self> {
+        SuitType::suit_indexes()
+            .iter()
+            .map(|index| Suit::<SuitType>::from(*index))
+            .collect()
+    }
+
+    /// TODO: Possible REFACTOR - Add symbol char to struct to avoid need for localization
+    /// call. We will save this for after REF2 is complete.
+    #[must_use]
+    pub fn symbol(&self) -> char {
+        SuitType::get_suit_symbol(self.index)
     }
 }
 
@@ -640,7 +656,32 @@ where
     }
 }
 
+/// Instantiates a new Suit struct from the passed in index.
+///
+/// ```
+/// use cardpack::refactored::*;
+///
+/// assert_eq!(Suit::<French>::from('♠'), French::SPADES);
+/// assert_eq!(Suit::<French>::from('S'), French::SPADES);
+/// assert_eq!(Suit::<French>::from('s'), French::SPADES);
+/// assert_eq!(Suit::<French>::from('♤'), French::SPADES);
+/// ```
+impl<SuiteType: Suited> From<char> for Suit<SuiteType> {
+    fn from(index: char) -> Self {
+        let index = Suit::<SuiteType>::get_suit_index(index);
+        Suit {
+            weight: Suit::<SuiteType>::get_suit_weight(index),
+            index,
+            phantom_data: PhantomData,
+        }
+    }
+}
+
 impl<SuiteType: Suited> Suited for Suit<SuiteType> {
+    fn colors() -> HashMap<char, Color> {
+        SuiteType::colors()
+    }
+
     fn get_suit_fluent_name(c: char) -> FluentName {
         SuiteType::get_suit_fluent_name(c)
     }
@@ -659,5 +700,42 @@ impl<SuiteType: Suited> Suited for Suit<SuiteType> {
 
     fn suit_indexes() -> Vec<char> {
         SuiteType::suit_indexes()
+    }
+}
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod suits {
+    use super::*;
+    use crate::refactored::French;
+
+    #[test]
+    fn suit__from() {
+        assert_eq!(Suit::<French>::from('♠'), French::SPADES);
+        assert_eq!(Suit::<French>::from('S'), French::SPADES);
+        assert_eq!(Suit::<French>::from('s'), French::SPADES);
+        assert_eq!(Suit::<French>::from('♤'), French::SPADES);
+        assert!(Suit::<French>::from(' ').is_blank());
+    }
+
+    #[test]
+    fn suit__symbol() {
+        assert_eq!(Suit::<French>::from('♠').symbol(), '♠');
+        assert_eq!(Suit::<French>::from('S').symbol(), '♠');
+        assert_eq!(Suit::<French>::from('s').symbol(), '♠');
+        assert_eq!(Suit::<French>::from('♤').symbol(), '♠');
+        assert_eq!(Suit::<French>::from(' ').symbol(), '_');
+    }
+
+    #[test]
+    fn suit__suits() {
+        let expected = vec![
+            French::SPADES,
+            French::HEARTS,
+            French::DIAMONDS,
+            French::CLUBS,
+        ];
+
+        assert_eq!(Suit::<French>::suits(), expected);
     }
 }
