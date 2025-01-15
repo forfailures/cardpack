@@ -336,26 +336,6 @@ mod card_tests {
 
         assert!(card.is_blank());
     }
-    //
-    // #[test]
-    // fn card__sort() {
-    //     let mut v: Vec<Card<French, French>> = Vec::new();
-    //
-    //     for suit_char in French::suit_indexes() {
-    //         for rank_char in French::rank_indexes() {
-    //             let card = Card::<French, French> {
-    //                 suit: Suit::<French>::from(suit_char),
-    //                 rank: Rank::<French>::from(rank_char),
-    //             };
-    //
-    //             println!("{}", card);
-    //             v.push(card);
-    //         }
-    //     }
-    //     v.reverse();
-    //     v.sort();
-    //     println!("{:?}", v);
-    // }
 
     #[test]
     fn from_str() {
@@ -454,6 +434,17 @@ where
     #[must_use]
     pub fn is_blank(&self) -> bool {
         self.index == BLANK
+    }
+
+    /// # ASIDE
+    ///
+    /// Wasted 10 minutes on a copilot suggestion that had into instead of from
+    #[must_use]
+    pub fn ranks() -> Vec<Self> {
+        RankType::rank_indexes()
+            .iter()
+            .map(|index| Rank::<RankType>::from(*index))
+            .collect()
     }
 
     #[must_use]
