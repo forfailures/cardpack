@@ -621,7 +621,10 @@ mod ranks {
 
     #[test]
     fn rank__ranks_index_all() {
-        
+        assert_eq!(
+            Rank::<French>::ranks_index_all(" "),
+            "A K Q J T 9 8 7 6 5 4 3 2"
+        );
     }
 
     /// TODO: Add some rows for other decks when they're added.
