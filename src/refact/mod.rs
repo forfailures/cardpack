@@ -448,6 +448,20 @@ where
     }
 
     #[must_use]
+    pub fn ranks_index(ranks: &[Rank<RankType>], joiner: &str) -> String {
+        ranks
+            .iter()
+            .map(ToString::to_string)
+            .collect::<Vec<String>>()
+            .join(joiner)
+    }
+
+    #[must_use]
+    pub fn ranks_index_all(joiner: &str) -> String {
+        Rank::<RankType>::ranks_index(&Rank::<RankType>::ranks(), joiner)
+    }
+
+    #[must_use]
     pub fn update_weight(&self, weight: u32) -> Rank<RankType> {
         Rank {
             weight,
@@ -605,6 +619,11 @@ mod ranks {
     use crate::refactored::French;
     use rstest::rstest;
 
+    #[test]
+    fn rank__ranks_index_all() {
+        
+    }
+
     /// TODO: Add some rows for other decks when they're added.
     #[rstest]
     #[case('A', French::ACE)]
@@ -628,7 +647,7 @@ mod ranks {
     #[case('2', French::DEUCE)]
     #[case('1', French::BLANK_RANK)]
     #[case('F', French::BLANK_RANK)]
-    fn suit__from__char(#[case] input: char, #[case] expected: Rank<French>) {
+    fn rank__from__char(#[case] input: char, #[case] expected: Rank<French>) {
         assert_eq!(expected, Rank::<French>::from(input));
     }
 }
