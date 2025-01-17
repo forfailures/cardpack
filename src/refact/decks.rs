@@ -1,12 +1,18 @@
 use crate::decks::FluentName;
+use crate::refact::pips::{Rank, Suit, BLANK};
 use crate::refact::traits::{Decked, Ranked, Suited};
-use crate::refact::{Rank, Suit, BLANK};
+use crate::refact::{Card, Pile};
 use colored::Color;
 use std::collections::HashMap;
 use std::marker::PhantomData;
 
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct French {}
+
+#[allow(clippy::module_name_repetitions)]
+pub type FrenchCard = Card<French, French>;
+#[allow(clippy::module_name_repetitions)]
+pub type FrenchDeck = Pile<French, French>;
 
 impl French {
     /// # REFACTOR WIN

@@ -1,5 +1,6 @@
 use crate::decks::FluentName;
-use crate::refact::{Card, Pile, Rank, Suit};
+use crate::refact::pips::{Rank, Suit};
+use crate::refact::{Card, Pile};
 use std::collections::HashMap;
 use std::hash::Hash;
 
