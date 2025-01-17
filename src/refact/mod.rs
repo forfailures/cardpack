@@ -134,6 +134,76 @@ impl<
     pub fn sort_in_place(&mut self) {
         self.0.sort();
     }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let pile: Pile<French, French> = French::deck();
+    ///
+    /// assert_eq!(pile.suit_index(), "S H D C");
+    /// ```
+    #[must_use]
+    pub fn suit_index(&self) -> String {
+        self.suit_indexed(|suit| String::from(suit.index), " ")
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let pile: Pile<French, French> = French::deck();
+    ///
+    /// assert_eq!(pile.suit_symbol_index(), "♠ ♥ ♦ ♣");
+    /// ```
+    #[must_use]
+    pub fn suit_symbol_index(&self) -> String {
+        self.suit_indexed(|suit| String::from(suit.symbol()), " ")
+    }
+
+    #[must_use]
+    fn suit_indexed<F>(&self, func: F, joiner: &str) -> String
+    where
+        F: Fn(&Suit<SuitType>) -> String,
+    {
+        self.suits()
+            .iter()
+            .map(func)
+            .collect::<Vec<String>>()
+            .join(joiner)
+    }
+
+    /// Returns a sorted vector of the `Suit`s within the `Pile`.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let pile: Pile<French, French> = French::deck();
+    ///
+    /// assert_eq!(pile.suits(), vec![French::SPADES, French::HEARTS, French::DIAMONDS, French::CLUBS]);
+    /// ```
+    #[must_use]
+    pub fn suits(&self) -> Vec<Suit<SuitType>> {
+        let mut v: Vec<Suit<SuitType>> = self
+            .iter()
+            .map(|c| c.suit)
+            .collect::<HashSet<Suit<SuitType>>>()
+            .into_iter()
+            .collect();
+        v.sort();
+        v.reverse();
+
+        v
+    }
+
+    /// Returns a `String` of the cards symbol string, colored by what's defined in the
+    /// `Suited` trait.
+    #[must_use]
+    pub fn to_color_symbol_string(&self) -> String {
+        self.0
+            .iter()
+            .map(Card::to_color_symbol_string)
+            .collect::<Vec<String>>()
+            .join(" ")
+    }
 }
 
 /// ```
@@ -367,6 +437,11 @@ where
             self.to_string()
         }
     }
+
+    // #[must_use]
+    // pub fn suit_symbol(&self) -> String {
+    //     self.suit.symbol()
+    // }
 }
 
 impl<RankType, SuitType> Display for Card<RankType, SuitType>
