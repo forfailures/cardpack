@@ -47,6 +47,26 @@ impl<
         self.0.clone()
     }
 
+    #[must_use]
+    pub fn draw(&mut self, n: usize) -> Option<Self> {
+        if n > self.len() || n < 1 {
+            None
+        } else {
+            let mut cards = Pile::<RankType, SuitType>::default();
+            for _ in 0..n {
+                cards.push(self.draw_first()?);
+            }
+            Some(cards)
+        }
+    }
+
+    pub fn draw_first(&mut self) -> Option<Card<RankType, SuitType>> {
+        match self.len() {
+            0 => None,
+            _ => Some(self.remove(0)),
+        }
+    }
+
     /// ```
     /// use cardpack::refactored::*;
     ///
@@ -104,6 +124,65 @@ impl<
             self.0.push(card);
             true
         }
+    }
+
+    pub fn remove(&mut self, x: usize) -> Card<RankType, SuitType> {
+        self.0.remove(x)
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let mut pile = French::deck();
+    /// pile.remove_card(&Card::<French, French>::from_str("K♠").unwrap());
+    ///
+    /// let actual = pile.draw(2).unwrap();
+    ///
+    /// println!("{pile}");
+    /// println!("{actual}");
+    ///
+    /// assert_eq!(actual, Pile::<French, French>::from_str("AS QS").unwrap());
+    /// ```
+    pub fn remove_card(
+        &mut self,
+        card: &Card<RankType, SuitType>,
+    ) -> Option<Card<RankType, SuitType>> {
+        let index = self.0.iter().position(|c| c == card);
+        if let Some(i) = index {
+            Some(self.0.remove(i))
+        } else {
+            None
+        }
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let ak = Pile::<French, French>::from_str("A♠ K♠").unwrap();
+    /// let ka = Pile::<French, French>::from_str("K♠ A♠").unwrap();
+    ///
+    /// assert_eq!(ak.reverse(), ka);
+    /// assert_eq!(ka.reverse(), ak);
+    /// ```
+    #[must_use]
+    pub fn reverse(&self) -> Self {
+        let mut pile = self.clone();
+        pile.reverse_in_place();
+        pile
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let mut ak = Pile::<French, French>::from_str("A♠ K♠").unwrap();
+    /// let ka = Pile::<French, French>::from_str("K♠ A♠").unwrap();
+    ///
+    /// ak.reverse_in_place();
+    ///
+    /// assert_eq!(ak, ka);
+    /// ```
+    pub fn reverse_in_place(&mut self) {
+        self.0.reverse();
     }
 
     /// ```
