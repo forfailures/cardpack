@@ -396,19 +396,7 @@ where
     /// ```
     /// use cardpack::refactored::*;
     ///
-    /// assert_eq!(French::DEUCE.get_prime(), 2);
-    /// assert_eq!(French::TREY.get_prime(), 3);
-    /// assert_eq!(French::FOUR.get_prime(), 5);
-    /// assert_eq!(French::FIVE.get_prime(), 7);
-    /// assert_eq!(French::SIX.get_prime(), 11);
-    /// assert_eq!(French::SEVEN.get_prime(), 13);
-    /// assert_eq!(French::EIGHT.get_prime(), 17);
-    /// assert_eq!(French::NINE.get_prime(), 19);
-    /// assert_eq!(French::TEN.get_prime(), 23);
-    /// assert_eq!(French::JACK.get_prime(), 29);
-    /// assert_eq!(French::QUEEN.get_prime(), 31);
     /// assert_eq!(French::KING.get_prime(), 37);
-    /// assert_eq!(French::ACE.get_prime(), 41);
     /// ```
     ///
     /// It only goes up to 20:
@@ -618,6 +606,38 @@ mod ranks {
     use super::*;
     use crate::refactored::French;
     use rstest::rstest;
+
+    #[test]
+    fn rank__get_prime() {
+        assert_eq!(French::DEUCE.get_prime(), 2);
+        assert_eq!(French::TREY.get_prime(), 3);
+        assert_eq!(French::FOUR.get_prime(), 5);
+        assert_eq!(French::FIVE.get_prime(), 7);
+        assert_eq!(French::SIX.get_prime(), 11);
+        assert_eq!(French::SEVEN.get_prime(), 13);
+        assert_eq!(French::EIGHT.get_prime(), 17);
+        assert_eq!(French::NINE.get_prime(), 19);
+        assert_eq!(French::TEN.get_prime(), 23);
+        assert_eq!(French::JACK.get_prime(), 29);
+        assert_eq!(French::QUEEN.get_prime(), 31);
+        assert_eq!(French::KING.get_prime(), 37);
+        assert_eq!(French::ACE.get_prime(), 41);
+
+        assert_eq!(French::TREY.update_weight(21).get_prime(), 0);
+    }
+
+    #[test]
+    fn rank__is_blank() {
+        let rank = Rank::<French>::default();
+
+        assert!(rank.is_blank());
+    }
+
+    #[test]
+    fn rank__ranks_index() {
+        let ranks = vec![French::KING, French::QUEEN, French::JACK, French::TEN];
+        assert_eq!(Rank::<French>::ranks_index(&ranks, "_"), "K_Q_J_T");
+    }
 
     #[test]
     fn rank__ranks_index_all() {
