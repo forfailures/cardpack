@@ -45,16 +45,42 @@ impl<
         self.0.clone()
     }
 
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// assert!(Pile::<French, French>::default().is_empty());
+    /// assert!(!French::deck().is_empty());
+    /// ```
     #[must_use]
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
 
+    /// Returns the number of `Card`s in the `Pile`.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let pile: Pile<French, French> = Pile::<French, French>::from_str("5♥ 3♥ 2♣ 4♣ A♥").unwrap();
+    ///
+    /// assert_eq!(pile.len(), 5);
+    /// assert_eq!(French::deck().len(), 52);
+    /// ```
     #[must_use]
     pub fn len(&self) -> usize {
         self.0.len()
     }
 
+    /// Returns a string representation of the `Pile`'s `Card`s index strings. The index is the
+    /// alpha-numerical representation of the `Card`'s `Rank` and `Suit`.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let pile: Pile<French, French> = Pile::<French, French>::from_str("5♣ 3♣ 2♣ 4♣ A♣ ").unwrap();
+    ///
+    /// assert_eq!(pile.index(), "5C 3C 2C 4C AC");
+    /// ```
     #[must_use]
     pub fn index(&self) -> String {
         self.0
@@ -78,11 +104,35 @@ impl<
         }
     }
 
+    /// Returns a cloned version of the `Pile` sorted in descending order.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let pile: Pile<French, French> = Pile::<French, French>::from_str("5♣ 3♣ 2♣ 4♣ A♣ ").unwrap();
+    ///
+    /// let sorted = pile.sort();
+    ///
+    /// assert_eq!(sorted.to_string(), "A♣ 5♣ 4♣ 3♣ 2♣");
+    /// ```
     #[must_use]
     pub fn sort(&self) -> Self {
         let mut cards: Vec<Card<RankType, SuitType>> = self.0.clone();
         cards.sort();
         Self(cards)
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let mut pile: Pile<French, French> = Pile::<French, French>::from_str("5♣ 3♣ 2♣ 4♣ A♣ ").unwrap();
+    ///
+    /// pile.sort_in_place();
+    ///
+    /// assert_eq!(pile.to_string(), "A♣ 5♣ 4♣ 3♣ 2♣");
+    /// ```
+    pub fn sort_in_place(&mut self) {
+        self.0.sort();
     }
 }
 
