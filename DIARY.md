@@ -127,4 +127,4 @@ impl<RankType: Ranked> From<char> for Rank<RankType> {
 REFERENCE:
 
 - Timothy Cain - [Code Refactoring](https://youtu.be/SuMElKtydDQ?si=c4XR3CghGDrdJvi-)
-
+- [Nobody understands playing cards — not even the experts](https://www.youtube.com/watch?v=kY6DmPs4klU)

@@ -275,6 +275,20 @@ where
     pub fn is_blank(&self) -> bool {
         self.rank.is_blank() | self.suit.is_blank()
     }
+
+    #[must_use]
+    pub fn to_color_symbol_string(&self) -> String {
+        let suit_char = self.suit.index;
+        // if let Some(color) = SuitType::colors().get(&suit_char) {
+        //     // let symbol = SuitType::get_suit_symbol(suit_char);
+        //     // let color = color.to_string();
+        //     // format!("{}{}", symbol, color)
+        // } else {
+        //     format!("{}", self)
+        // }
+
+        todo!()
+    }
 }
 
 impl<RankType, SuitType> Display for Card<RankType, SuitType>
