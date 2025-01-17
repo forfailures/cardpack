@@ -2,15 +2,17 @@ pub mod decks;
 pub mod pips;
 pub mod traits;
 
-use std::collections::HashSet;
-
 use crate::prelude::CardError;
 use crate::refact::pips::{Rank, Suit};
 use crate::refact::traits::{Ranked, Suited};
 use colored::Colorize;
+use rand::prelude::SliceRandom;
+use rand::thread_rng;
+use std::collections::HashSet;
 use std::fmt::{Display, Formatter};
 use std::hash::Hash;
 use std::str::FromStr;
+
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Pile
 
@@ -104,6 +106,59 @@ impl<
         }
     }
 
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let pile = French::deck();
+    /// let other_pile = pile.shuffle();
+    ///
+    /// assert!(pile.same(&pile));
+    /// assert!(pile.same(&other_pile));
+    /// ```
+    #[must_use]
+    pub fn same(&self, other: &Self) -> bool {
+        let left = self.sort();
+        let right = other.sort();
+
+        left == right
+    }
+
+    #[must_use]
+    pub fn shuffle(&self) -> Self {
+        let mut pile = self.clone();
+        pile.shuffle_in_place();
+        pile
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let mut pile: Pile<French, French> = French::deck();
+    ///
+    /// pile.shuffle_in_place();
+    ///
+    /// assert!(pile.same(&French::deck()));
+    /// ```
+    pub fn shuffle_in_place(&mut self) {
+        let mut rng = thread_rng();
+        self.0.shuffle(&mut rng);
+    }
+
+    /// TODO WIP
+    #[allow(dead_code)]
+    fn shuffle_in_place_custom<F>(&mut self, mut rng: F)
+    where
+        F: FnMut(usize) -> usize,
+    {
+        let mut cards = self.0.clone();
+        let mut shuffled = Vec::new();
+        while !cards.is_empty() {
+            let index = rng(cards.len());
+            shuffled.push(cards.remove(index));
+        }
+        self.0 = shuffled;
+    }
+
     /// Returns a cloned version of the `Pile` sorted in descending order.
     ///
     /// ```
@@ -135,6 +190,8 @@ impl<
         self.0.sort();
     }
 
+    /// Returns a `String` with all of the `Suit` index letters for the `Pile` separated by spaces.
+    ///
     /// ```
     /// use cardpack::refactored::*;
     ///
@@ -147,6 +204,8 @@ impl<
         self.suit_indexed(|suit| String::from(suit.index), " ")
     }
 
+    /// Returns a `String` with all of the `Suit` symbols for the `Pile` separated by spaces.
+    ///
     /// ```
     /// use cardpack::refactored::*;
     ///
