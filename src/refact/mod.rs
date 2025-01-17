@@ -382,6 +382,14 @@ where
         2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
     ];
 
+    /// Returns the `FluentName` of the rank. This is used to get localized values stored
+    /// in the `localization` module.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// assert_eq!(French::DEUCE.get_name(), FluentName::new("two"));
+    /// ```
     #[must_use]
     pub fn get_name(&self) -> FluentName {
         RankType::get_rank_fluent_name(self.index)
@@ -419,6 +427,15 @@ where
         }
     }
 
+    /// Returns true if the `Rank` is blank.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let rank = Rank::<French>::from('X');
+    ///
+    /// assert!(rank.is_blank());
+    /// ```
     #[must_use]
     pub fn is_blank(&self) -> bool {
         self.index == BLANK
@@ -427,6 +444,28 @@ where
     /// # ASIDE
     ///
     /// Wasted 10 minutes on a copilot suggestion that had into instead of from
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let expected = vec![
+    ///     French::ACE,
+    ///     French::KING,
+    ///     French::QUEEN,
+    ///     French::JACK,
+    ///     French::TEN,
+    ///     French::NINE,
+    ///     French::EIGHT,
+    ///     French::SEVEN,
+    ///     French::SIX,
+    ///     French::FIVE,
+    ///     French::FOUR,
+    ///     French::TREY,
+    ///     French::DEUCE,
+    /// ];
+    ///
+    /// assert_eq!(Rank::<French>::ranks(), expected);
+    /// ```
     #[must_use]
     pub fn ranks() -> Vec<Self> {
         RankType::rank_indexes()
@@ -435,6 +474,15 @@ where
             .collect()
     }
 
+    /// Returns an index of the `Ranks` joined by the joiner `&str`;
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let ranks = vec![French::ACE, French::DEUCE, French::TREY, French::FOUR, French::FIVE];
+    ///
+    /// assert_eq!("A-2-3-4-5", Rank::<French>::ranks_index(&ranks, "-"));
+    /// ```
     #[must_use]
     pub fn ranks_index(ranks: &[Rank<RankType>], joiner: &str) -> String {
         ranks
@@ -444,11 +492,42 @@ where
             .join(joiner)
     }
 
+    /// Returns an index of all the `Ranks` in the implementing `Deck` joined by the joiner `&str`;
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// assert_eq!(Rank::<French>::ranks_index_all("+"), "A+K+Q+J+T+9+8+7+6+5+4+3+2");
+    /// ```
     #[must_use]
     pub fn ranks_index_all(joiner: &str) -> String {
         Rank::<RankType>::ranks_index(&Rank::<RankType>::ranks(), joiner)
     }
 
+    /// Returns a new instance of the `Rank` with the weight updated. This is to enable the ability
+    /// to alter how the `Rank` is sorted.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let mut ranks = Rank::<French>::ranks();
+    /// let mut mirror_ranks: Vec<Rank<French>> = Vec::new();
+    ///
+    /// for (weight, rank) in ranks.iter().enumerate() {
+    ///     let updated_rank = rank.update_weight(weight as u32);
+    ///     mirror_ranks.push(updated_rank);
+    ///     println!("{:?}", updated_rank);
+    /// }
+    ///
+    /// ranks.sort();
+    /// mirror_ranks.sort();
+    ///
+    /// assert_eq!("2 3 4 5 6 7 8 9 T J Q K A", Rank::<French>::ranks_index(&ranks, " "));
+    /// assert_eq!("A K Q J T 9 8 7 6 5 4 3 2", Rank::<French>::ranks_index(&mirror_ranks, " "));
+    /// ```
+    ///
+    /// **NOTE:** These base structs sort from the natural order of the weight, just like an integer.
+    /// The plan is to update sorting at the `Card` level.
     #[must_use]
     pub fn update_weight(&self, weight: u32) -> Rank<RankType> {
         Rank {
@@ -535,6 +614,7 @@ where
 /// ```
 /// use cardpack::refactored::*;
 ///
+/// assert_eq!(Rank::<French>::from('A'), French::ACE);
 /// assert_eq!(Rank::<French>::from('a'), French::ACE);
 /// assert_eq!(Rank::<French>::from('2'), French::DEUCE);
 /// ```
@@ -724,11 +804,25 @@ where
         }
     }
 
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// assert!(Suit::<French>::default().is_blank());
+    /// ```
     #[must_use]
     pub fn is_blank(&self) -> bool {
         self.index == BLANK
     }
 
+    /// Returns a vector of all the suits in the implementing `Deck`.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let expected = vec![French::SPADES, French::HEARTS, French::DIAMONDS, French::CLUBS];
+    ///
+    /// assert_eq!(Suit::<French>::suits(), expected);
+    /// ```
     #[must_use]
     pub fn suits() -> Vec<Self> {
         SuitType::suit_indexes()
@@ -737,6 +831,14 @@ where
             .collect()
     }
 
+    /// Returns the suit;s symbol as set in the `FluentName` struct for the suit.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// assert_eq!(French::SPADES.symbol(), '♠');
+    /// ```
+    ///
     /// TODO: Possible REFACTOR - Add symbol char to struct to avoid need for localization
     /// call. We will save this for after REF2 is complete.
     #[must_use]

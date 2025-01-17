@@ -124,3 +124,7 @@ impl<RankType: Ranked> From<char> for Rank<RankType> {
 }
 ```
 
+REFERENCE:
+
+- Timothy Cain - [Code Refactoring](https://youtu.be/SuMElKtydDQ?si=c4XR3CghGDrdJvi-)
+
