@@ -137,6 +137,15 @@ impl<
         <&Self as IntoIterator>::into_iter(self)
     }
 
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let mut pile = Pile::<French, French>::from_str("K♠ A♠").unwrap();
+    /// let card = Card::<French, French>::from_str("Q♠").unwrap();
+    ///
+    /// assert!(pile.push(card));
+    /// assert_eq!(pile.to_string(), "K♠ A♠ Q♠");
+    /// ```
     pub fn push(&mut self, card: Card<RankType, SuitType>) -> bool {
         if card.is_blank() {
             false
@@ -157,6 +166,7 @@ impl<
         self.rank_indexed(|rank| String::from(rank.index), joiner)
     }
 
+    /// This is a mirror of the suit version. Seems totally over the top, but it's fun to include.
     pub fn rank_indexed<F>(&self, func: F, joiner: &str) -> String
     where
         F: Fn(&Rank<RankType>) -> String,
