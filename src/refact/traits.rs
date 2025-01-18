@@ -35,6 +35,11 @@ pub trait Decked<
         pile
     }
 
+    #[must_use]
+    fn decks(n: usize) -> Pile<RankType, SuitType> {
+        Pile::<RankType, SuitType>::pile_up(n, <Self as Decked<RankType, SuitType>>::deck)
+    }
+
     fn get_rank(index_char: char) -> Rank<RankType>;
     fn get_suit(index_char: char) -> Suit<SuitType>;
 }

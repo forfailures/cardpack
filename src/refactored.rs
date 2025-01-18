@@ -11,6 +11,7 @@ pub use crate::refact::traits::Ranked;
 pub use crate::refact::traits::Suited;
 pub use crate::refact::Card;
 pub use crate::refact::Pile;
+pub use crate::types::card_error::CardError;
 
 pub use colored::Colorize;
 pub use std::str::FromStr;

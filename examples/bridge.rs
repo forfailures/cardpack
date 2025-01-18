@@ -1,4 +1,4 @@
-use cardpack::prelude::*;
+use cardpack::refactored::*;
 use std::collections::HashMap;
 use std::fmt;
 use std::fmt::Display;
@@ -110,10 +110,10 @@ impl BridgeBoard {
         let pack = cards.clone();
 
         let dealer = BridgeDirection::random();
-        let south = cards.draw(13).sort();
-        let west = cards.draw(13).sort();
-        let north = cards.draw(13).sort();
-        let east = cards.draw(13).sort();
+        let south = cards.draw(13).unwrap().sort();
+        let west = cards.draw(13).unwrap().sort();
+        let north = cards.draw(13).unwrap().sort();
+        let east = cards.draw(13).unwrap().sort();
 
         BridgeBoard {
             dealer,
@@ -198,10 +198,10 @@ impl BridgeBoard {
 
     pub fn hand_to_pbn_deal_segment(hand: &FrenchDeck) -> String {
         let mappie = hand.map_by_suit();
-        let spades = BridgeBoard::get_suit_string(&Suit::new(French::SPADES), &mappie);
-        let hearts = BridgeBoard::get_suit_string(&Suit::new(French::HEARTS), &mappie);
-        let diamonds = BridgeBoard::get_suit_string(&Suit::new(French::DIAMONDS), &mappie);
-        let clubs = BridgeBoard::get_suit_string(&Suit::new(French::CLUBS), &mappie);
+        let spades = BridgeBoard::get_suit_string(&French::SPADES, &mappie);
+        let hearts = BridgeBoard::get_suit_string(&French::HEARTS, &mappie);
+        let diamonds = BridgeBoard::get_suit_string(&French::DIAMONDS, &mappie);
+        let clubs = BridgeBoard::get_suit_string(&French::CLUBS, &mappie);
 
         format!("{spades}.{hearts}.{diamonds}.{clubs}")
     }
@@ -341,25 +341,25 @@ impl BridgeCompass {
     fn cell_string(cards: FrenchDeck) -> String {
         let mut v = Vec::<String>::new();
 
-        match cards.rank_index_by_suit(&Suit::<French>::new(French::SPADES), " ") {
+        match cards.rank_index_by_suit(&French::SPADES, " ") {
             Some(index) => {
                 v.push(format!("♠ {index}"));
             }
             None => {}
         }
-        match cards.rank_index_by_suit(&Suit::<French>::new(French::HEARTS), " ") {
+        match cards.rank_index_by_suit(&French::HEARTS, " ") {
             Some(index) => {
                 v.push(format!("♥ {index}"));
             }
             None => {}
         }
-        match cards.rank_index_by_suit(&Suit::<French>::new(French::DIAMONDS), " ") {
+        match cards.rank_index_by_suit(&French::DIAMONDS, " ") {
             Some(index) => {
                 v.push(format!("♦ {index}"));
             }
             None => {}
         }
-        match cards.rank_index_by_suit(&Suit::<French>::new(French::CLUBS), " ") {
+        match cards.rank_index_by_suit(&French::CLUBS, " ") {
             Some(index) => {
                 v.push(format!("♣ {index}"));
             }
@@ -521,7 +521,7 @@ mod bridge_tests {
     fn is_valid_ne() {
         let mut deck = BridgeBoard::deal();
 
-        deck.south = deck.south.draw(1);
+        deck.south = deck.south.draw(1).unwrap();
 
         assert!(!deck.is_valid())
     }
@@ -558,7 +558,7 @@ mod bridge_tests {
 
     #[test]
     fn hand_to_pbn_deal_segment__unbalanced() {
-        let all_spades = French::deck().draw(13);
+        let all_spades = French::deck().draw(13).unwrap();
         let expected = "AKQJT98765432...";
 
         let actual = BridgeBoard::hand_to_pbn_deal_segment(&all_spades);

@@ -29,6 +29,25 @@ impl<
 {
     /// ```
     /// use cardpack::refactored::*;
+    /// use std::collections::HashSet;
+    ///
+    /// let five_deck = French::decks(5);
+    ///
+    /// let hashset: HashSet<Card<French, French>> = five_deck.as_hashset();
+    /// let deck = FrenchDeck::from(hashset);
+    ///
+    /// print!("{}", deck);
+    ///
+    /// assert_eq!(five_deck.len(), 260);
+    /// assert_eq!(deck, French::deck());
+    /// ```
+    #[must_use]
+    pub fn as_hashset(&self) -> HashSet<Card<RankType, SuitType>> {
+        self.0.iter().copied().collect()
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
     ///
     /// let pile = French::deck().draw(5).unwrap();
     ///
@@ -473,9 +492,6 @@ impl<
     ///
     /// let actual = pile.draw(2).unwrap();
     ///
-    /// println!("{pile}");
-    /// println!("{actual}");
-    ///
     /// assert_eq!(actual, Pile::<French, French>::from_str("AS QS").unwrap());
     /// ```
     pub fn remove_card(
@@ -708,7 +724,7 @@ impl<
     > From<HashSet<Card<RankType, SuitType>>> for Pile<RankType, SuitType>
 {
     fn from(cards: HashSet<Card<RankType, SuitType>>) -> Self {
-        Pile(cards.into_iter().collect())
+        Pile(cards.into_iter().collect()).sort()
     }
 }
 
