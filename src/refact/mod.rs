@@ -8,7 +8,7 @@ use crate::refact::traits::{Ranked, Suited};
 use colored::Colorize;
 use rand::prelude::SliceRandom;
 use rand::thread_rng;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fmt::{Display, Formatter};
 use std::hash::Hash;
 use std::str::FromStr;
@@ -45,6 +45,11 @@ impl<
     #[must_use]
     pub fn cards(&self) -> Vec<Card<RankType, SuitType>> {
         self.0.clone()
+    }
+
+    #[must_use]
+    pub fn contains(&self, card: &Card<RankType, SuitType>) -> bool {
+        self.0.contains(card)
     }
 
     #[must_use]
@@ -85,6 +90,22 @@ impl<
     /// ```
     pub fn draw_last(&mut self) -> Option<Card<RankType, SuitType>> {
         self.0.pop()
+    }
+
+    /// Returns a Card at the specific passed in position.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let deck = French::deck();
+    ///
+    /// assert_eq!(deck.get(0).unwrap().to_string(), "A♠");
+    /// assert_eq!(deck.get(51).unwrap().to_string(), "2♣");
+    /// assert!(deck.get(52).is_none());
+    /// ```
+    #[must_use]
+    pub fn get(&self, position: usize) -> Option<&Card<RankType, SuitType>> {
+        self.0.get(position)
     }
 
     /// ```
@@ -135,6 +156,57 @@ impl<
     #[must_use]
     pub fn iter(&self) -> std::vec::IntoIter<Card<RankType, SuitType>> {
         <&Self as IntoIterator>::into_iter(self)
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let pile = French::deck();
+    ///
+    /// let map = pile.map_by_suit();
+    ///
+    /// assert_eq!(map.len(), 4);
+    /// assert_eq!(map[&French::SPADES].to_string(), "A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠ 5♠ 4♠ 3♠ 2♠");
+    /// assert_eq!(map[&French::HEARTS].to_string(), "A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥ 5♥ 4♥ 3♥ 2♥");
+    /// assert_eq!(map[&French::DIAMONDS].to_string(), "A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦ 5♦ 4♦ 3♦ 2♦");
+    /// assert_eq!(map[&French::CLUBS].to_string(), "A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣ 5♣ 4♣ 3♣ 2♣");
+    /// ```
+    ///
+    /// A more advanced example of this can be found in the Bridge example in the `examples` directory.
+    ///
+    /// # Panics
+    ///
+    /// No idea how it could. Too lazy to find a cleaner way.
+    #[must_use]
+    pub fn map_by_suit(&self) -> HashMap<Suit<SuitType>, Pile<RankType, SuitType>> {
+        let mut map = HashMap::new();
+        for card in self {
+            let suit = card.suit;
+            let pile = map.entry(suit).or_insert(Pile::default());
+            pile.push(card);
+        }
+        map
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// // `FrenchDeck` is the same as `Pile<French, French>`.
+    /// let pile1 = FrenchDeck::from_str("2♠ 8♠ 4♠").unwrap();
+    /// let pile2 = FrenchDeck::from_str("5♠ 6♠ 7♠").unwrap();
+    /// let piles = vec![pile1, pile2];
+    ///
+    /// let pile = FrenchDeck::pile_on(&piles);
+    ///
+    /// assert_eq!(pile. to_string(), "2♠ 8♠ 4♠ 5♠ 6♠ 7♠");
+    /// ```
+    #[must_use]
+    pub fn pile_on(piles: &Vec<Pile<RankType, SuitType>>) -> Pile<RankType, SuitType> {
+        let mut pile = Pile::<RankType, SuitType>::default();
+        for p in piles {
+            pile.extend(p);
+        }
+        pile
     }
 
     /// Returns a Pile by calling the passed in function n times and consolidating the results into
@@ -640,10 +712,22 @@ mod pile_tests {
     use crate::refactored::French;
 
     #[test]
+    fn pile__contains() {}
+
+    #[test]
     fn pile__index() {
         let pile: Pile<French, French> = French::deck();
 
         assert_eq!(pile.index(), "AS KS QS JS TS 9S 8S 7S 6S 5S 4S 3S 2S AH KH QH JH TH 9H 8H 7H 6H 5H 4H 3H 2H AD KD QD JD TD 9D 8D 7D 6D 5D 4D 3D 2D AC KC QC JC TC 9C 8C 7C 6C 5C 4C 3C 2C");
+    }
+
+    #[test]
+    fn pile__iter() {
+        let pile = French::deck();
+
+        for card in pile.iter() {
+            assert!(pile.contains(&card));
+        }
     }
 
     #[test]

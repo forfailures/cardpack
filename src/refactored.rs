@@ -1,6 +1,8 @@
 pub use crate::localization::FluentName;
 pub use crate::localization::Named;
 pub use crate::refact::decks::French;
+pub use crate::refact::decks::FrenchCard;
+pub use crate::refact::decks::FrenchDeck;
 pub use crate::refact::pips::Rank;
 pub use crate::refact::pips::Suit;
 pub use crate::refact::pips::BLANK;
