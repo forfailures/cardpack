@@ -128,3 +128,7 @@ REFERENCE:
 
 - Timothy Cain - [Code Refactoring](https://youtu.be/SuMElKtydDQ?si=c4XR3CghGDrdJvi-)
 - [Nobody understands playing cards — not even the experts](https://www.youtube.com/watch?v=kY6DmPs4klU)
+
+# Jan 18th 2025
+
+Finished core ref2. Now focusing on macros and decks. 

@@ -42,7 +42,7 @@ use std::str::FromStr;
 /// ```
 /// use cardpack::old_prelude::*;
 ///
-/// let card = card!("JC");
+/// let card = old_card!("JC");
 /// assert_eq!(card.to_string(), "J♣");
 ///
 /// let pile = cards!("KS QC");
@@ -265,9 +265,9 @@ impl<RankType: Ranked + Clone, SuitType: Suited + Clone> FromStr for Card<RankTy
 #[allow(non_snake_case)]
 mod types__card__tests {
     use super::*;
-    use crate::card;
     use crate::localization::FluentName;
     use crate::old::decks::french::French;
+    use crate::old_card;
 
     #[test]
     fn new() {
@@ -306,10 +306,10 @@ mod types__card__tests {
     /// coming first.
     #[test]
     fn test_sort_from_weight() {
-        let ace_of_spades = card!("AS");
-        let ace_of_hearts = card!("AH");
-        let ace_of_diamonds = card!("AD");
-        let ace_of_clubs = card!("AC");
+        let ace_of_spades = old_card!("AS");
+        let ace_of_hearts = old_card!("AH");
+        let ace_of_diamonds = old_card!("AD");
+        let ace_of_clubs = old_card!("AC");
 
         let mut cards = vec![
             ace_of_clubs.clone(),
@@ -328,14 +328,14 @@ mod types__card__tests {
 
     #[test]
     fn to_color_symbol_string__default() {
-        let card = card!("AS");
+        let card = old_card!("AS");
 
         assert_eq!("A♠".to_string(), card.to_color_symbol_string());
     }
 
     #[test]
     fn to_color_symbol_string() {
-        let card = card!("AH");
+        let card = old_card!("AH");
 
         assert_eq!("A♥".red().to_string(), card.to_color_symbol_string());
     }
@@ -353,7 +353,7 @@ mod types__card__tests {
         let spades = Suit::<French>::from('S');
         let expected_card: Card<French, French> = Card::new(ace, spades);
 
-        let card = card!("AS");
+        let card = old_card!("AS");
 
         assert_eq!(card, expected_card);
         assert!(!card.is_blank());
@@ -361,14 +361,14 @@ mod types__card__tests {
 
     #[test]
     fn from_str_blank() {
-        let card = card!("BW");
+        let card = old_card!("BW");
 
         assert!(card.is_blank());
     }
 
     #[test]
     fn from_str__symbol() {
-        let card = card!("AS");
+        let card = old_card!("AS");
 
         assert_eq!(card.index, "AS");
         assert_eq!(card.rank.name, FluentName::new(French::ACE));

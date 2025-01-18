@@ -482,7 +482,7 @@ impl<
     /// ```
     /// use cardpack::old_prelude::*;
     /// let mut pile = French::deck();
-    /// pile.remove_card(&card!(KS));
+    /// pile.remove_card(&old_card!(KS));
     ///
     /// assert_eq!(pile.draw(2), cards!("AS QS").unwrap());
     /// ```
@@ -500,7 +500,7 @@ impl<
     /// pile.remove_cards(&cards!("K♠ A♠").unwrap());
     ///
     /// assert_eq!(pile.len(), 50);
-    /// assert_eq!(pile.draw_first().unwrap_or(French::blank()), card!(QS));
+    /// assert_eq!(pile.draw_first().unwrap_or(French::blank()), old_card!(QS));
     /// ```
     pub fn remove_cards(&mut self, cards: &Pile<RankType, SuitType>) {
         for card in &cards.0 {

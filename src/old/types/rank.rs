@@ -296,14 +296,14 @@ impl<RankType: Ranked> FromStr for Rank<RankType> {
 #[allow(non_snake_case)]
 mod types__rank__tests {
     use super::*;
-    use crate::card;
     use crate::old::types::card::Card;
+    use crate::old_card;
     use crate::types::utils::Bit;
     use ckc_rs::CardNumber;
 
     #[test]
     fn get_bits() {
-        let card = card!("AS");
+        let card = old_card!("AS");
         let ckc_as = Bit::ckc_bits(CardNumber::ACE_SPADES);
 
         // println!("{:b}", ckc_as);
@@ -324,7 +324,7 @@ mod types__rank__tests {
 
     #[test]
     fn prime() {
-        let card = card!("AS");
+        let card = old_card!("AS");
         let ckc_as = Bit::ckc_prime(CardNumber::ACE_SPADES);
 
         // println!("{:b}", ckc_as);
@@ -335,7 +335,7 @@ mod types__rank__tests {
 
     #[test]
     fn ckc_number() {
-        let card = card!("AS");
+        let card = old_card!("AS");
         let ckc_as = Bit::strip_suit_flags(CardNumber::ACE_SPADES);
 
         assert_eq!(card.rank.ckc_number(), ckc_as);

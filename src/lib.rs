@@ -28,7 +28,7 @@
 //!     french_deck.to_string(),
 //!     "A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠ 5♠ 4♠ 3♠ 2♠ A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥ 5♥ 4♥ 3♥ 2♥ A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦ 5♦ 4♦ 3♦ 2♦ A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣ 5♣ 4♣ 3♣ 2♣"
 //! );
-//! assert!(french_deck.contains(&card!(AS)));
+//! assert!(french_deck.contains(&old_card !(AS)));
 //!
 //! let shuffled = french_deck.shuffle();
 //! let parsed = cards!(shuffled.to_string().as_str()).unwrap();
@@ -47,8 +47,8 @@
 //! assert_eq!(french_deck.len(), 47);
 //!
 //! // Cards can provide a longer description in English and German:
-//! assert_eq!(card!(AS).long(&FluentName::US_ENGLISH), "Ace Spades");
-//! assert_eq!(card!(QH).long(&FluentName::DEUTSCH), "Dame Herzen");
+//! assert_eq!(old_card!(AS).long(&FluentName::US_ENGLISH), "Ace Spades");
+//! assert_eq!(old_card!(QH).long(&FluentName::DEUTSCH), "Dame Herzen");
 //! ```
 //!
 //! An important thing to remember about the decks is that the cards have their weight inside them

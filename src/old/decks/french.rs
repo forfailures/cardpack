@@ -13,49 +13,49 @@ use std::str::FromStr;
 /// ```
 /// use cardpack::old_prelude::*;
 ///
-/// assert_eq!(card!(AS), Card::<French, French>::from_str("A♠").unwrap());
-/// assert_eq!(card!(KS), Card::<French, French>::from_str("K♠").unwrap());
-/// assert_eq!(card!(QS), Card::<French, French>::from_str("Q♠").unwrap());
-/// assert_eq!(card!(JS), Card::<French, French>::from_str("J♠").unwrap());
-/// assert_eq!(card!(TS), Card::<French, French>::from_str("T♠").unwrap());
-/// assert_eq!(card!(9S), Card::<French, French>::from_str("9♠").unwrap());
-/// assert_eq!(card!(8S), Card::<French, French>::from_str("8♠").unwrap());
-/// assert_eq!(card!(7S), Card::<French, French>::from_str("7♠").unwrap());
-/// assert_eq!(card!(6S), Card::<French, French>::from_str("6♠").unwrap());
-/// assert_eq!(card!(5S), Card::<French, French>::from_str("5♠").unwrap());
-/// assert_eq!(card!(4S), Card::<French, French>::from_str("4♠").unwrap());
-/// assert_eq!(card!(3S), Card::<French, French>::from_str("3♠").unwrap());
-/// assert_eq!(card!(2S), Card::<French, French>::from_str("2♠").unwrap());
-/// assert_eq!(card!(AH), Card::<French, French>::from_str("A♥").unwrap());
-/// assert_eq!(card!(KH), Card::<French, French>::from_str("K♥").unwrap());
-/// assert_eq!(card!(QH), Card::<French, French>::from_str("Q♥").unwrap());
-/// assert_eq!(card!(JH), Card::<French, French>::from_str("J♥").unwrap());
-/// assert_eq!(card!(TH), Card::<French, French>::from_str("T♥").unwrap());
-/// assert_eq!(card!(9H), Card::<French, French>::from_str("9♥").unwrap());
-/// assert_eq!(card!(8H), Card::<French, French>::from_str("8♥").unwrap());
-/// assert_eq!(card!(7H), Card::<French, French>::from_str("7♥").unwrap());
-/// assert_eq!(card!(6H), Card::<French, French>::from_str("6♥").unwrap());
-/// assert_eq!(card!(5H), Card::<French, French>::from_str("5♥").unwrap());
-/// assert_eq!(card!(4H), Card::<French, French>::from_str("4♥").unwrap());
-/// assert_eq!(card!(3H), Card::<French, French>::from_str("3♥").unwrap());
-/// assert_eq!(card!(2H), Card::<French, French>::from_str("2♥").unwrap());
-/// assert_eq!(card!(AD), Card::<French, French>::from_str("A♦").unwrap());
-/// assert_eq!(card!(KD), Card::<French, French>::from_str("K♦").unwrap());
-/// assert_eq!(card!(QD), Card::<French, French>::from_str("Q♦").unwrap());
-/// assert_eq!(card!(JD), Card::<French, French>::from_str("J♦").unwrap());
-/// assert_eq!(card!(JD), Card::<French, French>::from_str("J♦").unwrap());
-/// assert_eq!(card!(TD), Card::<French, French>::from_str("T♦").unwrap());
-/// assert_eq!(card!(9D), Card::<French, French>::from_str("9♦").unwrap());
-/// assert_eq!(card!(8D), Card::<French, French>::from_str("8♦").unwrap());
-/// assert_eq!(card!(7D), Card::<French, French>::from_str("7♦").unwrap());
-/// assert_eq!(card!(6D), Card::<French, French>::from_str("6♦").unwrap());
-/// assert_eq!(card!(5D), Card::<French, French>::from_str("5♦").unwrap());
-/// assert_eq!(card!(4D), Card::<French, French>::from_str("4♦").unwrap());
-/// assert_eq!(card!(3D), Card::<French, French>::from_str("3♦").unwrap());
-/// assert_eq!(card!(2D), Card::<French, French>::from_str("2♦").unwrap());
+/// assert_eq!(old_card!(AS), Card::<French, French>::from_str("A♠").unwrap());
+/// assert_eq!(old_card!(KS), Card::<French, French>::from_str("K♠").unwrap());
+/// assert_eq!(old_card!(QS), Card::<French, French>::from_str("Q♠").unwrap());
+/// assert_eq!(old_card!(JS), Card::<French, French>::from_str("J♠").unwrap());
+/// assert_eq!(old_card!(TS), Card::<French, French>::from_str("T♠").unwrap());
+/// assert_eq!(old_card!(9S), Card::<French, French>::from_str("9♠").unwrap());
+/// assert_eq!(old_card!(8S), Card::<French, French>::from_str("8♠").unwrap());
+/// assert_eq!(old_card!(7S), Card::<French, French>::from_str("7♠").unwrap());
+/// assert_eq!(old_card!(6S), Card::<French, French>::from_str("6♠").unwrap());
+/// assert_eq!(old_card!(5S), Card::<French, French>::from_str("5♠").unwrap());
+/// assert_eq!(old_card!(4S), Card::<French, French>::from_str("4♠").unwrap());
+/// assert_eq!(old_card!(3S), Card::<French, French>::from_str("3♠").unwrap());
+/// assert_eq!(old_card!(2S), Card::<French, French>::from_str("2♠").unwrap());
+/// assert_eq!(old_card!(AH), Card::<French, French>::from_str("A♥").unwrap());
+/// assert_eq!(old_card!(KH), Card::<French, French>::from_str("K♥").unwrap());
+/// assert_eq!(old_card!(QH), Card::<French, French>::from_str("Q♥").unwrap());
+/// assert_eq!(old_card!(JH), Card::<French, French>::from_str("J♥").unwrap());
+/// assert_eq!(old_card!(TH), Card::<French, French>::from_str("T♥").unwrap());
+/// assert_eq!(old_card!(9H), Card::<French, French>::from_str("9♥").unwrap());
+/// assert_eq!(old_card!(8H), Card::<French, French>::from_str("8♥").unwrap());
+/// assert_eq!(old_card!(7H), Card::<French, French>::from_str("7♥").unwrap());
+/// assert_eq!(old_card!(6H), Card::<French, French>::from_str("6♥").unwrap());
+/// assert_eq!(old_card!(5H), Card::<French, French>::from_str("5♥").unwrap());
+/// assert_eq!(old_card!(4H), Card::<French, French>::from_str("4♥").unwrap());
+/// assert_eq!(old_card!(3H), Card::<French, French>::from_str("3♥").unwrap());
+/// assert_eq!(old_card!(2H), Card::<French, French>::from_str("2♥").unwrap());
+/// assert_eq!(old_card!(AD), Card::<French, French>::from_str("A♦").unwrap());
+/// assert_eq!(old_card!(KD), Card::<French, French>::from_str("K♦").unwrap());
+/// assert_eq!(old_card!(QD), Card::<French, French>::from_str("Q♦").unwrap());
+/// assert_eq!(old_card!(JD), Card::<French, French>::from_str("J♦").unwrap());
+/// assert_eq!(old_card!(JD), Card::<French, French>::from_str("J♦").unwrap());
+/// assert_eq!(old_card!(TD), Card::<French, French>::from_str("T♦").unwrap());
+/// assert_eq!(old_card!(9D), Card::<French, French>::from_str("9♦").unwrap());
+/// assert_eq!(old_card!(8D), Card::<French, French>::from_str("8♦").unwrap());
+/// assert_eq!(old_card!(7D), Card::<French, French>::from_str("7♦").unwrap());
+/// assert_eq!(old_card!(6D), Card::<French, French>::from_str("6♦").unwrap());
+/// assert_eq!(old_card!(5D), Card::<French, French>::from_str("5♦").unwrap());
+/// assert_eq!(old_card!(4D), Card::<French, French>::from_str("4♦").unwrap());
+/// assert_eq!(old_card!(3D), Card::<French, French>::from_str("3♦").unwrap());
+/// assert_eq!(old_card!(2D), Card::<French, French>::from_str("2♦").unwrap());
 /// ```
 #[macro_export]
-macro_rules! card {
+macro_rules! old_card {
     (AS) => {
         Card::<French, French>::new(
             Rank::<French>::new(French::ACE),
@@ -568,71 +568,71 @@ impl Suited for French {
 #[allow(non_snake_case)]
 mod decks__standard52__tests {
     use super::*;
-    use crate::card;
     use crate::cards;
     use crate::localization::{FluentName, Named};
     use crate::old::types::card::Card;
     use crate::old::types::rank::Rank;
     use crate::old::types::suit::Suit;
+    use crate::old_card;
     use ckc_rs::CardNumber;
     use rstest::rstest;
     use std::str::FromStr;
 
     #[test]
     fn card__from_str() {
-        assert_eq!(card!("A♠"), card!(AS));
-        assert_eq!(card!("K♠"), card!(KS));
-        assert_eq!(card!("Q♠"), card!(QS));
-        assert_eq!(card!("J♠"), card!(JS));
-        assert_eq!(card!("T♠"), card!(TS));
-        assert_eq!(card!("9♠"), card!(9S));
-        assert_eq!(card!("8♠"), card!(8S));
-        assert_eq!(card!("7♠"), card!(7S));
-        assert_eq!(card!("6♠"), card!(6S));
-        assert_eq!(card!("5♠"), card!(5S));
-        assert_eq!(card!("4♠"), card!(4S));
-        assert_eq!(card!("3♠"), card!(3S));
-        assert_eq!(card!("2♠"), card!(2S));
-        assert_eq!(card!("A♥"), card!(AH));
-        assert_eq!(card!("K♥"), card!(KH));
-        assert_eq!(card!("Q♥"), card!(QH));
-        assert_eq!(card!("J♥"), card!(JH));
-        assert_eq!(card!("T♥"), card!(TH));
-        assert_eq!(card!("9♥"), card!(9H));
-        assert_eq!(card!("8♥"), card!(8H));
-        assert_eq!(card!("7♥"), card!(7H));
-        assert_eq!(card!("6♥"), card!(6H));
-        assert_eq!(card!("5♥"), card!(5H));
-        assert_eq!(card!("4♥"), card!(4H));
-        assert_eq!(card!("3♥"), card!(3H));
-        assert_eq!(card!("2♥"), card!(2H));
-        assert_eq!(card!("A♦"), card!(AD));
-        assert_eq!(card!("K♦"), card!(KD));
-        assert_eq!(card!("Q♦"), card!(QD));
-        assert_eq!(card!("J♦"), card!(JD));
-        assert_eq!(card!("T♦"), card!(TD));
-        assert_eq!(card!("9♦"), card!(9D));
-        assert_eq!(card!("8♦"), card!(8D));
-        assert_eq!(card!("7♦"), card!(7D));
-        assert_eq!(card!("6♦"), card!(6D));
-        assert_eq!(card!("5♦"), card!(5D));
-        assert_eq!(card!("4♦"), card!(4D));
-        assert_eq!(card!("3♦"), card!(3D));
-        assert_eq!(card!("2♦"), card!(2D));
-        assert_eq!(card!("A♣"), card!(AC));
-        assert_eq!(card!("K♣"), card!(KC));
-        assert_eq!(card!("Q♣"), card!(QC));
-        assert_eq!(card!("J♣"), card!(JC));
-        assert_eq!(card!("T♣"), card!(TC));
-        assert_eq!(card!("9♣"), card!(9C));
-        assert_eq!(card!("8♣"), card!(8C));
-        assert_eq!(card!("7♣"), card!(7C));
-        assert_eq!(card!("6♣"), card!(6C));
-        assert_eq!(card!("5♣"), card!(5C));
-        assert_eq!(card!("4♣"), card!(4C));
-        assert_eq!(card!("3♣"), card!(3C));
-        assert_eq!(card!("2♣"), card!(2C));
-        assert_eq!(card!("__"), card!(__));
+        assert_eq!(old_card!("A♠"), old_card!(AS));
+        assert_eq!(old_card!("K♠"), old_card!(KS));
+        assert_eq!(old_card!("Q♠"), old_card!(QS));
+        assert_eq!(old_card!("J♠"), old_card!(JS));
+        assert_eq!(old_card!("T♠"), old_card!(TS));
+        assert_eq!(old_card!("9♠"), old_card!(9S));
+        assert_eq!(old_card!("8♠"), old_card!(8S));
+        assert_eq!(old_card!("7♠"), old_card!(7S));
+        assert_eq!(old_card!("6♠"), old_card!(6S));
+        assert_eq!(old_card!("5♠"), old_card!(5S));
+        assert_eq!(old_card!("4♠"), old_card!(4S));
+        assert_eq!(old_card!("3♠"), old_card!(3S));
+        assert_eq!(old_card!("2♠"), old_card!(2S));
+        assert_eq!(old_card!("A♥"), old_card!(AH));
+        assert_eq!(old_card!("K♥"), old_card!(KH));
+        assert_eq!(old_card!("Q♥"), old_card!(QH));
+        assert_eq!(old_card!("J♥"), old_card!(JH));
+        assert_eq!(old_card!("T♥"), old_card!(TH));
+        assert_eq!(old_card!("9♥"), old_card!(9H));
+        assert_eq!(old_card!("8♥"), old_card!(8H));
+        assert_eq!(old_card!("7♥"), old_card!(7H));
+        assert_eq!(old_card!("6♥"), old_card!(6H));
+        assert_eq!(old_card!("5♥"), old_card!(5H));
+        assert_eq!(old_card!("4♥"), old_card!(4H));
+        assert_eq!(old_card!("3♥"), old_card!(3H));
+        assert_eq!(old_card!("2♥"), old_card!(2H));
+        assert_eq!(old_card!("A♦"), old_card!(AD));
+        assert_eq!(old_card!("K♦"), old_card!(KD));
+        assert_eq!(old_card!("Q♦"), old_card!(QD));
+        assert_eq!(old_card!("J♦"), old_card!(JD));
+        assert_eq!(old_card!("T♦"), old_card!(TD));
+        assert_eq!(old_card!("9♦"), old_card!(9D));
+        assert_eq!(old_card!("8♦"), old_card!(8D));
+        assert_eq!(old_card!("7♦"), old_card!(7D));
+        assert_eq!(old_card!("6♦"), old_card!(6D));
+        assert_eq!(old_card!("5♦"), old_card!(5D));
+        assert_eq!(old_card!("4♦"), old_card!(4D));
+        assert_eq!(old_card!("3♦"), old_card!(3D));
+        assert_eq!(old_card!("2♦"), old_card!(2D));
+        assert_eq!(old_card!("A♣"), old_card!(AC));
+        assert_eq!(old_card!("K♣"), old_card!(KC));
+        assert_eq!(old_card!("Q♣"), old_card!(QC));
+        assert_eq!(old_card!("J♣"), old_card!(JC));
+        assert_eq!(old_card!("T♣"), old_card!(TC));
+        assert_eq!(old_card!("9♣"), old_card!(9C));
+        assert_eq!(old_card!("8♣"), old_card!(8C));
+        assert_eq!(old_card!("7♣"), old_card!(7C));
+        assert_eq!(old_card!("6♣"), old_card!(6C));
+        assert_eq!(old_card!("5♣"), old_card!(5C));
+        assert_eq!(old_card!("4♣"), old_card!(4C));
+        assert_eq!(old_card!("3♣"), old_card!(3C));
+        assert_eq!(old_card!("2♣"), old_card!(2C));
+        assert_eq!(old_card!("__"), old_card!(__));
     }
 
     #[test]
@@ -698,12 +698,12 @@ mod decks__standard52__tests {
     #[case("2C", CardNumber::DEUCE_CLUBS)]
     #[case("__", 0u32)]
     fn card__get_ckc_number(#[case] input: &str, #[case] expected_ckc: u32) {
-        assert_eq!(expected_ckc, card!(input).get_ckc_number());
+        assert_eq!(expected_ckc, old_card!(input).get_ckc_number());
     }
 
     #[test]
     fn card__get_ckc_number__blank() {
-        let blank = card!("__");
+        let blank = old_card!("__");
         assert!(blank.is_blank());
         assert_eq!(0, blank.get_ckc_number());
     }

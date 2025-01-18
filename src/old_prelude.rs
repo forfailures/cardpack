@@ -27,10 +27,10 @@ pub use crate::old::types::traits::{Decked, Ranked, Suited};
 pub use crate::types::errors::CardError;
 
 // Macros
-pub use crate::card;
 pub use crate::cards;
 pub use crate::modern;
 pub use crate::modern_card;
+pub use crate::old_card;
 pub use crate::pinochle_card;
 pub use crate::skat;
 pub use crate::skat_card;
