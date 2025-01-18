@@ -137,6 +137,30 @@ impl<
         <&Self as IntoIterator>::into_iter(self)
     }
 
+    /// Returns a Pile by calling the passed in function n times and consolidating the results into
+    /// a single Pile.
+    ///
+    /// NOTE: why?
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// fn ak() -> Pile<French, French> {
+    ///     Pile::<French, French>::from_str("A♠ K♠").unwrap()
+    /// }
+    ///
+    /// let pile = Pile::<French, French>::pile_up(3, ak);
+    ///
+    /// assert_eq!(pile. to_string(), "A♠ K♠ A♠ K♠ A♠ K♠");
+    /// ```
+    pub fn pile_up(n: usize, f: fn() -> Pile<RankType, SuitType>) -> Pile<RankType, SuitType> {
+        let mut pile = Pile::<RankType, SuitType>::default();
+        for _ in 0..n {
+            pile.extend(&f());
+        }
+        pile
+    }
+
     /// ```
     /// use cardpack::refactored::*;
     /// let pile = French::deck();
@@ -150,21 +174,27 @@ impl<
         self.0.iter().position(|c| c == card)
     }
 
+    /// Extends the `Pile` with the contents of the passed in `Pile`.
+    ///
     /// ```
     /// use cardpack::refactored::*;
+    ///
     /// let mut hand = Pile::<French, French>::from_str("A♦ T♦ Q♦").unwrap();
     /// let flop = Pile::<French, French>::from_str("K♦ J♦").unwrap();
     ///
-    /// hand.append(&flop);
+    /// hand.extend(&flop);
     ///
     /// assert_eq!(hand.to_string(), "A♦ T♦ Q♦ K♦ J♦");
     /// ```
-    pub fn append(&mut self, other: &Pile<RankType, SuitType>) {
-        self.0.append(&mut other.0.clone());
+    pub fn extend(&mut self, other: &Self) {
+        self.0.extend(other.0.clone());
     }
 
+    /// Places the passed in `Pile` at the front of the current `Pile`.
+    ///
     /// ```
     /// use cardpack::refactored::*;
+    ///
     /// let mut hand = Pile::<French, French>::from_str("T♦ Q♦").unwrap();
     /// let flop = Pile::<French, French>::from_str("K♦ J♦ A♦").unwrap();
     ///
