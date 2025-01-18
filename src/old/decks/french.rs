@@ -398,7 +398,7 @@ macro_rules! cards {
 /// trait method.
 ///
 /// ```
-/// use cardpack::decks::french::French;
+/// use cardpack::old::decks::french::French;
 /// use cardpack::types::card::Card;
 /// use cardpack::types::pile::Pile;
 /// use cardpack::types::rank::Rank;

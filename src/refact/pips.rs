@@ -1,4 +1,4 @@
-use crate::decks::FluentName;
+use crate::localization::FluentName;
 use crate::refactored::{Ranked, Suited};
 use crate::types::utils::Bit;
 use colored::Color;

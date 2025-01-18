@@ -1,8 +1,8 @@
-use crate::decks::french::French;
-use crate::decks::modern::Modern;
-use crate::decks::skat::Skat;
-use crate::decks::tarot::Tarot;
 use crate::localization::{FluentName, Named};
+use crate::old::decks::french::French;
+use crate::old::decks::modern::Modern;
+use crate::old::decks::skat::Skat;
+use crate::old::decks::tarot::Tarot;
 use crate::types::traits::Suited;
 use crate::types::utils::Bit;
 use colored::Color;

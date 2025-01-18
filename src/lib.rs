@@ -16,7 +16,7 @@
 //!
 //! ## Standard 52 Card French Deck
 //!
-//! The Standard 52 Card [`French`](decks::french::French) deck is the most common deck of playing cards.
+//! The Standard 52 Card [`French`](old::decks::french::French) deck is the most common deck of playing cards.
 //! It is made up of a [`Pile`](types::pile::Pile) of 52 [`Cards`](types::card::Card) with 13 ranks in each of the four suits.
 //!
 //! ```rust
@@ -57,7 +57,7 @@
 //!
 //! ## Modern Deck
 //!
-//! A [`Modern`](decks::modern::Modern) deck is a French deck with two jokers.
+//! A [`Modern`](old::decks::modern::Modern) deck is a French deck with two jokers.
 //!
 //! ```rust
 //! use cardpack::prelude::*;
@@ -75,14 +75,14 @@
 //!
 //! Other decks include:
 //!
-//! - [`Canasta`](decks::canasta::Canasta) - 2 Modern decks with the red 3s made jokers.
-//! - [`Euchre`](decks::euchre24::Euchre24) - A 24 card version of a Euchre deck.
-//! - [`HandAndFoot`](decks::hand_and_foot::HandAndFoot) - 5 Modern decks.
-//! - [`ShortDeck`](decks::short::Short) - A 36 card deck with ranks 6 through Ace.
-//! - [`Pinochle`](decks::pinochle::Pinochle) - A 48 card deck with two copies of the 9 through Ace ranks.
-//! - [`Skat`](decks::skat::Skat) - A 32 card German card game with different suits and ranks.
-//! - [`Spades`](decks::spades::Spades) - A Modern deck with the 2 of Clubs and 2 of Diamonds removed.
-//! - [`Tarot`](decks::tarot::Tarot) - A 78 card deck with 22 Major Arcana and 56 Minor Arcana cards.
+//! - [`Canasta`](old::decks::canasta::Canasta) - 2 Modern decks with the red 3s made jokers.
+//! - [`Euchre`](old::decks::euchre24::Euchre24) - A 24 card version of a Euchre deck.
+//! - [`HandAndFoot`](old::decks::hand_and_foot::HandAndFoot) - 5 Modern decks.
+//! - [`ShortDeck`](old::decks::short::Short) - A 36 card deck with ranks 6 through Ace.
+//! - [`Pinochle`](old::decks::pinochle::Pinochle) - A 48 card deck with two copies of the 9 through Ace ranks.
+//! - [`Skat`](old::decks::skat::Skat) - A 32 card German card game with different suits and ranks.
+//! - [`Spades`](old::decks::spades::Spades) - A Modern deck with the 2 of Clubs and 2 of Diamonds removed.
+//! - [`Tarot`](old::decks::tarot::Tarot) - A 78 card deck with 22 Major Arcana and 56 Minor Arcana cards.
 //!
 //! ## Custom Deck example:
 //!
@@ -193,11 +193,9 @@
 //! assert!(deck.draw_first().is_none());
 //! ```
 
-#![allow(clippy::needless_doctest_main)] // want this just for the README.md
-                                         // 🤩 You can test your README code!!!
-#[doc = include_str!("../README.md")]
-pub mod decks;
+#![allow(clippy::needless_doctest_main)]
 pub mod localization;
+pub mod old;
 pub mod prelude;
 pub mod refact;
 pub mod refactored;

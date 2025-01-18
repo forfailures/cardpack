@@ -1,5 +1,5 @@
-use crate::decks::french::French;
-use crate::decks::modern::Modern;
+use crate::old::decks::french::French;
+use crate::old::decks::modern::Modern;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;
@@ -89,9 +89,9 @@ impl Canasta {
     /// The original experiment with this code was much more complex using direct checks:
     ///
     /// ```rust
-    /// use cardpack::decks::canasta::Canasta;
-    /// use cardpack::decks::modern::Modern;
-    /// use cardpack::decks::french::French;
+    /// use cardpack::old::decks::canasta::Canasta;
+    /// use cardpack::old::decks::modern::Modern;
+    /// use cardpack::old::decks::french::French;
     /// use cardpack::types::card::Card;
     /// use cardpack::types::rank::Rank;
     /// use cardpack::types::suit::Suit;

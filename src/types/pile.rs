@@ -14,9 +14,9 @@ use std::str::FromStr;
 /// `Pile` is a [generic data type](https://doc.rust-lang.org/book/ch10-01-syntax.html)
 /// whose specific implementations implement the [`Decked`](crate::types::traits::Decked) trait,
 /// which is made of a [`Vec`] of [`Cards`](Card) that implement the [`Ranked`], and [`Suited`] traits.
-/// Implementations of a specific type of `Pile` are stored in the [`decks`](crate::decks) module.
+/// Implementations of a specific type of `Pile` are stored in the [`decks`](crate::old::decks) module.
 ///
-/// The most common deck is the [`French`](crate::decks::french::French) deck:
+/// The most common deck is the [`French`](crate::old::decks::french::French) deck:
 ///
 /// ```rust
 /// use cardpack::prelude::{Decked, French, Pile};
@@ -29,8 +29,8 @@ use std::str::FromStr;
 /// assert_eq!(french_deck.len(), 47);
 /// ```
 ///
-/// The [`Modern`](crate::decks::modern::Modern) deck is simply the
-/// [`French`](crate::decks::french::French) deck with the addition of the big and little jokers,
+/// The [`Modern`](crate::old::decks::modern::Modern) deck is simply the
+/// [`French`](crate::old::decks::french::French) deck with the addition of the big and little jokers,
 /// which belong to the joker suit.
 ///
 /// ```rust
@@ -870,7 +870,7 @@ impl<
 #[allow(non_snake_case)]
 mod types__pile__tests {
     use super::*;
-    use crate::decks::french::French;
+    use crate::old::decks::french::French;
     use crate::types::traits::Decked;
     use std::str::FromStr;
 

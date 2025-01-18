@@ -1,6 +1,9 @@
-pub mod decks;
 pub mod pips;
 pub mod traits;
+// want this just for the README.md
+// 🤩 You can test your README code!!!
+#[doc = include_str!("../../README.md")]
+pub mod decks;
 
 use crate::prelude::CardError;
 use crate::refact::pips::{Rank, Suit};

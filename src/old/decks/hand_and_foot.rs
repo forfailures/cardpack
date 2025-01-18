@@ -1,4 +1,4 @@
-use crate::decks::modern::Modern;
+use crate::old::decks::modern::Modern;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;

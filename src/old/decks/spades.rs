@@ -1,6 +1,6 @@
-use crate::decks::french::French;
-use crate::decks::modern::Modern;
 use crate::modern_card;
+use crate::old::decks::french::French;
+use crate::old::decks::modern::Modern;
 use crate::types::card::Card;
 use crate::types::card_error::CardError;
 use crate::types::pile::Pile;

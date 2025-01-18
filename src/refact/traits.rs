@@ -1,4 +1,4 @@
-use crate::decks::FluentName;
+use crate::localization::FluentName;
 use crate::refact::pips::{Rank, Suit};
 use crate::refact::{Card, Pile};
 use std::collections::HashMap;

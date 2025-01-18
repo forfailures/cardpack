@@ -23,7 +23,7 @@ use std::str::FromStr;
 /// that determines the card's
 ///
 /// The goal of this structure is to allow for the flexibility in how decks of cards are represented.
-/// For example, a standard 52 card deck would use the [`French`](crate::decks::french::French)
+/// For example, a standard 52 card deck would use the [`French`](crate::old::decks::french::French)
 /// _unit-like struct_.
 ///
 /// ```
@@ -134,7 +134,7 @@ where
     ///
     /// ```rust
     /// use std::str::FromStr;
-    /// use cardpack::decks::french::French;
+    /// use cardpack::old::decks::french::French;
     /// use cardpack::types::card::Card;
     ///
     /// let jack_of_diamonds = Card::<French, French>::from_str("jd").unwrap();
@@ -266,8 +266,8 @@ impl<RankType: Ranked + Clone, SuitType: Suited + Clone> FromStr for Card<RankTy
 mod types__card__tests {
     use super::*;
     use crate::card;
-    use crate::decks::french::French;
     use crate::localization::FluentName;
+    use crate::old::decks::french::French;
 
     #[test]
     fn new() {

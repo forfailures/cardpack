@@ -1,9 +1,9 @@
-use crate::decks::french::French;
-use crate::decks::modern::Modern;
-use crate::decks::pinochle::Pinochle;
-use crate::decks::skat::Skat;
-use crate::decks::tarot::Tarot;
 use crate::localization::{FluentName, Named};
+use crate::old::decks::french::French;
+use crate::old::decks::modern::Modern;
+use crate::old::decks::pinochle::Pinochle;
+use crate::old::decks::skat::Skat;
+use crate::old::decks::tarot::Tarot;
 use crate::types::card_error::CardError;
 use crate::types::traits::Ranked;
 use crate::types::utils::Bit;

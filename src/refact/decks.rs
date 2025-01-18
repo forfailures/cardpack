@@ -1,4 +1,4 @@
-use crate::decks::FluentName;
+use crate::localization::FluentName;
 use crate::refact::pips::{Rank, Suit, BLANK};
 use crate::refact::traits::{Decked, Ranked, Suited};
 use crate::refact::{Card, Pile};

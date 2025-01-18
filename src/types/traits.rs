@@ -18,7 +18,7 @@ pub trait Decked<
     /// as tarot decks and ones with jokers.
     ///
     /// ```rust
-    /// use cardpack::decks::french::French;
+    /// use cardpack::old::decks::french::French;
     /// use cardpack::types::traits::Decked;
     /// use cardpack::types::pile::Pile;
     ///

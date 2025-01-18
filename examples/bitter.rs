@@ -1,4 +1,4 @@
-use cardpack::decks::skat::Skat;
+use cardpack::old::decks::skat::Skat;
 use cardpack::prelude::French;
 use cardpack::types::traits::Decked;
 
