@@ -60,11 +60,31 @@ impl<
         }
     }
 
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let mut pile = French::deck();
+    /// let card = pile.draw_first().unwrap();
+    ///
+    /// assert_eq!(card.to_string(), "A♠");
+    /// ```
     pub fn draw_first(&mut self) -> Option<Card<RankType, SuitType>> {
         match self.len() {
             0 => None,
             _ => Some(self.remove(0)),
         }
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let mut pile = French::deck();
+    /// let card = pile. draw_last().unwrap();
+    ///
+    /// assert_eq!(card. to_string(), "2♣");
+    /// ```
+    pub fn draw_last(&mut self) -> Option<Card<RankType, SuitType>> {
+        self.0.pop()
     }
 
     /// ```
