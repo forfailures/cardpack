@@ -47,11 +47,30 @@ impl<
         self.0.clone()
     }
 
+    /// Returns true if the card is in the `Pile`.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let pile = FrenchDeck::from_str("K♦ K♣ K♠").unwrap();
+    /// let king_of_diamonds = FrenchCard::from_str("K♦").unwrap();
+    /// let king_of_hearts = FrenchCard::from_str("K♥").unwrap();
+    ///
+    /// assert!(pile.contains(&king_of_diamonds));
+    /// assert!(!pile.contains(&king_of_hearts));
+    /// ```
     #[must_use]
     pub fn contains(&self, card: &Card<RankType, SuitType>) -> bool {
         self.0.contains(card)
     }
 
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let mut pile = Pile::<French, French>::from_str("J♦ T♦ 9♦ 8♦ 7♦").unwrap();
+    ///
+    /// assert_eq!(pile.draw(3).unwrap().to_string(), "J♦ T♦ 9♦");
+    /// ```
     #[must_use]
     pub fn draw(&mut self, n: usize) -> Option<Self> {
         if n > self.len() || n < 1 {
@@ -90,6 +109,22 @@ impl<
     /// ```
     pub fn draw_last(&mut self) -> Option<Card<RankType, SuitType>> {
         self.0.pop()
+    }
+
+    /// Extends the `Pile` with the contents of the passed in `Pile`.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let mut hand = Pile::<French, French>::from_str("A♦ T♦ Q♦").unwrap();
+    /// let flop = Pile::<French, French>::from_str("K♦ J♦").unwrap();
+    ///
+    /// hand.extend(&flop);
+    ///
+    /// assert_eq!(hand.to_string(), "A♦ T♦ Q♦ K♦ J♦");
+    /// ```
+    pub fn extend(&mut self, other: &Self) {
+        self.0.extend(other.0.clone());
     }
 
     /// Returns a Card at the specific passed in position.
@@ -246,22 +281,6 @@ impl<
         self.0.iter().position(|c| c == card)
     }
 
-    /// Extends the `Pile` with the contents of the passed in `Pile`.
-    ///
-    /// ```
-    /// use cardpack::refactored::*;
-    ///
-    /// let mut hand = Pile::<French, French>::from_str("A♦ T♦ Q♦").unwrap();
-    /// let flop = Pile::<French, French>::from_str("K♦ J♦").unwrap();
-    ///
-    /// hand.extend(&flop);
-    ///
-    /// assert_eq!(hand.to_string(), "A♦ T♦ Q♦ K♦ J♦");
-    /// ```
-    pub fn extend(&mut self, other: &Self) {
-        self.0.extend(other.0.clone());
-    }
-
     /// Places the passed in `Pile` at the front of the current `Pile`.
     ///
     /// ```
@@ -397,6 +416,16 @@ impl<
         }
     }
 
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let mut pile = French::deck();
+    /// let card = pile.remove(1);
+    ///
+    /// assert_eq!(card.to_string(), "K♠");
+    /// assert_eq!(pile.draw(2).unwrap().to_string(), "A♠ Q♠");
+    /// ```
+    ///
     /// TODO: Possible RF change to [`VecDeque`](https://doc.rust-lang.org/std/collections/struct.VecDeque.html)?
     pub fn remove(&mut self, x: usize) -> Card<RankType, SuitType> {
         self.0.remove(x)
