@@ -139,6 +139,49 @@ impl<
 
     /// ```
     /// use cardpack::refactored::*;
+    /// let pile = French::deck();
+    ///
+    /// let card = Card::<French, French>::from_str("2♣").unwrap();
+    ///
+    /// assert_eq!(pile.position(&card).unwrap(), 51);
+    /// ```
+    #[must_use]
+    pub fn position(&self, card: &Card<RankType, SuitType>) -> Option<usize> {
+        self.0.iter().position(|c| c == card)
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    /// let mut hand = Pile::<French, French>::from_str("A♦ T♦ Q♦").unwrap();
+    /// let flop = Pile::<French, French>::from_str("K♦ J♦").unwrap();
+    ///
+    /// hand.append(&flop);
+    ///
+    /// assert_eq!(hand.to_string(), "A♦ T♦ Q♦ K♦ J♦");
+    /// ```
+    pub fn append(&mut self, other: &Pile<RankType, SuitType>) {
+        self.0.append(&mut other.0.clone());
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    /// let mut hand = Pile::<French, French>::from_str("T♦ Q♦").unwrap();
+    /// let flop = Pile::<French, French>::from_str("K♦ J♦ A♦").unwrap();
+    ///
+    /// hand.prepend(&flop);
+    ///
+    /// assert_eq!(hand.to_string(), "K♦ J♦ A♦ T♦ Q♦");
+    /// ```
+    pub fn prepend(&mut self, other: &Pile<RankType, SuitType>) {
+        let mut product = other.0.clone();
+        product.append(&mut self.0);
+        self.0 = product;
+    }
+
+    /// Places the Card at the bottom (end) of the Pile.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
     ///
     /// let mut pile = Pile::<French, French>::from_str("K♠ A♠").unwrap();
     /// let card = Card::<French, French>::from_str("Q♠").unwrap();
