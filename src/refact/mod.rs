@@ -146,6 +146,60 @@ impl<
         }
     }
 
+    /// Returns a vector of the `Rank`s within the `Pile`.
+    ///
+    /// ```
+    /// use cardpack::refactored::*;
+    /// let pile = Pile::<French, French>::from_str("A♠ K♠ A♣ Q♣ K♥").unwrap();
+    ///
+    /// let expected = vec![
+    ///     French::ACE,
+    ///     French::KING,
+    ///     French::QUEEN,
+    /// ];
+    ///
+    /// assert_eq!(pile.ranks(), expected);
+    /// ```
+    #[must_use]
+    pub fn ranks(&self) -> Vec<Rank<RankType>> {
+        let mut v: Vec<Rank<RankType>> = self
+            .iter()
+            .map(|c| c.rank)
+            .collect::<HashSet<Rank<RankType>>>()
+            .into_iter()
+            .collect();
+        v.sort();
+        v.reverse();
+
+        v
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    /// let pile = Pile::<French, French>::from_str("A♠ K♠").unwrap();
+    ///
+    /// let expected = vec![
+    ///     French::ACE,
+    ///     French::KING,
+    /// ];
+    ///
+    /// assert_eq!(pile.ranks_by_suit(&French::SPADES).unwrap(), expected);
+    /// assert!(pile.ranks_by_suit(&French::HEARTS).is_none());
+    #[must_use]
+    pub fn ranks_by_suit(&self, suit: &Suit<SuitType>) -> Option<Vec<Rank<RankType>>> {
+        let ranks: Vec<Rank<RankType>> = self
+            .iter()
+            .filter(|c| &c.suit == suit)
+            .map(|c| c.rank)
+            .collect();
+
+        match ranks.len() {
+            0 => None,
+            _ => Some(ranks),
+        }
+    }
+
+    /// TODO: Possible RF change to `VecDeque`?
     pub fn remove(&mut self, x: usize) -> Card<RankType, SuitType> {
         self.0.remove(x)
     }
