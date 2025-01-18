@@ -1,7 +1,7 @@
 use crate::localization::FluentName;
-use crate::refact::pips::{Rank, Suit, BLANK};
-use crate::refact::traits::{Decked, Ranked, Suited};
-use crate::refact::{Card, Pile};
+use crate::types::pips::{Rank, Suit, BLANK};
+use crate::types::traits::{Decked, Ranked, Suited};
+use crate::types::{Card, Pile};
 use colored::Color;
 use std::collections::HashMap;
 use std::marker::PhantomData;
@@ -301,7 +301,7 @@ impl Suited for French {
     }
 
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// assert_eq!(French::get_suit_fluent_name('S'), FluentName::new("spades"));
     /// ```
@@ -318,7 +318,7 @@ impl Suited for French {
     }
 
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// assert_eq!(French::get_suit_weight('S'), 4);
     /// ```
@@ -338,7 +338,7 @@ impl Suited for French {
 
 impl Ranked for French {
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// assert_eq!(French::get_rank_fluent_name('A'), FluentName::new("ace"));
     /// ```

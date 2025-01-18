@@ -4,8 +4,8 @@ use crate::old::decks::modern::Modern;
 use crate::old::decks::pinochle::Pinochle;
 use crate::old::decks::skat::Skat;
 use crate::old::decks::tarot::Tarot;
-use crate::types::card_error::CardError;
-use crate::types::traits::Ranked;
+use crate::old::types::traits::Ranked;
+use crate::types::errors::CardError;
 use crate::types::utils::Bit;
 use std::fmt::Display;
 use std::marker::PhantomData;
@@ -297,7 +297,7 @@ impl<RankType: Ranked> FromStr for Rank<RankType> {
 mod types__rank__tests {
     use super::*;
     use crate::card;
-    use crate::types::card::Card;
+    use crate::old::types::card::Card;
     use crate::types::utils::Bit;
     use ckc_rs::CardNumber;
 

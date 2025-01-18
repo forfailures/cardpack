@@ -1,8 +1,8 @@
 use crate::localization::Named;
-use crate::types::card_error::CardError;
-use crate::types::rank::Rank;
-use crate::types::suit::Suit;
-use crate::types::traits::{Ranked, Suited};
+use crate::old::types::rank::Rank;
+use crate::old::types::suit::Suit;
+use crate::old::types::traits::{Ranked, Suited};
+use crate::types::errors::CardError;
 use std::fmt::Display;
 
 use colored::Colorize;
@@ -27,7 +27,7 @@ use std::str::FromStr;
 /// _unit-like struct_.
 ///
 /// ```
-/// use cardpack::prelude::*;
+/// use cardpack::old_prelude::*;
 ///
 /// let rank = Rank::<French>::new(French::JACK);
 /// let suit = Suit::<French>::new(French::CLUBS);
@@ -37,10 +37,10 @@ use std::str::FromStr;
 /// ```
 ///
 /// Many of the decks have macros to make instantiating a single `Card` or a
-/// [`Pile`](crate::types::pile::Pile) of `Cards`:
+/// [`Pile`](crate::types::Pile) of `Cards`:
 ///
 /// ```
-/// use cardpack::prelude::*;
+/// use cardpack::old_prelude::*;
 ///
 /// let card = card!("JC");
 /// assert_eq!(card.to_string(), "J♣");
@@ -71,7 +71,7 @@ where
     /// `(suit.weight * 1000) + rank.weight`.
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     ///
     /// let expected: Card<French, French> = Card {
     ///     weight: 4012,
@@ -101,7 +101,7 @@ where
     /// of Cards is done based on the weight field, so this is a way to create custom sorts.
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     ///
     /// let ace = Rank::<French>::from('A');
     /// let spades = Suit::<French>::from('S');
@@ -135,7 +135,7 @@ where
     /// ```rust
     /// use std::str::FromStr;
     /// use cardpack::old::decks::french::French;
-    /// use cardpack::types::card::Card;
+    /// use cardpack::old::types::card::Card;
     ///
     /// let jack_of_diamonds = Card::<French, French>::from_str("jd").unwrap();
     ///

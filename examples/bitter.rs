@@ -1,6 +1,6 @@
 use cardpack::old::decks::skat::Skat;
-use cardpack::prelude::French;
-use cardpack::types::traits::Decked;
+use cardpack::old::types::traits::Decked;
+use cardpack::old_prelude::French;
 
 fn main() {
     let deck = Skat::deck();

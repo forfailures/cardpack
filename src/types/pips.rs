@@ -1,5 +1,5 @@
 use crate::localization::FluentName;
-use crate::refactored::{Ranked, Suited};
+use crate::prelude::{Ranked, Suited};
 use crate::types::utils::Bit;
 use colored::Color;
 use std::collections::HashMap;
@@ -39,7 +39,7 @@ where
     /// in the `localization` module.
     ///
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// assert_eq!(French::DEUCE.get_name(), FluentName::new("two"));
     /// ```
@@ -54,17 +54,17 @@ where
     /// prime number as a field. In refactoring this code, I am trying to take a minimalist approach
     /// to the types. The original structs come from when I was very new to Rust.
     ///
-    /// ```
-    /// use cardpack::refactored::*;
+    ///```
+    /// use cardpack::prelude::*;
     ///
     /// assert_eq!(French::KING.get_prime(), 37);
     /// ```
     ///
     /// It only goes up to 20:
     ///
-    /// ```
+    ///```
     /// use std::marker::PhantomData;
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// let heavy_card = French::TREY.update_weight(21);
     ///
@@ -83,7 +83,7 @@ where
     /// Returns true if the `Rank` is blank.
     ///
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// let rank = Rank::<French>::from('X');
     ///
@@ -99,7 +99,7 @@ where
     /// Wasted 10 minutes on a copilot suggestion that had into instead of from
     ///
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// let expected = vec![
     ///     French::ACE,
@@ -130,7 +130,7 @@ where
     /// Returns an index of the `Ranks` joined by the joiner `&str`;
     ///
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// let ranks = vec![French::ACE, French::DEUCE, French::TREY, French::FOUR, French::FIVE];
     ///
@@ -148,7 +148,7 @@ where
     /// Returns an index of all the `Ranks` in the implementing `Deck` joined by the joiner `&str`;
     ///
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// assert_eq!(Rank::<French>::ranks_index_all("+"), "A+K+Q+J+T+9+8+7+6+5+4+3+2");
     /// ```
@@ -161,7 +161,7 @@ where
     /// to alter how the `Rank` is sorted.
     ///
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// let mut ranks = Rank::<French>::ranks();
     /// let mut mirror_ranks: Vec<Rank<French>> = Vec::new();
@@ -196,7 +196,7 @@ where
     /// aka [Cactus Kev](https://suffe.cool/poker/evaluator.html) number.
     ///
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// assert_eq!(0b00000000_00000001_00000000_00000010, French::DEUCE.ckc_number());
     /// assert_eq!(0b00000000_00000010_00000001_00000011, French::TREY.ckc_number());
@@ -230,7 +230,7 @@ where
 
 /// ```
 /// use std::marker::PhantomData;
-/// use cardpack::refactored::*;
+/// use cardpack::prelude::*;
 ///
 /// let expected = Rank::<French> {
 ///     weight: 0,
@@ -251,7 +251,7 @@ where
     RankType: Ranked,
 {
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// assert_eq!(French::DEUCE_INDEX.to_string(), French::DEUCE.to_string());
     /// ```
@@ -265,7 +265,7 @@ where
 /// This win ended up being a big W when I tried to wire it into the Card struct.
 ///
 /// ```
-/// use cardpack::refactored::*;
+/// use cardpack::prelude::*;
 ///
 /// assert_eq!(Rank::<French>::from('A'), French::ACE);
 /// assert_eq!(Rank::<French>::from('a'), French::ACE);
@@ -337,7 +337,7 @@ impl<RankType: Ranked> Ranked for Rank<RankType> {
 #[allow(non_snake_case)]
 mod ranks {
     use super::*;
-    use crate::refactored::French;
+    use crate::prelude::French;
     use rstest::rstest;
 
     #[test]
@@ -441,7 +441,7 @@ where
     /// TODO: need a way to add the jokers suit. Right now this assumes standard 52
     ///
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// assert_eq!(0b00000000_00000000_10000000_00000000, French::SPADES.ckc_number());
     /// assert_eq!(0b00000000_00000000_01000000_00000000, French::HEARTS.ckc_number());
@@ -458,7 +458,7 @@ where
     }
 
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// assert!(Suit::<French>::default().is_blank());
     /// ```
@@ -470,7 +470,7 @@ where
     /// Returns a vector of all the suits in the implementing `Deck`.
     ///
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// let expected = vec![French::SPADES, French::HEARTS, French::DIAMONDS, French::CLUBS];
     ///
@@ -487,7 +487,7 @@ where
     /// Returns the suit;s symbol as set in the `FluentName` struct for the suit.
     ///
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// assert_eq!(French::SPADES.symbol(), '♠');
     /// ```
@@ -511,7 +511,7 @@ where
     SuitType: Suited,
 {
     /// ```
-    /// use cardpack::refactored::*;
+    /// use cardpack::prelude::*;
     ///
     /// assert_eq!(French::DIAMONDS.to_string(), "♦");
     /// ```
@@ -523,7 +523,7 @@ where
 /// Instantiates a new Suit struct from the passed in index.
 ///
 /// ```
-/// use cardpack::refactored::*;
+/// use cardpack::prelude::*;
 ///
 /// assert_eq!(Suit::<French>::from('♠'), French::SPADES);
 /// assert_eq!(Suit::<French>::from('S'), French::SPADES);
@@ -571,7 +571,7 @@ impl<SuiteType: Suited> Suited for Suit<SuiteType> {
 #[allow(non_snake_case)]
 mod suits {
     use super::*;
-    use crate::refactored::French;
+    use crate::prelude::French;
     use rstest::rstest;
 
     /// TODO: Add some rows for other decks when they're added.

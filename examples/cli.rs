@@ -8,8 +8,8 @@ use cardpack::old::decks::short::Short;
 use cardpack::old::decks::skat::Skat;
 use cardpack::old::decks::spades::Spades;
 use cardpack::old::decks::tarot::Tarot;
-use cardpack::types::card_error::CardError;
-use cardpack::types::traits::Decked;
+use cardpack::old::types::traits::Decked;
+use cardpack::types::errors::CardError;
 use clap::Parser;
 
 /// Run all of the decks with 1 for each:

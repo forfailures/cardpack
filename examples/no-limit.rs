@@ -1,4 +1,4 @@
-use cardpack::prelude::*;
+use cardpack::old_prelude::*;
 
 fn main() {
     let pack = French::deck();

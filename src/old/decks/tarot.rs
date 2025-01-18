@@ -1,10 +1,10 @@
 use crate::old::decks::french::French;
-use crate::types::card::Card;
-use crate::types::card_error::CardError;
-use crate::types::pile::Pile;
-use crate::types::rank::Rank;
-use crate::types::suit::Suit;
-use crate::types::traits::{Decked, Ranked, Suited};
+use crate::old::types::card::Card;
+use crate::old::types::pile::Pile;
+use crate::old::types::rank::Rank;
+use crate::old::types::suit::Suit;
+use crate::old::types::traits::{Decked, Ranked, Suited};
+use crate::types::errors::CardError;
 use colored::Color;
 use std::collections::HashMap;
 use std::str::FromStr;

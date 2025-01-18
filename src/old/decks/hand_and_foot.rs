@@ -1,8 +1,8 @@
 use crate::old::decks::modern::Modern;
-use crate::types::card::Card;
-use crate::types::card_error::CardError;
-use crate::types::pile::Pile;
-use crate::types::traits::Decked;
+use crate::old::types::card::Card;
+use crate::old::types::pile::Pile;
+use crate::old::types::traits::Decked;
+use crate::types::errors::CardError;
 use std::str::FromStr;
 
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]

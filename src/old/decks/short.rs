@@ -1,8 +1,8 @@
 use crate::old::decks::french::French;
-use crate::types::card::Card;
-use crate::types::card_error::CardError;
-use crate::types::pile::Pile;
-use crate::types::traits::{Decked, Ranked};
+use crate::old::types::card::Card;
+use crate::old::types::pile::Pile;
+use crate::old::types::traits::{Decked, Ranked};
+use crate::types::errors::CardError;
 use std::str::FromStr;
 
 /// [Manila, aka Six Plus aka Short-deck](https://en.wikipedia.org/wiki/Six-plus_hold_%27em)
@@ -73,7 +73,7 @@ impl Ranked for Short {
 #[allow(non_snake_case)]
 mod decks__manila__tests {
     use super::*;
-    use crate::types::rank::Rank;
+    use crate::old::types::rank::Rank;
 
     #[test]
     fn deck() {

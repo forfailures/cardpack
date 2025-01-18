@@ -1,11 +1,11 @@
 use crate::old::decks::french::French;
 use crate::old::decks::modern::Modern;
-use crate::types::card::Card;
-use crate::types::card_error::CardError;
-use crate::types::pile::Pile;
-use crate::types::rank::Rank;
-use crate::types::suit::Suit;
-use crate::types::traits::{Decked, Ranked, Suited};
+use crate::old::types::card::Card;
+use crate::old::types::pile::Pile;
+use crate::old::types::rank::Rank;
+use crate::old::types::suit::Suit;
+use crate::old::types::traits::{Decked, Ranked, Suited};
+use crate::types::errors::CardError;
 use std::str::FromStr;
 
 /// [Canasta](https://en.wikipedia.org/wiki/Canasta)deck
@@ -92,10 +92,10 @@ impl Canasta {
     /// use cardpack::old::decks::canasta::Canasta;
     /// use cardpack::old::decks::modern::Modern;
     /// use cardpack::old::decks::french::French;
-    /// use cardpack::types::card::Card;
-    /// use cardpack::types::rank::Rank;
-    /// use cardpack::types::suit::Suit;
-    /// use cardpack::types::traits::{Ranked, Suited};
+    /// use cardpack::old::types::card::Card;
+    /// use cardpack::old::types::rank::Rank;
+    /// use cardpack::old::types::suit::Suit;
+    /// use cardpack::old::types::traits::{Ranked, Suited};
     ///
     /// fn is_red_three<RankType: Ranked + Clone, SuitType: Suited + Clone>(
     ///         card: &Card<RankType, SuitType>,

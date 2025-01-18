@@ -1,7 +1,7 @@
-use crate::types::card::Card;
-use crate::types::card_error::CardError;
-use crate::types::pile::Pile;
-use crate::types::traits::{Decked, Ranked, Suited};
+use crate::old::types::card::Card;
+use crate::old::types::pile::Pile;
+use crate::old::types::traits::{Decked, Ranked, Suited};
+use crate::types::errors::CardError;
 use crate::types::utils::Bit;
 use colored::Color;
 use std::collections::HashMap;
@@ -11,7 +11,7 @@ use std::str::FromStr;
 /// from the generics.
 ///
 /// ```
-/// use cardpack::prelude::*;
+/// use cardpack::old_prelude::*;
 ///
 /// assert_eq!(card!(AS), Card::<French, French>::from_str("A♠").unwrap());
 /// assert_eq!(card!(KS), Card::<French, French>::from_str("K♠").unwrap());
@@ -399,11 +399,11 @@ macro_rules! cards {
 ///
 /// ```
 /// use cardpack::old::decks::french::French;
-/// use cardpack::types::card::Card;
-/// use cardpack::types::pile::Pile;
-/// use cardpack::types::rank::Rank;
-/// use cardpack::types::suit::Suit;
-/// use cardpack::types::traits::Decked;
+/// use cardpack::old::types::card::Card;
+/// use cardpack::old::types::pile::Pile;
+/// use cardpack::old::types::rank::Rank;
+/// use cardpack::old::types::suit::Suit;
+/// use cardpack::old::types::traits::Decked;
 ///
 /// // use cardpack::prelude::*; also works
 ///
@@ -571,9 +571,9 @@ mod decks__standard52__tests {
     use crate::card;
     use crate::cards;
     use crate::localization::{FluentName, Named};
-    use crate::types::card::Card;
-    use crate::types::rank::Rank;
-    use crate::types::suit::Suit;
+    use crate::old::types::card::Card;
+    use crate::old::types::rank::Rank;
+    use crate::old::types::suit::Suit;
     use ckc_rs::CardNumber;
     use rstest::rstest;
     use std::str::FromStr;

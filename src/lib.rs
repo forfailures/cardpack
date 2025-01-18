@@ -2,14 +2,14 @@
 //! Library to represent various decks of playing cards. The library is designed to support the
 //! following features:
 //!
-//! - Custom [`Rank`](types::rank::Rank) and [`Suit`](types::suit::Suit) types.
-//! - Ability to sort a [`Pile`](types::pile::Pile) of [`Cards`](types::card::Card)  in various ways.
+//! - Custom [`Rank`](types::pips::Rank) and [`Suit`](types::pips::Suit) types.
+//! - Ability to sort a [`Pile`](types::Pile) of [`Cards`](types::Card)  in various ways.
 //! - Localization of card names using [fluent-templates](https://github.com/XAMPPRocky/fluent-templates).
 //!
 //! ## Overview
 //!
-//! The structure of the library is the following: A [`Pile`](types::pile::Pile) is a collection of Cards
-//! that have a [`Rank`](types::rank::Rank) that implements the [`Ranked`](types::traits::Ranked) and
+//! The structure of the library is the following: A [`Pile`](types::Pile) is a collection of Cards
+//! that have a [`Rank`](types::pips::Rank) that implements the [`Ranked`](types::traits::Ranked) and
 //! a Suit that implements the [`Suited`](types::traits::Suited) trait.
 //!
 //! The library supports the following decks:
@@ -17,10 +17,10 @@
 //! ## Standard 52 Card French Deck
 //!
 //! The Standard 52 Card [`French`](old::decks::french::French) deck is the most common deck of playing cards.
-//! It is made up of a [`Pile`](types::pile::Pile) of 52 [`Cards`](types::card::Card) with 13 ranks in each of the four suits.
+//! It is made up of a [`Pile`](types::Pile) of 52 [`Cards`](types::Card) with 13 ranks in each of the four suits.
 //!
 //! ```rust
-//! use cardpack::prelude::*;
+//! use cardpack::old_prelude::*;
 //!
 //! let mut french_deck = French::deck();
 //!
@@ -60,7 +60,7 @@
 //! A [`Modern`](old::decks::modern::Modern) deck is a French deck with two jokers.
 //!
 //! ```rust
-//! use cardpack::prelude::*;
+//! use cardpack::old_prelude::*;
 //!
 //! let mut modern_deck = Modern::deck();
 //!
@@ -92,7 +92,7 @@
 //! ```rust
 //! use std::collections::HashMap;
 //! use colored::Color;
-//! use cardpack::prelude::*;
+//! use cardpack::old_prelude::*;
 //!
 //! #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 //! pub struct Tiny {}
@@ -194,9 +194,10 @@
 //! ```
 
 #![allow(clippy::needless_doctest_main)]
+
+pub mod decks;
 pub mod localization;
 pub mod old;
+pub mod old_prelude;
 pub mod prelude;
-pub mod refact;
-pub mod refactored;
 pub mod types;

@@ -3,7 +3,7 @@ use crate::old::decks::french::French;
 use crate::old::decks::modern::Modern;
 use crate::old::decks::skat::Skat;
 use crate::old::decks::tarot::Tarot;
-use crate::types::traits::Suited;
+use crate::old::types::traits::Suited;
 use crate::types::utils::Bit;
 use colored::Color;
 use std::collections::HashMap;
@@ -13,7 +13,7 @@ use std::marker::PhantomData;
 /// A macro to simplify the creation of a `Suit`.
 ///
 /// ```
-/// use cardpack::prelude::*;
+/// use cardpack::old_prelude::*;
 ///
 /// assert_eq!(suit!(S), Suit::<French>::new(French::SPADES));
 /// assert_eq!(suit!(H), Suit::<French>::new(French::HEARTS));

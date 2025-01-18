@@ -1,9 +1,9 @@
-use crate::types::card::Card;
-use crate::types::card_error::CardError;
-use crate::types::rank::Rank;
-use crate::types::suit::Suit;
-use crate::types::traits::Ranked;
-use crate::types::traits::Suited;
+use crate::old::types::card::Card;
+use crate::old::types::rank::Rank;
+use crate::old::types::suit::Suit;
+use crate::old::types::traits::Ranked;
+use crate::old::types::traits::Suited;
+use crate::types::errors::CardError;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 use std::collections::{HashMap, HashSet};
@@ -19,7 +19,7 @@ use std::str::FromStr;
 /// The most common deck is the [`French`](crate::old::decks::french::French) deck:
 ///
 /// ```rust
-/// use cardpack::prelude::{Decked, French, Pile};
+/// use cardpack::old_prelude::{Decked, French, Pile};
 /// let mut french_deck: Pile<French, French> = French::deck();
 ///
 /// assert_eq!(french_deck.rank_index(" "), "A K Q J T 9 8 7 6 5 4 3 2");
@@ -34,7 +34,7 @@ use std::str::FromStr;
 /// which belong to the joker suit.
 ///
 /// ```rust
-/// use cardpack::prelude::{Decked, Modern, Pile};
+/// use cardpack::old_prelude::{Decked, Modern, Pile};
 /// let modern_deck: Pile<Modern, Modern> = Modern::deck();
 ///
 /// assert_eq!(modern_deck.rank_index(""), "BLAKQJT98765432");
@@ -57,7 +57,7 @@ impl<
 {
     /// ```
     /// use std::collections::HashSet;
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let five_deck = French::decks(5);
     ///
     /// let hashset: HashSet<Card<French, French>> = five_deck.as_hashset();
@@ -101,7 +101,7 @@ impl<
     /// Returns true if the card is in the `Pile`.
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let pile = FrenchDeck::from_str("K♦ K♣ K♠").unwrap();
     /// let king_of_diamonds = FrenchCard::from_str("K♦").unwrap();
     /// let king_of_hearts = FrenchCard::from_str("K♥").unwrap();
@@ -115,7 +115,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let mut pile = French::deck();
     ///
     /// let ak = pile.draw(2);
@@ -134,7 +134,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let mut pile = French::deck().reverse();
     /// let card = pile.draw_first().unwrap();
     ///
@@ -148,7 +148,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let mut pile = French::deck();
     /// let card = pile.draw_last().unwrap();
     ///
@@ -159,7 +159,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let mut pile = French::deck();
     /// let card = pile.remove(1);
     ///
@@ -173,7 +173,7 @@ impl<
     /// Extends the `Pile` with the contents of the passed in `Pile`.
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     ///
     /// let mut pile = FrenchDeck::from_str("K♦ K♣ K♠").unwrap();
     /// let other_pile = FrenchDeck::from_str("A♦ A♣ A♠").unwrap();
@@ -188,7 +188,7 @@ impl<
     /// Returns a Card at the specific passed in position.
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let deck = French::deck();
     ///
     /// assert_eq!(deck.get(0).unwrap().to_string(), "A♠");
@@ -203,7 +203,7 @@ impl<
     /// Returns a string of the index of the cards in the `Pile`.
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let pile = FrenchDeck::from_str("K♦ K♣ K♠").unwrap();
     ///
     /// assert_eq!(pile.index(), "KD KC KS");
@@ -217,7 +217,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// assert!(FrenchDeck::default().is_empty());
     /// assert!(!French::deck().is_empty());
     /// assert!(ModernDeck::default().is_empty());
@@ -233,7 +233,7 @@ impl<
     /// Returns the length of the `Pile`.
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// assert_eq!(French::deck().len(), 52);
     /// assert_eq!(Modern::deck().len(), 54);
     /// ```
@@ -243,7 +243,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let pile = French::deck();
     ///
     /// for card in pile.iter() {
@@ -258,7 +258,7 @@ impl<
     /// Takes the `Pile` and returns a `HashMap` of the cards mapped by their [`Suit`].
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let pile = Short::deck();
     ///
     /// let map = pile.map_by_suit();
@@ -291,7 +291,7 @@ impl<
     /// Returns a simple new `Pile` from the consolidated passed in vector of `Piles`.
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// // `FrenchDeck` is the same as `Pile<French, French>`.
     /// let pile1 = FrenchDeck::from_str("2♠ 8♠ 4♠").unwrap();
     /// let pile2 = FrenchDeck::from_str("5♠ 6♠ 7♠").unwrap();
@@ -318,7 +318,7 @@ impl<
     /// into a single `Pile`.
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     ///
     /// fn ak() -> Pile<French, French> {
     ///     Pile::<French, French>::from_str("A♠ K♠").unwrap()
@@ -339,7 +339,7 @@ impl<
     /// Returns the zero indexed position of a [`Card`] in the `Pile`.
     ///
     /// ```rust
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let pile = Modern::deck();
     ///
     /// let card = ModernCard::from_str("2♣").unwrap();
@@ -354,7 +354,7 @@ impl<
     /// Adds a Pile of [`Cards`](Card) to the end of another pile.
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     ///
     /// let mut hand = Pile::<French, French>::from_str("K♦ J♦").unwrap();
     /// let flop = Pile::<French, French>::from_str("A♦ T♦ Q♦").unwrap();
@@ -372,7 +372,7 @@ impl<
     /// Places the Card at the bottom (end) of the Pile.
     ///
     /// ```rust
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     ///
     /// let mut hand = Pile::<French, French>::from_str("K♠ A♠").unwrap();
     /// hand.push(Card::<French, French>::from_str("Q♠").unwrap());
@@ -403,7 +403,7 @@ impl<
     /// String of all the [`Ranks`](Rank) in the `Pile`, joined by the passed in separator.
     ///
     /// ```rust
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let pile = Short::deck();
     /// assert_eq!(pile.rank_index(" "), "A K Q J T 9 8 7 6");
     /// ```
@@ -416,7 +416,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let pile = cards!("A♠ K♠ A♣ Q♣ K♥").unwrap();
     ///
     /// assert_eq!(pile.rank_index_by_suit(&suit!(S), "-"), Some("A-K".to_string()));
@@ -431,7 +431,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let pile = cards!("A♠ K♠ A♣ Q♣ K♥").unwrap();
     ///
     /// let expected = vec![
@@ -452,7 +452,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let pile = cards!("A♠ K♠").unwrap();
     ///
     /// let expected = vec![
@@ -480,7 +480,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let mut pile = French::deck();
     /// pile.remove_card(&card!(KS));
     ///
@@ -495,7 +495,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let mut pile = French::deck();
     /// pile.remove_cards(&cards!("K♠ A♠").unwrap());
     ///
@@ -509,7 +509,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let ak = cards!("A♠ K♠").unwrap();
     /// let ka = cards!("K♠ A♠").unwrap();
     ///
@@ -524,7 +524,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let mut ak = cards!("A♠ K♠").unwrap();
     /// let ka = cards!("K♠ A♠").unwrap();
     ///
@@ -540,7 +540,7 @@ impl<
     /// of order.
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let pile = Canasta::deck();
     /// let other_pile = pile.shuffle();
     ///
@@ -556,7 +556,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let pile = French::deck();
     /// let shuffled = pile.shuffle();
     ///
@@ -585,7 +585,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let mut pile = French::deck();
     /// pile.shuffle_in_place();
     ///
@@ -597,7 +597,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     ///
     /// let pile = FrenchDeck::from_str("K♠ A♠").unwrap();
     /// let sorted = pile.sort();
@@ -613,7 +613,7 @@ impl<
     }
 
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     ///
     /// let mut pile = FrenchDeck::from_str("K♠ A♠").unwrap();
     /// pile.sort_in_place();
@@ -628,7 +628,7 @@ impl<
     /// Returns a vector of all the [`Suits`](Suit) in the `Pile`.
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let pile = Short::deck();
     /// assert_eq!(
     ///     pile.suits(),
@@ -652,7 +652,7 @@ impl<
     /// Returns a `String` with all of the [`Suit`] index letters for the `Pile` separated by spaces.
     ///
     /// ```rust
-    /// use cardpack::prelude::{Decked, Pile, Skat};
+    /// use cardpack::old_prelude::{Decked, Pile, Skat};
     /// let skat_deck: Pile<Skat, Skat> = Skat::deck();
     /// assert_eq!(skat_deck.suit_index(), "E L H S");
     /// ```
@@ -663,7 +663,7 @@ impl<
     /// Returns a `String` with all of the [`Suit`] symbols for the `Pile` separated by spaces.
     ///
     /// ```rust
-    /// use cardpack::prelude::{Decked, Pile, Tarot};
+    /// use cardpack::old_prelude::{Decked, Pile, Tarot};
     /// let tarot_deck: Pile<Tarot, Tarot> = Tarot::deck();
     /// assert_eq!(tarot_deck.suit_symbol_index(), "M 🪄 🏆 ⚔ ☆");
     pub fn suit_symbol_index(&self) -> String {
@@ -685,7 +685,7 @@ impl<
     /// [`Suited`] trait.
     ///
     /// ```rust
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let mut pile = FrenchDeck::from_str("2♠ A♥").unwrap();
     /// assert_eq!(pile.to_color_symbol_string(), "2♠ A♥");
     /// ```
@@ -701,7 +701,7 @@ impl<
     /// Returns the Pile's internal vector of [`Cards`](Card).
     ///
     /// ```rust
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     /// let mut pile = French::deck();
     /// let v: Vec<FrenchCard> = vec![
     ///     FrenchCard::from_str("A♠").unwrap(),
@@ -757,7 +757,7 @@ impl<
 /// [`Suit`] for a specific deck. For example:
 ///
 /// ```rust
-/// use cardpack::prelude::*;
+/// use cardpack::old_prelude::*;
 /// let wheel = Pile::<French, French>::from_str("5S 4S 3s 2S AS").unwrap();
 ///
 /// assert_eq!(wheel.to_string(), "5♠ 4♠ 3♠ 2♠ A♠");
@@ -767,7 +767,7 @@ impl<
 /// [`Suit`] and letters or Unicode symbols for the [`Rank`]. For example:
 ///
 /// ```rust
-/// use cardpack::prelude::*;
+/// use cardpack::old_prelude::*;
 /// let wheel = Pile::<French, French>::from_str("5♠ 4♠ 3♠ 2♠ a♠").unwrap();
 ///
 /// assert_eq!(wheel.index(), "5S 4S 3S 2S AS");
@@ -776,7 +776,7 @@ impl<
 /// It is also possible to mix and match:
 ///
 /// ```rust
-/// use cardpack::prelude::*;
+/// use cardpack::old_prelude::*;
 ///
 /// let wheel = Pile::<French, French>::from_str("5S 4♠ 3♠ 2s A♠").unwrap();
 ///
@@ -812,7 +812,7 @@ impl<
 }
 
 /// ```rust
-/// use cardpack::prelude::*;
+/// use cardpack::old_prelude::*;
 /// let pile = French::deck();
 ///
 /// // Need to clone since `Pile` doesn't implement `Copy`.
@@ -846,7 +846,7 @@ impl<
 /// For a `Pile` reference, the implementation of the trait will internally `clone()` the `Cards`.
 ///
 /// ```rust
-/// use cardpack::prelude::*;
+/// use cardpack::old_prelude::*;
 /// let pile = French::deck();
 ///
 /// for card in &pile {
@@ -871,7 +871,7 @@ impl<
 mod types__pile__tests {
     use super::*;
     use crate::old::decks::french::French;
-    use crate::types::traits::Decked;
+    use crate::old::types::traits::Decked;
     use std::str::FromStr;
 
     fn test_pile() -> Pile<French, French> {

@@ -1,8 +1,8 @@
 use crate::old::decks::french::French;
-use crate::types::card::Card;
-use crate::types::card_error::CardError;
-use crate::types::pile::Pile;
-use crate::types::traits::{Decked, Ranked};
+use crate::old::types::card::Card;
+use crate::old::types::pile::Pile;
+use crate::old::types::traits::{Decked, Ranked};
+use crate::types::errors::CardError;
 use std::str::FromStr;
 
 /// This deck represents the most common 24 card form of
@@ -64,7 +64,7 @@ impl Ranked for Euchre24 {
 mod decks__euchre__tests {
     use super::*;
     use crate::localization::{FluentName, Named};
-    use crate::types::rank::Rank;
+    use crate::old::types::rank::Rank;
 
     #[test]
     fn new() {

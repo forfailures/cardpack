@@ -1,10 +1,10 @@
 use crate::old::decks::french::French;
-use crate::types::card::Card;
-use crate::types::card_error::CardError;
-use crate::types::pile::Pile;
-use crate::types::rank::Rank;
-use crate::types::suit::Suit;
-use crate::types::traits::{Decked, Ranked};
+use crate::old::types::card::Card;
+use crate::old::types::pile::Pile;
+use crate::old::types::rank::Rank;
+use crate::old::types::suit::Suit;
+use crate::old::types::traits::{Decked, Ranked};
+use crate::types::errors::CardError;
 use std::str::FromStr;
 
 #[macro_export]
@@ -166,7 +166,7 @@ macro_rules! pinochle_card {
 pub struct Pinochle {}
 
 /// ```
-/// use cardpack::prelude::*;
+/// use cardpack::old_prelude::*;
 ///
 /// let card1 = PinochleCard::new(Rank::<Pinochle>::new(Pinochle::ACE), Suit::<French>::new(French::SPADES));
 /// let card2 = Card::<Pinochle, French>::new(Rank::<Pinochle>::new(Pinochle::ACE), Suit::<French>::new(French::SPADES));
@@ -188,7 +188,7 @@ impl Pinochle {
     /// You can see this in action when we sort the same hands in both decks:
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     ///
     /// let french_hand = French::from_str("AS KS QS JS TS").unwrap().sort();
     /// let pinochle_hand = Pinochle::from_str("AS KS QS JS TS").unwrap().sort();
@@ -216,7 +216,7 @@ impl Decked<Pinochle, French> for Pinochle {
     /// This function creates a deck of cards for the game of Pinochle.
     ///
     /// ```
-    /// use cardpack::prelude::*;
+    /// use cardpack::old_prelude::*;
     ///
     /// let deck = Pinochle::deck();
     /// let expected = "A♠ A♠ T♠ T♠ K♠ K♠ Q♠ Q♠ J♠ J♠ 9♠ 9♠ A♥ A♥ T♥ T♥ K♥ K♥ Q♥ Q♥ J♥ J♥ 9♥ 9♥ A♦ A♦ T♦ T♦ K♦ K♦ Q♦ Q♦ J♦ J♦ 9♦ 9♦ A♣ A♣ T♣ T♣ K♣ K♣ Q♣ Q♣ J♣ J♣ 9♣ 9♣";
@@ -278,7 +278,7 @@ impl Ranked for Pinochle {
 mod decks__pinochle__tests {
     use super::*;
     use crate::localization::Named;
-    use crate::types::rank::Rank;
+    use crate::old::types::rank::Rank;
 
     #[test]
     fn rank__new_with_weight() {
