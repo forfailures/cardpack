@@ -146,6 +146,27 @@ impl<
         }
     }
 
+    /// ```
+    /// use cardpack::refactored::*;
+    /// let pile = Pile::<French, French>::from_str("A♠ K♠ A♣ Q♣ K♥").unwrap();
+    ///
+    /// assert_eq!(pile.rank_index_by_suit(&French::SPADES, "-").unwrap(), "A-K");
+    /// assert_eq!(pile.rank_index_by_suit(&French::HEARTS, "-"), Some("K".to_string()));
+    /// assert_eq!(pile.rank_index_by_suit(&French::CLUBS, "-"), Some("A-Q".to_string()));
+    /// assert_eq!(pile.rank_index_by_suit(&French::DIAMONDS, "-"), None);
+    /// ```
+    #[must_use]
+    pub fn rank_index_by_suit(&self, suit: &Suit<SuitType>, joiner: &str) -> Option<String> {
+        let ranks = self.ranks_by_suit(suit)?;
+        Some(
+            ranks
+                .iter()
+                .map(|r| String::from(r.index))
+                .collect::<Vec<String>>()
+                .join(joiner),
+        )
+    }
+
     /// Returns a vector of the `Rank`s within the `Pile`.
     ///
     /// ```
