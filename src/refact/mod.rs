@@ -27,6 +27,40 @@ impl<
         SuitType: Suited + Clone + Copy + PartialOrd + Ord + Default + Hash,
     > Pile<RankType, SuitType>
 {
+    /// ```
+    /// use cardpack::refactored::*;
+    ///
+    /// let pile = French::deck().draw(5).unwrap();
+    ///
+    /// assert_eq!(pile.card_by_index("qs").unwrap(), FrenchCard::from_str("Q♠").unwrap());
+    /// assert!(pile.card_by_index("8♥").is_none());
+    /// ```
+    ///
+    /// Here's the original code:
+    ///
+    /// ```txt
+    /// #[must_use]
+    /// pub fn card_by_index(&self, index: &str) -> Option<&Card> {
+    ///   self.0.iter().find(|c| c.index_default() == index)
+    /// }
+    /// ```
+    ///
+    /// Why TF not just use `Card::from_str()?` I guess the big difference is that
+    /// the card is actually in the Pile in question. Do I need this?
+    #[must_use]
+    pub fn card_by_index<S: Into<String>>(&self, index: S) -> Option<Card<RankType, SuitType>> {
+        match Card::<RankType, SuitType>::from_str(index.into().as_str()) {
+            Ok(c) => {
+                if self.contains(&c) {
+                    Some(c)
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        }
+    }
+
     /// Returns a clone of the `Pile`'s internal `Vec<Card>`.
     ///
     /// ```
