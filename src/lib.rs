@@ -31,7 +31,7 @@
 //! assert!(french_deck.contains(&old_card !(AS)));
 //!
 //! let shuffled = french_deck.shuffle();
-//! let parsed = cards!(shuffled.to_string().as_str()).unwrap();
+//! let parsed = old_cards!(shuffled.to_string().as_str()).unwrap();
 //!
 //! // Verify that the cards, in any order, are the same:
 //! assert!(french_deck.same(&parsed));

@@ -381,7 +381,7 @@ macro_rules! old_card {
 }
 
 #[macro_export]
-macro_rules! cards {
+macro_rules! old_cards {
     ($card_str:expr) => {
         Pile::<French, French>::from_str($card_str)
     };
@@ -568,12 +568,12 @@ impl Suited for French {
 #[allow(non_snake_case)]
 mod decks__standard52__tests {
     use super::*;
-    use crate::cards;
     use crate::localization::{FluentName, Named};
     use crate::old::types::card::Card;
     use crate::old::types::rank::Rank;
     use crate::old::types::suit::Suit;
     use crate::old_card;
+    use crate::old_cards;
     use ckc_rs::CardNumber;
     use rstest::rstest;
     use std::str::FromStr;
@@ -637,10 +637,10 @@ mod decks__standard52__tests {
 
     #[test]
     fn macro_cards() {
-        let deck = cards!("A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠ 5♠ 4♠ 3♠ 2♠ A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥ 5♥ 4♥ 3♥ 2♥ A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦ 5♦ 4♦ 3♦ 2♦ A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣ 5♣ 4♣ 3♣ 2♣").unwrap();
+        let deck = old_cards!("A♠ K♠ Q♠ J♠ T♠ 9♠ 8♠ 7♠ 6♠ 5♠ 4♠ 3♠ 2♠ A♥ K♥ Q♥ J♥ T♥ 9♥ 8♥ 7♥ 6♥ 5♥ 4♥ 3♥ 2♥ A♦ K♦ Q♦ J♦ T♦ 9♦ 8♦ 7♦ 6♦ 5♦ 4♦ 3♦ 2♦ A♣ K♣ Q♣ J♣ T♣ 9♣ 8♣ 7♣ 6♣ 5♣ 4♣ 3♣ 2♣").unwrap();
 
         assert_eq!(deck.to_string(), French::deck().to_string());
-        assert!(cards!("AA xx __").is_err());
+        assert!(old_cards!("AA xx __").is_err());
     }
 
     #[rstest]

@@ -417,7 +417,7 @@ impl<
 
     /// ```
     /// use cardpack::old_prelude::*;
-    /// let pile = cards!("A♠ K♠ A♣ Q♣ K♥").unwrap();
+    /// let pile = old_cards!("A♠ K♠ A♣ Q♣ K♥").unwrap();
     ///
     /// assert_eq!(pile.rank_index_by_suit(&suit!(S), "-"), Some("A-K".to_string()));
     /// assert_eq!(pile.rank_index_by_suit(&suit!(H), "-"), Some("K".to_string()));
@@ -432,7 +432,7 @@ impl<
 
     /// ```
     /// use cardpack::old_prelude::*;
-    /// let pile = cards!("A♠ K♠ A♣ Q♣ K♥").unwrap();
+    /// let pile = old_cards!("A♠ K♠ A♣ Q♣ K♥").unwrap();
     ///
     /// let expected = vec![
     ///     Rank::<French>::new(French::ACE),
@@ -453,7 +453,7 @@ impl<
 
     /// ```
     /// use cardpack::old_prelude::*;
-    /// let pile = cards!("A♠ K♠").unwrap();
+    /// let pile = old_cards!("A♠ K♠").unwrap();
     ///
     /// let expected = vec![
     ///     Rank::<French>::new(French::ACE),
@@ -484,7 +484,7 @@ impl<
     /// let mut pile = French::deck();
     /// pile.remove_card(&old_card!(KS));
     ///
-    /// assert_eq!(pile.draw(2), cards!("AS QS").unwrap());
+    /// assert_eq!(pile.draw(2), old_cards!("AS QS").unwrap());
     /// ```
     pub fn remove_card(
         &mut self,
@@ -497,7 +497,7 @@ impl<
     /// ```
     /// use cardpack::old_prelude::*;
     /// let mut pile = French::deck();
-    /// pile.remove_cards(&cards!("K♠ A♠").unwrap());
+    /// pile.remove_cards(&old_cards!("K♠ A♠").unwrap());
     ///
     /// assert_eq!(pile.len(), 50);
     /// assert_eq!(pile.draw_first().unwrap_or(French::blank()), old_card!(QS));
@@ -510,8 +510,8 @@ impl<
 
     /// ```
     /// use cardpack::old_prelude::*;
-    /// let ak = cards!("A♠ K♠").unwrap();
-    /// let ka = cards!("K♠ A♠").unwrap();
+    /// let ak = old_cards!("A♠ K♠").unwrap();
+    /// let ka = old_cards!("K♠ A♠").unwrap();
     ///
     /// assert_eq!(ak.reverse(), ka);
     /// assert_eq!(ka.reverse(), ak);
@@ -525,8 +525,8 @@ impl<
 
     /// ```
     /// use cardpack::old_prelude::*;
-    /// let mut ak = cards!("A♠ K♠").unwrap();
-    /// let ka = cards!("K♠ A♠").unwrap();
+    /// let mut ak = old_cards!("A♠ K♠").unwrap();
+    /// let ka = old_cards!("K♠ A♠").unwrap();
     ///
     /// ak.reverse_in_place();
     ///

@@ -15,6 +15,8 @@ pub type FrenchCard = Card<French, French>;
 pub type FrenchDeck = Pile<French, French>;
 
 impl French {
+    pub const GUIDE: &'static str = "xxxAKQJT 98765432 ♠♥♦♣rrrr xxpppppp";
+
     /// # REFACTOR WIN
     pub const ACE: Rank<French> = Rank {
         weight: 12,

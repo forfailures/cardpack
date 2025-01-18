@@ -45,7 +45,7 @@ use std::str::FromStr;
 /// let card = old_card!("JC");
 /// assert_eq!(card.to_string(), "J♣");
 ///
-/// let pile = cards!("KS QC");
+/// let pile = old_cards!("KS QC");
 /// assert_eq!(pile.unwrap().to_string(), "K♠ Q♣");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
