@@ -22,7 +22,7 @@ use std::str::FromStr;
 /// use cardpack::prelude::{Decked, French, Pile};
 /// let mut french_deck: Pile<French, French> = French::deck();
 ///
-/// assert_eq!(french_deck.rank_index_joined(" "), "A K Q J T 9 8 7 6 5 4 3 2");
+/// assert_eq!(french_deck.rank_index(" "), "A K Q J T 9 8 7 6 5 4 3 2");
 /// assert_eq!(french_deck.suit_symbol_index(), "♠ ♥ ♦ ♣");
 /// assert_eq!(french_deck.suit_index(), "S H D C");
 /// assert_eq!(french_deck.draw(5).to_string(), "A♠ K♠ Q♠ J♠ T♠");
@@ -37,7 +37,7 @@ use std::str::FromStr;
 /// use cardpack::prelude::{Decked, Modern, Pile};
 /// let modern_deck: Pile<Modern, Modern> = Modern::deck();
 ///
-/// assert_eq!(modern_deck.rank_index(), "BLAKQJT98765432");
+/// assert_eq!(modern_deck.rank_index(""), "BLAKQJT98765432");
 /// assert_eq!(modern_deck.suit_symbol_index(), "🃟 ♠ ♥ ♦ ♣");
 /// assert_eq!(modern_deck.suit_index(), "J S H D C");
 /// ```
@@ -388,26 +388,26 @@ impl<
         }
     }
 
-    /// String of all the [`Ranks`](Rank) in the `Pile`.
-    ///
-    /// ```rust
-    /// use cardpack::prelude::*;
-    /// let pile = Short::deck();
-    /// assert_eq!(pile.rank_index(), "AKQJT9876");
-    /// ```
-    #[must_use]
-    pub fn rank_index(&self) -> String {
-        self.rank_index_joined("")
-    }
+    // String of all the [`Ranks`](Rank) in the `Pile`.
+    //
+    // ```rust
+    // use cardpack::prelude::*;
+    // let pile = Short::deck();
+    // assert_eq!(pile.rank_index(""), "AKQJT9876");
+    // ```
+    // #[must_use]
+    // pub fn rank_index(&self) -> String {
+    //     self.rank_index_joined("")
+    // }
 
     /// String of all the [`Ranks`](Rank) in the `Pile`, joined by the passed in separator.
     ///
     /// ```rust
     /// use cardpack::prelude::*;
     /// let pile = Short::deck();
-    /// assert_eq!(pile.rank_index_joined(" "), "A K Q J T 9 8 7 6");
+    /// assert_eq!(pile.rank_index(" "), "A K Q J T 9 8 7 6");
     /// ```
-    pub fn rank_index_joined(&self, sep: &str) -> String {
+    pub fn rank_index(&self, sep: &str) -> String {
         self.ranks()
             .iter()
             .map(ToString::to_string)

@@ -209,7 +209,7 @@ impl BridgeBoard {
     fn get_suit_string(suit: &Suit<French>, mappie: &HashMap<Suit<French>, FrenchDeck>) -> String {
         let indexes = mappie.get(suit);
         match indexes {
-            Some(hand) => hand.rank_index(),
+            Some(hand) => hand.rank_index(""),
             None => String::new(),
         }
     }

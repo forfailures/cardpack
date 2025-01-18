@@ -149,6 +149,28 @@ impl<
     /// ```
     /// use cardpack::refactored::*;
     /// let pile = Pile::<French, French>::from_str("A♠ K♠ A♣ Q♣ K♥").unwrap();
+    /// assert_eq!(pile.rank_index(" "), "A K Q");
+    /// assert_eq!(French::deck().rank_index(" "), "A K Q J T 9 8 7 6 5 4 3 2");
+    /// ```
+    #[must_use]
+    pub fn rank_index(&self, joiner: &str) -> String {
+        self.rank_indexed(|rank| String::from(rank.index), joiner)
+    }
+
+    pub fn rank_indexed<F>(&self, func: F, joiner: &str) -> String
+    where
+        F: Fn(&Rank<RankType>) -> String,
+    {
+        self.ranks()
+            .iter()
+            .map(func)
+            .collect::<Vec<String>>()
+            .join(joiner)
+    }
+
+    /// ```
+    /// use cardpack::refactored::*;
+    /// let pile = Pile::<French, French>::from_str("A♠ K♠ A♣ Q♣ K♥").unwrap();
     ///
     /// assert_eq!(pile.rank_index_by_suit(&French::SPADES, "-").unwrap(), "A-K");
     /// assert_eq!(pile.rank_index_by_suit(&French::HEARTS, "-"), Some("K".to_string()));
@@ -220,7 +242,7 @@ impl<
         }
     }
 
-    /// TODO: Possible RF change to `VecDeque`?
+    /// TODO: Possible RF change to [`VecDeque`](https://doc.rust-lang.org/std/collections/struct.VecDeque.html)?
     pub fn remove(&mut self, x: usize) -> Card<RankType, SuitType> {
         self.0.remove(x)
     }
