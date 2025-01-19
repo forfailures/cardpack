@@ -12,6 +12,9 @@ pub type ModernDeck = Pile<Modern, Modern>;
 
 impl Modern {
     // Jokers Fluent Names
-    pub const BIG: &'static str = "big-joker";
-    pub const LITTLE: &'static str = "little-joker";
+    pub const FLUENT_KEY_BIG: &'static str = "big-joker";
+    pub const FLUENT_KEY_LITTLE: &'static str = "little-joker";
+
+    // Rank
+    pub const FLUENT_KEY_JOKER: &'static str = "joker";
 }
