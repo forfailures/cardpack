@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+use crate::prelude::{French, Suit};
 // use crate::types::pips::{Rank, Suit, BLANK};
 // use crate::types::traits::{Decked, Ranked, Suited};
 use crate::types::{Card, Pile};
@@ -17,4 +19,12 @@ impl Modern {
 
     // Rank
     pub const FLUENT_KEY_JOKER: &'static str = "joker";
+
+    // Suites
+    pub const JOKERS_INDEX: char = 'S';
+    pub const JOKERS: Suit<French> = Suit {
+        weight: 5,
+        index: Modern::JOKERS_INDEX,
+        phantom_data: PhantomData,
+    };
 }
