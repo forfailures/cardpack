@@ -42,6 +42,74 @@ impl Modern {
         index: Modern::LITTLE_JOKER_INDEX,
         phantom_data: PhantomData,
     };
+    // OK, part of me hates how lowbrow and hacky this is. Another part of me loves it for that
+    // very reason. Well, if we come up with something better, we can add it for phase III, which
+    // I hope never happens.
+    pub const ACE: Rank<Modern> = Rank {
+        weight: French::ACE.weight,
+        index: French::ACE_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const KING: Rank<Modern> = Rank {
+        weight: French::KING.weight,
+        index: French::KING_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const QUEEN: Rank<Modern> = Rank {
+        weight: French::QUEEN.weight,
+        index: French::QUEEN_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const JACK: Rank<Modern> = Rank {
+        weight: French::JACK.weight,
+        index: French::JACK_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const TEN: Rank<Modern> = Rank {
+        weight: French::TEN.weight,
+        index: French::TEN_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const NINE: Rank<Modern> = Rank {
+        weight: French::NINE.weight,
+        index: French::NINE_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const EIGHT: Rank<Modern> = Rank {
+        weight: French::EIGHT.weight,
+        index: French::EIGHT_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const SEVEN: Rank<Modern> = Rank {
+        weight: French::SEVEN.weight,
+        index: French::SEVEN_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const SIX: Rank<Modern> = Rank {
+        weight: French::SIX.weight,
+        index: French::SIX_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const FIVE: Rank<Modern> = Rank {
+        weight: French::FIVE.weight,
+        index: French::FIVE_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const FOUR: Rank<Modern> = Rank {
+        weight: French::FOUR.weight,
+        index: French::FOUR_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const TREY: Rank<Modern> = Rank {
+        weight: French::TREY.weight,
+        index: French::TREY_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const DEUCE: Rank<Modern> = Rank {
+        weight: French::DEUCE.weight,
+        index: French::DEUCE_INDEX,
+        phantom_data: PhantomData,
+    };
 
     // Suits
     // Fluent Names
@@ -52,6 +120,26 @@ impl Modern {
     pub const JOKER_SUIT: Suit<Modern> = Suit {
         weight: 5,
         index: Modern::JOKERS_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const SPADES: Suit<Modern> = Suit {
+        weight: French::SPADES.weight,
+        index: French::SPADES_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const HEARTS: Suit<Modern> = Suit {
+        weight: French::HEARTS.weight,
+        index: French::HEARTS_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const DIAMONDS: Suit<Modern> = Suit {
+        weight: French::DIAMONDS.weight,
+        index: French::DIAMONDS_INDEX,
+        phantom_data: PhantomData,
+    };
+    pub const CLUBS: Suit<Modern> = Suit {
+        weight: French::CLUBS.weight,
+        index: French::CLUBS_INDEX,
         phantom_data: PhantomData,
     };
 
@@ -125,12 +213,35 @@ impl Decked<Modern, Modern> for Modern {
         match index_char {
             'b' | Modern::BIG_JOKER_INDEX => Modern::BIG_JOKER_RANK,
             'l' | Modern::LITTLE_JOKER_INDEX => Modern::LITTLE_JOKER_RANK,
-            _ => French::get_rank(index_char),
+            _ => Rank::<Modern>::from(French::get_rank(index_char)),
         }
     }
 
     fn get_suit(index_char: char) -> Suit<Modern> {
-        todo!()
+        match index_char {
+            '🃟' | 'j' | Modern::JOKERS_INDEX => Modern::JOKER_SUIT,
+            _ => Suit::<Modern>::from(French::get_suit(index_char)),
+        }
+    }
+}
+
+impl From<Rank<French>> for Rank<Modern> {
+    fn from(rank: Rank<French>) -> Self {
+        Rank {
+            weight: rank.weight,
+            index: rank.index,
+            phantom_data: PhantomData,
+        }
+    }
+}
+
+impl From<Suit<French>> for Suit<Modern> {
+    fn from(suit: Suit<French>) -> Self {
+        Suit {
+            weight: suit.weight,
+            index: suit.index,
+            phantom_data: PhantomData,
+        }
     }
 }
 
@@ -203,5 +314,28 @@ impl Ranked for Modern {
             French::TREY_INDEX,
             French::DEUCE_INDEX,
         ]
+    }
+}
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod decks__modern__tests {
+    use super::*;
+    use crate::localization::Named;
+
+    #[test]
+    fn new() {
+        assert_eq!(
+            Card::<Modern, Modern>::new(Modern::BIG_JOKER_RANK, Modern::JOKER_SUIT).index(),
+            "BJ"
+        );
+        assert_eq!(
+            ModernCard::new(Modern::LITTLE_JOKER_RANK, Modern::JOKER_SUIT).index(),
+            "LJ"
+        );
+        assert_eq!(
+            Card::<Modern, Modern>::new(Modern::ACE, Modern::SPADES).index(),
+            "AS"
+        );
     }
 }

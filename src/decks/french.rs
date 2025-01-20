@@ -377,7 +377,7 @@ impl Ranked for French {
 
 #[cfg(test)]
 #[allow(non_snake_case)]
-mod decks {
+mod decks__french__tests {
     use super::*;
 
     #[test]
