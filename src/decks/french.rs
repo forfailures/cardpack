@@ -107,7 +107,7 @@ impl French {
     pub const BLANK_RANK: Rank<French> = Rank::<French>::BLANK;
     pub const BLANK_SUIT: Suit<French> = Suit::<French>::BLANK;
 
-    // Suites
+    // Suits
     pub const SPADES_INDEX: char = 'S';
     pub const HEARTS_INDEX: char = 'H';
     pub const DIAMONDS_INDEX: char = 'D';
